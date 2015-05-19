@@ -1,0 +1,118 @@
+﻿html, body {
+  background-color: rgb(237, 237, 237);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font: menu;
+}
+
+#main {
+  height: 100%;
+}
+
+#content-container {
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0 auto;
+  max-width: 940px;
+  min-height: 500px;
+  min-width: 780px;
+  padding: 0 20px;
+  position: relative;
+  -webkit-margin-start: 302px;
+}
+
+#content {
+  background-clip: padding-box;
+  background-color: rgba(255, 255, 255, .9);
+  border-left: 1px solid rgba(0, 0, 0, .25);
+  border-right: 1px solid rgba(0, 0, 0, .25);
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: 50px 30px 30px 30px;
+}
+
+#title {
+  img {
+    float: left;
+    margin-top: -10px;
+    margin-right: 20px;
+  }
+
+  h1 {
+  }
+
+  margin-bottom: 40px;
+}
+
+section {
+  -webkit-padding-start: 18px;
+  margin-bottom: 24px;
+}
+
+.section-header {
+  color: rgb(95, 95,95);
+  display: -webkit-flex;
+  font-size: 1.17rem;
+  font-weight: normal;
+  line-height: 2rem;
+  margin: 0 0 12px -18px;
+  white-space: pre-wrap;
+
+  &::after {
+    background-image: linear-gradient(rgb(190, 190, 190), transparent 1px);
+    background-position: left 55%;
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    content: '';
+    -webkit-flex: auto;
+    -webkit-margin-start: 10px;
+  }
+}
+
+.settings-row {
+  margin: 0 0 6px 0;
+  display: block;
+}
+
+.checkbox > *, .radio > * {
+  display: -webkit-inline-flex;
+  align-items: center;
+}
+
+.checkbox input, .radio input {
+  margin: 0;
+  -webkit-margin-end: 6px;
+}
+
+.checkbox, .radio {
+  margin-bottom: 6px;
+}
+
+.checkbox input + label,
+.radio input + label,
+.checkbox input + span,
+.radio input + span {
+  -webkit-flex: 1;
+}
+
+button, input[type='number'],
+input[type='password'],
+input[type='search'],
+input[type='text'],
+input[type='url'],
+input:not([type]),
+select,
+textarea {
+  box-sizing: border-box;
+  font: inherit;
+}
+
+.text-center{
+  text-align:center;
+  display: block;
+}
+
+.fa{
+  color:#555;
+}

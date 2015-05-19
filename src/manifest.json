@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+
+  "name": "Tab Sidebar",
+  "description": "A sidebar extension for tab management.",
+  "version": "1.0",
+  "options_page": "app/options.html",
+  "background": {"scripts": ["app/js/background.js"]},
+
+  "permissions": ["tabs","storage","chrome://favicon/","opera://favicon/", "<all_urls>"],
+  "icons": { "16": "app/media/icons/tabSidebar_16.png",
+             "19": "app/media/icons/tabSidebar_19.png",
+             "48": "app/media/icons/tabSidebar_48.png",
+             "128": "app/media/icons/tabSidebar_128.png" },
+  "sidebar_action": {
+    "default_icon": "app/media/icons/tabSidebar_19.png", //required
+    "default_title": "Tab Sidebar",    // optional; shown in tooltip
+    "default_panel": "app/panel.html"    // required
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Tab Sidebar",
+  "description": "Tab management extension for the Opera sidebar",
+  "version": "0.0.1",
+  "homepage": "",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "react": "0.13.0",
+    "classnames": "1.1.4",
+    "font-awesome": "4.3.0"
+    
+  }
+  
+}
