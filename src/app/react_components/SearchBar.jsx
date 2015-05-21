@@ -1,27 +1,30 @@
 /** @jsx React.DOM */
 "use strict";
 
-module.exports = React.createClass({ 
+module.exports = React.createClass({
   getInitialState: function() {
     return {value:''};
-  }, 
-  
+  },
+
   search: function(){
     var query = React.findDOMNode(this.refs.searchBox).value.trim();
-    
-    console.log(query);
+    this.props.onSearch(query);
   },
-  handleKeyDown:function(e){
+  handleKeyUp:function(e){
     this.search();
   },
-  render: function () {     
-    
+  handleClearSearch: function(e){
+    React.findDOMNode(this.refs.searchBox).value='';
+    this.props.onSearch('');
+  },
+  render: function () {
+
     return (
       <div className="search-bar">
-        <input placeholder="Search tabs..." ref="searchBox" type="text" onKeyDown={this.handleKeyDown}/>
-        
+        <input placeholder="Search tabs..." ref="searchBox" type="text" onKeyUp={this.handleKeyUp}/>
+        <button className="clear-margin-right" title="Clear search" onClick={this.handleClearSearch}><i className="fa fa-times-circle"></i></button>
       </div>
-        
+
     );
   }
 });

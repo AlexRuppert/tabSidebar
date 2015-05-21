@@ -20,7 +20,7 @@ module.exports = React.createClass({
     },
     {
       type: 'item',
-      title: 'Thmubnail view',
+      title: 'Thumbnail view',
       icon: 'fa-image',
       action: 'thumbnailview'
     },

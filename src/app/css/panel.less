@@ -58,7 +58,18 @@ input[type="color"] {
     border: 1px solid darken(@formBorderColor,10%) !important;
   }
 }
-
+.clear-margin-right{
+  margin-right:0!important;
+}
+.clear-margin-left{
+  margin-left:0!important;
+}
+.clear-margin-top{
+  margin-top:0!important;
+}
+.clear-margin-bottom{
+  margin-bottom:0!important;
+}
 @contextMenuBorderColor: #bababa;
 @contextMenuShadowColor: #8d8d8d;
 @contextMenuBackgroundColor: #f0f0f0;
@@ -353,6 +364,10 @@ input[type="color"] {
     width: 100%;
     height: @tabHeight;
     border-right: 1px solid @borderColor;
+
+    .mainline {
+      display: flex;
+    }
     /* &:not(:first-child) {
       margin-top: -1px;
     }*/
@@ -371,8 +386,9 @@ input[type="color"] {
     &.small {
       height: 20px !important;
       padding: 0;
-      .title{
-        margin-left: 18px!important;
+
+      .title {
+        margin-left: 18px !important;
       }
     }
 
@@ -388,6 +404,7 @@ input[type="color"] {
         top: 0;
         left: 0;
       }
+
       &.small:before {
         border-bottom: 4px solid transparent;
         border-left: 4px solid @darkBackgroundColor;
@@ -400,6 +417,10 @@ input[type="color"] {
       padding: 0;
       height: 20px;
 
+      .favicon {
+        margin: 1px;
+      }
+
       .title {
         text-overflow: clip;
 
@@ -410,7 +431,7 @@ input[type="color"] {
           position: absolute;
           left: 0;
           top: 0;
-          background: linear-gradient(to right,transparent 60%, @activeColor 100%);
+          background: linear-gradient(to right,transparent 60%, lighten(@activeColor,100%) 100%);
         }
       }
 
@@ -428,21 +449,20 @@ input[type="color"] {
     }
 
     i {
-      float: left;
-      margin: 2px;
+      position: absolute;
+      padding: 2px;
     }
 
     .favicon {
       width: 16px;
       height: 16px;
-      margin: 2px;
-      float: left;
-      position: relative;
+      margin: 0;
+      position: absolute;
       z-index: 1;
     }
 
     .title {
-      margin-left: 26px;
+      margin-left: 20px;
       margin-right: 15px;
       position: relative;
       z-index: 1;
@@ -450,7 +470,7 @@ input[type="color"] {
       overflow: hidden;
       white-space: nowrap;
 
-      &.extended{
+      &.extended {
         margin-right: 0;
       }
     }
@@ -470,26 +490,35 @@ input[type="color"] {
         text-shadow: none;
       }
     }
-    &.small{
+
+    &.small {
       .tabClose {
         top: 0;
         right: 0;
       }
     }
-    
 
     &.tab-thumbnail {
       height: @tabThumbnailHeight !important;
     }
 
     .thumbnail {
-      /*background: url('../media/dummy/thumb1.png');*/
-      width: 100%;
       height: 100px;
-      background-size: cover;
-      margin-top: 7px;
+      margin-top: 4px;
+      margin-left: -1px;
       border: 1px solid @borderColor;
       z-index: 0;
+      background-size: cover;
+      background-repeat: no-repeat;
+      /*.thumbnail {
+        background-size: cover;
+        background-repeat: no-repeat;
+
+        height: 100%;
+      }*/
+      &.empty{
+        border:none;
+      }
     }
 
     &.active {
@@ -502,10 +531,12 @@ input[type="color"] {
       .title {
         color: black;
         text-shadow: 0 0 1px #FFF,0 0 1px #FFF, 0 0 2px #FFF;
-        background-color: rgba(255, 255, 255, 0.6);
+        background-color: rgba(255, 255, 255, 0.8);
         padding-left: 3px;
         padding-right: 3px;
         font-weight: 500;
+        border-radius: 2px;
+        box-shadow: 0px 0px 5px #FFF;
       }
 
       .tabClose {
@@ -547,7 +578,7 @@ input[type="color"] {
   }
 
   .active {
-    background-color: @activeColor;
+    background-color: lighten(@activeColor,100%);
   }
 
   .fa {

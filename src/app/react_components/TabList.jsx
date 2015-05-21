@@ -4,10 +4,10 @@
 var Tab = require('./Tab.jsx');
 var TabGroup = require('./TabGroup.jsx');
 var TabLogic = require('../logic/Tab.js');
+var ThumbnailCache = require('../logic/ThumbnailCache.js');
 var TabContextMenu = require('./TabContextMenu.jsx');
 var ContextMenu = require('./ContextMenu.jsx');
 var allGroupId='allGroup';
-var testFavicon ='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABfElEQVQ4T2NkoBAwUqifAcUAdnb2LqCBakDMBDWY+efPn95sbGyhv379Wo3NMhQD+Pj4FgANeQFU+A+kGKhJ+OPHj+k8PDyr/v79u/r79+8YhqAYICIiMpuDg+MNzKYfP36IvHnzJhUoPgdoANfv3783fPnyZRWyS1AMkJKSmsPJyfkWpgBoo/CzZ89SJCQkFjAxMf0Fekfgz58/K4GughuCYoC8vPw8bm7ud0gGCNy/fz/l////DUi27mFkZDwC46MYoKqqugDZAKBt7G/fvlUEGgALVAYgm/nly5euWA3Q1tZeBAxIuAuwhfqnT5+Erl69GofVAH19/SUCAgJ4Dfjw4YPQxYsXY7AaYGpqulRISOg9vsT17t07wdOnT0djNcDKymo5MQYcO3YsEqsBdnZ2qwQFBT8wMzODExI6AKYFpvfv3wscOnQoDKsBiYmJix8+fMgBlPyPwxuMioqKP+bOnRuL1QBgFCUCJeQJZLAHwHSwAKsBBDRilQYAInaYESmjmvoAAAAASUVORK5CYII=';
 
 module.exports = React.createClass({
   tabPlaceholder: document.createElement("li"),
@@ -17,28 +17,58 @@ module.exports = React.createClass({
     return {
       tabs: [],
       activeTab: 0,
+      searchTabsQuery:'',
       activeGroup: allGroupId,
-      groups:[]/*[{title: 'work', id: 'g1', tabs:[2,3,4]},
-              {title: 'fun', id: 'g2', tabs:[1,5,6]},
-              {title: 'search', id: 'g3', tabs:[7,8,9,10]},
-              {title: 'rest', id: 'g4', tabs:[11]}]*/
+      groups:[]
     };
   },
-  getTabs: function(callback){
-    chrome.tabs.query({ currentWindow: true }, function (tabs) {
-      for (var i = 0; i < tabs.length; i++) {
-        tabs[i].favicon = TabLogic.getFavIcon(tabs[i].url, tabs[i].favIconUrl);
-      }
-      callback(tabs);
-    });
-  },
-  componentWillMount: function(){
-    var self=this;
-    TabLogic.setUpEventListeners(self);
-    TabLogic.getTabs(self);
-    TabLogic.setToCurrentTab(self);
-  },
+  shouldComponentUpdate: function(nextProps, nextState) {
 
+    if(this.props.viewState!=nextProps.viewState)
+      return true;
+    if(this.props.multiColumn!=nextProps.multiColumn)
+      return true;
+    if(this.props.showCloseButtons!=nextProps.showCloseButtons)
+      return true;
+    if(this.props.showGroups!=nextProps.showGroups)
+      return true;
+    if(this.props.showNewOnTabs!=nextProps.showNewOnTabs)
+      return true;
+
+
+    /*if(this.state.tabs.length != nextState.tabs.length)
+      return true;
+    for(var i=0; i < this.state.tabs.length; i++){
+      if(this.state.tabs[i].id!=nextState.tabs[i].id){
+        return true;
+      }
+      if(this.state.tabs[i].pinned!=nextState.tabs[i].pinned){
+        return true;
+      }
+    }
+
+    if(this.state.groups!=nextState.groups)
+      return true;*/
+    if(this.state.searchTabsQuery!= nextState.searchTabsQuery)
+      return true;
+    return false;
+
+    return true;
+  },
+  componentDidMount: function(){
+    ThumbnailCache.init();
+    TabLogic.setUpEventListeners(this);
+    TabLogic.getTabs(this);
+    TabLogic.setToCurrentTab(this);
+    ThumbnailCache.scheduleCleanup(this);
+
+
+  },
+  /*componentWillUpdate(object nextProps, object nextState){
+    for(var i; i < nextState.tabs.length; i++){
+      ThumbnailCache.loadFromCache(this,nextState.tabs[i]);
+    }
+  },*/
 
 
   isAllGroupActive: function(){
@@ -84,28 +114,43 @@ module.exports = React.createClass({
 
     this.setState({groups: groups});
   },
+  isSearchingTabs: function(){
+    return this.state.searchTabsQuery.length>0
+  },
+  searchTabs: function(query){
+
+    if (typeof query === 'string'){
+      if(query!=this.state.searchTabsQuery){
+        this.setState({searchTabsQuery:query.toLowerCase()});
+      }
+    }
+  },
   handleTabClicked: function(id, event) {
     event = event.nativeEvent;
     if (event.which == 1) {
       var oldId=this.state.activeTab;
-      var self=this;
-      /*chrome.tabs.captureVisibleTab(function(dataUrl) {
 
-        var tabs = self.state.tabs;
-        var index = self.getTabIndex(oldId);
-        if(index>=0){
-          tabs[index].thumbnail=dataUrl;
-          self.setState({tabs:tabs});
-        }
-      });*/
+      if(this.state.activeTab==id){
+        return 0;
+      }
+      //create thumbnail on leaving tab
+      ThumbnailCache.updateThumbnail(this, oldId);
+
       chrome.tabs.update(id, {active:true});
 
-      if(this.state.activeTab && this.refs[this.state.activeTab]){
+      /*if(this.state.activeTab && this.refs[this.state.activeTab]){
         this.refs[this.state.activeTab].setState({isActive:false});
+      }*/
+
+      var tab =this.refs[id];
+      var self=this;
+
+      if(typeof tab.state.thumbnail!=='undefined' && tab.state.thumbnail.length <= 1){
+        setTimeout(function(){
+          ThumbnailCache.updateThumbnail(self, id);
+        }, 100);
       }
 
-
-      //this.setState({activeTab:id});
     }
     else if (event.which == 2) {
       this.handleTabClosed(id);
@@ -153,6 +198,8 @@ module.exports = React.createClass({
     this.tabOver = e.currentTarget;
   },
   tabDragEnd: function(e) {
+
+
     if(!this.groupDragged && this.groupOver && this.tabDragged)
     {
       var groupId = this.groupOver.getAttribute('data-reactid').split('$')[1];
@@ -180,8 +227,11 @@ module.exports = React.createClass({
       this.tabDragged.parentNode.removeChild(this.tabPlaceholder);
       return;
     }
-    this.tabDragged.style.display = "block";
 
+    this.tabDragged.style.display = "block";
+    if(this.isSearchingTabs()){//no moving, when searching
+      return;
+    }
     var index=0;
     try {
       index = Array.prototype.indexOf.call(this.tabDragged.parentNode.children, this.tabPlaceholder);
@@ -227,7 +277,7 @@ module.exports = React.createClass({
         pinnedCount++;
       }
     }
-  
+
     chrome.tabs.move(this.state.tabs[draggedIndex+pinnedCount].id,{index:to+pinnedCount});
     /*tabs.splice(to, 0, tabs.splice(from, 1)[0]);
     this.setState({tabs: tabs});*/
@@ -237,6 +287,9 @@ module.exports = React.createClass({
     this.groupOver = null;
     if(!this.tabDragged)
       return;
+    if(this.isSearchingTabs()){//no moving, when searching
+      return;
+    }
     //only 2 levels to keep it simple: check if we are over another tab
     if(!e.target.classList.contains("tab")&&!e.target.classList.contains("tab-placeholder")){
       e.target = e.target.parentNode;
@@ -374,7 +427,21 @@ module.exports = React.createClass({
     var tabsToMap=[];
 
     if((this.state.activeGroup==allGroupId || (!this.getActiveGroup()))){
-      tabsToMap=this.state.tabs;
+      if(!this.isSearchingTabs()){
+        tabsToMap=this.state.tabs;
+      }
+      else{
+
+        for(var i = 0; i < this.state.tabs.length;i++){
+          if(this.state.tabs[i].title.toLowerCase().indexOf(this.state.searchTabsQuery)>=0){
+            tabsToMap.push(this.state.tabs[i]);
+          }
+        }
+      }
+
+
+
+
     } else {
       var activeGroup=this.getActiveGroup();
 
@@ -391,47 +458,51 @@ module.exports = React.createClass({
     var tabNodes = tabsToMap.map(function (tab, i) {
 
       if(!tab.pinned){
-        return (
-          <Tab ref={tab.id}
-          id={tab.id}
-          index={i}
-          key={tab.id}
-          title={tab.title||tab.url}
-          isActive={this.state.activeTab==tab.id}
-          onTabClicked={this.handleTabClicked}
-          onTabClosed={this.handleTabClosed}
 
-          favicon={tab.favicon}
-          onDragEnd = {this.tabDragEnd}
-          onDragStart = {this.tabDragStart}
-          onContextMenu = {this.handleTabContextMenuOpen}
-          showThumbnails = {this.props.viewState=='thumbnailview'||this.props.viewState=='compactview'}
-          showCompactThumbnails = {this.props.viewState=='compactview'}
-          thumbnail={tab.thumbnail}
-          multiColumn= {this.props.multiColumn}
-          showClose={this.props.showCloseButtons}
-          isSmall={this.props.viewState=='smalltabs'}
-          isLoading={tab.status=='loading'}
-          newlyCreated={tab.newlyCreated}
-          showNewOnTabs={this.props.showNewOnTabs}
-          >
+          return (
+            <Tab ref={tab.id}
+            id={tab.id}
+            index={i}
+            key={tab.id}
+            title={tab.title||tab.url}
 
-          </Tab>
+            onTabClicked={this.handleTabClicked}
+            onTabClosed={this.handleTabClosed}
 
-        );
+            favicon={tab.favicon}
+            onDragEnd = {this.tabDragEnd}
+            onDragStart = {this.tabDragStart}
+            onContextMenu = {this.handleTabContextMenuOpen}
+            viewState = {this.props.viewState}
+
+            thumbnail={tab.thumbnail}
+
+            multiColumn= {this.props.multiColumn}
+            showClose={this.props.showCloseButtons}
+
+            isLoading={tab.status=='loading'}
+            newlyCreated={tab.newlyCreated}
+            showNewOnTabs={this.props.showNewOnTabs}
+            >
+
+            </Tab>
+
+          );
+
       }
     },this);
     var thereArePinnedNodes=false;
     var pinNodes = this.state.tabs.map(function (tab, i) {
       if(tab.pinned){
         thereArePinnedNodes=true;
+        console.log(tab.favicon);
         return (
           <Tab ref={tab.id}
           id={tab.id}
           index={i}
           key={tab.id}
           title={tab.title}
-          isActive={this.state.activeTab==tab.id}
+
           onTabClicked={this.handleTabClicked}
           onTabClosed={this.handleTabClosed}
           favicon={tab.favicon}
@@ -487,6 +558,7 @@ module.exports = React.createClass({
       'hidden': !this.props.showGroups
 
     });
+
     return (
       <div className="tab-container">
         <div className="tab-list-container">
@@ -504,14 +576,14 @@ module.exports = React.createClass({
           </div>
 
           <div className="tab-group-bar"></div>
-          <div className="tab-list">
+            <div className="tab-list">
             <ul className={pinNodesClasses}>
               {pinNodes}
             </ul>
             <ul onDragOver={this.tabDragOver}>
               {tabNodes}
             </ul>
-        </div>
+          </div>
         </div>
       </div>
     );

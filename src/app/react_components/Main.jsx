@@ -19,7 +19,7 @@ module.exports = React.createClass({
   },
   componentDidMount : function(){
     var self=this;
-    
+
     Persistency.loadState(function(){
       var state=Persistency.getState();
 
@@ -48,6 +48,9 @@ module.exports = React.createClass({
   handleNewTabGroupCreated: function(name, color){
     this.refs.tabList.createNewGroup(name,color);
   },
+  handleSearch:function(query) {
+    this.refs['tabList'].searchTabs(query);
+  },
   render: function (){
     return (
       <div>
@@ -56,11 +59,11 @@ module.exports = React.createClass({
           handleColumnChange={this.handleColumnChange}
           handleNewTabGroup={this.handleNewTabGroup}
           showGroups={this.state.showGroups}/>
-        <SearchBar/>
+        <SearchBar onSearch={this.handleSearch}/>
         <GroupCreator
           ref="groupCreator"
           handleCreate={this.handleNewTabGroupCreated}/>
-        <TabList
+          <TabList
           ref="tabList"
           viewState={this.state.viewState}
           multiColumn={this.state.multiColumn}
