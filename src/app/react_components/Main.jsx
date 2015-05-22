@@ -6,9 +6,11 @@ var SearchBar = require('./SearchBar.jsx');
 var MenuBar = require('./MenuBar.jsx');
 var GroupCreator = require('./GroupCreator.jsx');
 var Persistency = require('../logic/Persistency.js');
+Persistency.init();
 module.exports = React.createClass({
 
   getInitialState: function(){
+
     return {
       viewState:'normalview',
       multiColumn: false,
@@ -19,10 +21,8 @@ module.exports = React.createClass({
   },
   componentDidMount : function(){
     var self=this;
-
     Persistency.loadState(function(){
       var state=Persistency.getState();
-
         self.setState({
           viewState:state.viewState,
           multiColumn: state.multiColumn,
@@ -30,7 +30,8 @@ module.exports = React.createClass({
           showGroups: state.showGroups,
           showNewOnTabs: state.showNewOnTabs
           });
-
+          self.refs["tabList"].loadGroups();
+          self.refs["tabList"].forceUpdate();
     });
 
   },

@@ -10,6 +10,8 @@ module.exports = React.createClass({
       return true;
     if(this.state.isActive!=nextState.isActive)
       return true;
+    if(this.state.notVisited!=nextState.notVisited)
+      return true;
     if(this.state.title!=nextState.title)
       return true;
     if(this.state.favicon!=nextState.favicon)
@@ -50,24 +52,27 @@ module.exports = React.createClass({
     if(this.props.isPinned){
       event.preventDefault();
     }
-
-    this.setState({
-     isActive: true,
-     notVisited: false
-    });
+    if(event.nativeEvent.which==1){
+      this.setState({
+       isActive: true,
+       notVisited: false
+      });
+    }
     this.props.onTabClicked(this.props.id, event);
   },
   handleCloseClicked: function(event) {
      this.props.onTabClosed(this.props.id);
   },
   handleContextMenu: function(event) {
+    //TODO: enable for release
     return;
     event.nativeEvent.preventDefault();
     this.props.onContextMenu(this.props, event);
   },
 
   componentWillUpdate: function(nextProps, nextState) {
-    if(nextState.isActive && this.state.notVisited==false){
+    //console.log(nextState.isActive +' '+ this.state.notVisited)
+    if(nextState.isActive && this.state.notVisited){
       this.setState({notVisited: false});
     }
 

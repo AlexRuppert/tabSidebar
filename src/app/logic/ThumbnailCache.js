@@ -8,6 +8,8 @@ module.exports = {
   schedule: null,
   desiredWidth: 300,
   minUpdateDeleyMs: 2000,
+  criticalCacheSize: 2000,
+
   init: function () {
     if (!this.canvas.width) {
       this.canvas = document.createElement('canvas');
@@ -17,6 +19,7 @@ module.exports = {
     }
     if (!this.cache.hasOwnProperty('thumbnailCache')) {
       this.cache.thumbnailCache = {};
+      this.cache.thumbnailCacheSize = 0;
     }
   },
   hashThumbnail: function (id, url) {
@@ -72,6 +75,7 @@ module.exports = {
         }
       }
     }
+    this.cache.thumbnailCacheSize = count - deletedCount;
     console.log("Cached thumbnails = " + count);
     console.log("Deleted thumbnails = " + deletedCount);
   },
@@ -120,6 +124,7 @@ module.exports = {
         } //else fall through
       } else {
         this.cache.thumbnailCache[hash] = {};
+        this.cache.thumbnailCacheSize++;
       }
 
       var self = this;
@@ -132,6 +137,10 @@ module.exports = {
           tabList.refs[tabId].setState({ thumbnail: img });
         }
       });
+    }
+    //if user somehow creates too many thumbnails before cleanup kicks in
+    if (this.cache.thumbnailCacheSize > this.criticalCacheSize) {
+      this.cleanUpCache(tabList.state.tabs);
     }
   }
 }

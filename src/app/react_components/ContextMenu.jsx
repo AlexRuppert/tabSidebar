@@ -17,14 +17,23 @@ module.exports = React.createClass({
       targetProps: {}
     };
   },
+  closeMenu:function(){
+    if(this.state.isVisible){
+      this.setState({isVisible:false});
+    }
+  },
+  componentDidMount:function(){
+    var self=this;
+    opr.sidebarAction.onBlur.addListener(function () {      
+      self.closeMenu();
+    });
+  },
   componentWillReceiveProps: function(nextProps) {
     this.setState({isVisible: nextProps.isVisible});
   },
   handleContextMenuClose: function (event) {
     event.nativeEvent.preventDefault();
-    if(this.state.isVisible){
-      this.setState({isVisible:false});
-    }
+    this.closeMenu();
   },
   handleContextMenu: function(props, event){
 

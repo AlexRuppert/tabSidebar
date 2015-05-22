@@ -14,6 +14,18 @@ module.exports = React.createClass({
       isVisible:false
     }
   },
+  closeMenu:function(){
+    if(this.state.isVisible){
+      this.setState({isVisible:false});
+    }
+    this.props.handleSelect('none');
+  },
+  componentDidMount:function(){
+    var self=this;
+    opr.sidebarAction.onBlur.addListener(function () {
+      self.closeMenu();
+    });
+  },
   componentWillReceiveProps: function(nextProps) {
     this.setState({isVisible: nextProps.isVisible});
   },
@@ -45,10 +57,8 @@ module.exports = React.createClass({
   },
   handleMenuClose: function (event) {
     event.nativeEvent.preventDefault();
-    if(this.state.isVisible){
-      this.setState({isVisible:false});
-    }
-    this.props.handleSelect('none');
+    this.closeMenu();
+
   },
   render: function () {
     var classes = classNames({

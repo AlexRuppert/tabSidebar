@@ -58,18 +58,23 @@ input[type="color"] {
     border: 1px solid darken(@formBorderColor,10%) !important;
   }
 }
-.clear-margin-right{
-  margin-right:0!important;
+
+.clear-margin-right {
+  margin-right: 0 !important;
 }
-.clear-margin-left{
-  margin-left:0!important;
+
+.clear-margin-left {
+  margin-left: 0 !important;
 }
-.clear-margin-top{
-  margin-top:0!important;
+
+.clear-margin-top {
+  margin-top: 0 !important;
 }
-.clear-margin-bottom{
-  margin-bottom:0!important;
+
+.clear-margin-bottom {
+  margin-bottom: 0 !important;
 }
+
 @contextMenuBorderColor: #bababa;
 @contextMenuShadowColor: #8d8d8d;
 @contextMenuBackgroundColor: #f0f0f0;
@@ -131,6 +136,8 @@ input[type="color"] {
     display: block;
     padding: 5px 8px;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     // Disabled state sets text to gray and nukes hover/tab effects
     &.rc-menu-item-disabled, &.rc-menu-submenu-disabled {
       color: #777;
@@ -208,6 +215,7 @@ input[type="color"] {
       flex: 1 0 0;
       border-left: 1px solid @activeColor;
       border-right: 1px solid @activeColor;
+      margin: 0;
 
       &:hover {
         border: none !important;
@@ -516,8 +524,8 @@ input[type="color"] {
 
         height: 100%;
       }*/
-      &.empty{
-        border:none;
+      &.empty {
+        border: none;
       }
     }
 
@@ -575,6 +583,10 @@ input[type="color"] {
         }
       }
     }
+  }
+
+  .unpinned-tabs .tab:last-child {
+    margin-bottom: 10px;
   }
 
   .active {

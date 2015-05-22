@@ -35,6 +35,12 @@ module.exports = React.createClass({
     this.setState({isVisible:false});
     this.refs.groupNameInput.getDOMNode().value='';
   },
+  componentDidMount:function(){
+    var self=this;
+    opr.sidebarAction.onBlur.addListener(function () {
+      self.handleCloseClick();
+    });
+  },
   handleInputKeyDown: function(e) {
     var eventKey=e.nativeEvent.which;
 

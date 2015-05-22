@@ -26,6 +26,8 @@ module.exports = React.createClass({
      this.props.onGroupClosed(this.props.id);
   },
   handleContextMenu: function(event) {
+    //TODO: remove for release
+    return;
     event.nativeEvent.preventDefault();
     this.props.onContextMenu(this.props.id, event);
   },

@@ -1,6 +1,6 @@
 ﻿"use strict";
 var ThumbnailCache = require('./ThumbnailCache.js');
-module.exports = {
+module.exports = {  
   getTabs: function (tabList) {
     var self = this;
     chrome.tabs.query({ currentWindow: true }, function (tabs) {
@@ -22,22 +22,22 @@ module.exports = {
     });
   },
   getFavIcon: function (url, favicon) {
-    var result = chrome.runtime.getURL("app/media/fav/default.png");
+    var result = chrome.runtime.getURL('app/media/fav/default.png');
     if (!url.startsWith('opera://')) {
-      result = favicon || chrome.runtime.getURL("app/media/fav/default.png");
+      result = favicon || chrome.runtime.getURL('app/media/fav/default.png');
     }
     else {
-      if (url === 'opera://settings/') result = chrome.runtime.getURL("app/media/fav/settings.png");
-      else if (url === 'opera://startpage/#speeddial') result = chrome.runtime.getURL("app/media/fav/newtab.png");
-      else if (url === 'opera://history/') result = chrome.runtime.getURL("app/media/fav/history.png");
-      else if (url === 'opera://themes/') result = chrome.runtime.getURL("app/media/fav/themes.png");
-      else if (url === 'opera://downloads/') result = chrome.runtime.getURL("app/media/fav/downloads.png");
-      else if (url === 'opera://bookmarks/') result = chrome.runtime.getURL("app/media/fav/bookmarks.png");
-      else if (url === 'opera://startpage/#discover') result = chrome.runtime.getURL("app/media/fav/discover.png");
-      else if (url === 'opera://extensions/') result = chrome.runtime.getURL("app/media/fav/extensions.png");
-      else if (url === 'opera://plugins/') result = chrome.runtime.getURL("app/media/fav/plugins.png");
-      else if (url === 'opera://flags/') result = chrome.runtime.getURL("app/media/fav/flags.png");
-      else result = chrome.runtime.getURL("app/media/fav/default.png");
+      if (url === 'opera://settings/') result = chrome.runtime.getURL('app/media/fav/settings.png');
+      else if (url === 'opera://startpage/#speeddial') result = chrome.runtime.getURL('app/media/fav/newtab.png');
+      else if (url === 'opera://history/') result = chrome.runtime.getURL('app/media/fav/history.png');
+      else if (url === 'opera://themes/') result = chrome.runtime.getURL('app/media/fav/themes.png');
+      else if (url === 'opera://downloads/') result = chrome.runtime.getURL('app/media/fav/downloads.png');
+      else if (url === 'opera://bookmarks/') result = chrome.runtime.getURL('app/media/fav/bookmarks.png');
+      else if (url === 'opera://startpage/#discover') result = chrome.runtime.getURL('app/media/fav/discover.png');
+      else if (url === 'opera://extensions/') result = chrome.runtime.getURL('app/media/fav/extensions.png');
+      else if (url === 'opera://plugins/') result = chrome.runtime.getURL('app/media/fav/plugins.png');
+      else if (url === 'opera://flags/') result = chrome.runtime.getURL('app/media/fav/flags.png');
+      else result = chrome.runtime.getURL('app/media/fav/default.png');
     }
     return result;
   },
@@ -50,7 +50,7 @@ module.exports = {
         for (var i = 0; i < tabList.state.tabs.length; i++) {
           var tabRef = tabList.state.tabs[i].id;
           if (tabRef != activeInfo.tabId
-            && tabList.refs[tabRef].state.isActive) {
+            && tabList.refs[tabRef] && tabList.refs[tabRef].state.isActive) {
             tabList.refs[tabRef].setState({ isActive: false });
             
           }
@@ -138,5 +138,7 @@ module.exports = {
       tabList.setState({ tabs: tabs });
       tabList.forceUpdate();
     });
+
+    
   }
 }

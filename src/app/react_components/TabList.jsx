@@ -4,24 +4,27 @@
 var Tab = require('./Tab.jsx');
 var TabGroup = require('./TabGroup.jsx');
 var TabLogic = require('../logic/Tab.js');
+var GroupLogic = require('../logic/Group.js');
 var ThumbnailCache = require('../logic/ThumbnailCache.js');
 var TabContextMenu = require('./TabContextMenu.jsx');
 var ContextMenu = require('./ContextMenu.jsx');
-var allGroupId='allGroup';
+var allGroupId = GroupLogic.allGroupId;
 
 module.exports = React.createClass({
   tabPlaceholder: document.createElement("li"),
   groupPlaceholder: document.createElement("div"),
-
+  pinOffset: 0,
+  lastTabDragY: 0,
   getInitialState: function() {
     return {
       tabs: [],
       activeTab: 0,
       searchTabsQuery:'',
-      activeGroup: allGroupId,
-      groups:[]
+      activeGroup: GroupLogic.loadLastActiveGroup(),
+      groups: []
     };
   },
+
   shouldComponentUpdate: function(nextProps, nextState) {
 
     if(this.props.viewState!=nextProps.viewState)
@@ -34,6 +37,10 @@ module.exports = React.createClass({
       return true;
     if(this.props.showNewOnTabs!=nextProps.showNewOnTabs)
       return true;
+    if(this.state.activeGroup!=nextState.activeGroup){
+      GroupLogic.saveLastActiveGroup(nextState.activeGroup);
+      return true;
+    }
 
 
     /*if(this.state.tabs.length != nextState.tabs.length)
@@ -51,9 +58,11 @@ module.exports = React.createClass({
       return true;*/
     if(this.state.searchTabsQuery!= nextState.searchTabsQuery)
       return true;
+
+
     return false;
 
-    return true;
+
   },
   componentDidMount: function(){
     ThumbnailCache.init();
@@ -62,6 +71,10 @@ module.exports = React.createClass({
     TabLogic.setToCurrentTab(this);
     ThumbnailCache.scheduleCleanup(this);
 
+
+  },
+  loadGroups(){
+    GroupLogic.loadGroups(this);
 
   },
   /*componentWillUpdate(object nextProps, object nextState){
@@ -111,8 +124,9 @@ module.exports = React.createClass({
   createNewGroup: function (name, color) {
     var groups = this.state.groups;
     groups.push({title:name, id: 'g'+name, tabs:[], color:color})
-
     this.setState({groups: groups});
+    GroupLogic.saveGroups(this.state.groups);
+    this.forceUpdate();
   },
   isSearchingTabs: function(){
     return this.state.searchTabsQuery.length>0
@@ -160,15 +174,18 @@ module.exports = React.createClass({
 
     event = event.nativeEvent;
     if (event.which == 1) {
-      if(this.state.activeGroup && this.refs[this.state.activeGroup]){
-        this.refs[this.state.activeGroup].setState({isActive:false});
-      }
+      if(this.state.activeGroup!=id){
+        if(this.refs[this.state.activeGroup]){
+          this.refs[this.state.activeGroup].setState({isActive:false});
+        }
 
-      this.setState({activeGroup:id});
+        this.setState({activeGroup:id});
+      }
     }
     else if (event.which == 2) {
       this.handleGroupClosed(id);
     }
+
   },
   handleTabClosed: function(id) {
     var newTabs = this.state.tabs.filter(function( obj ) {
@@ -177,19 +194,25 @@ module.exports = React.createClass({
 
     chrome.tabs.remove(id);
     this.setState({
-      tabs: newTabs,
-      activeTab:(id!=this.state.activeTab)?this.state.activeTab:(newTabs.length>0?newTabs[0].id:'')
+      tabs: newTabs//,
+      //activeTab:(id!=this.state.activeTab)?this.state.activeTab:(newTabs.length>0?newTabs[0].id:'')
     });
   },
   handleGroupClosed: function(id) {
     var newGroups = this.state.groups.filter(function( obj ) {
         return obj.id != id;
     });
+    var newActiveGroup= id==this.state.activeGroup?allGroupId:this.state.activeGroup;//(id!=this.state.activeGroup)?this.state.activeGroup:(newGroups.length>0?newGroups[0].id:'');
+
     this.setState({
       groups: newGroups,
-      activeGroup:(id!=this.state.activeGroup)?this.state.activeGroup:(newGroups.length>0?newGroups[0].id:'')
+      activeGroup:newActiveGroup
     });
+    GroupLogic.saveGroups(newGroups);
+
+    this.forceUpdate();
   },
+
   tabDragStart: function(e) {
     this.tabDragged = e.currentTarget;
     e.dataTransfer.effectAllowed = 'move';
@@ -200,7 +223,7 @@ module.exports = React.createClass({
   tabDragEnd: function(e) {
 
 
-    if(!this.groupDragged && this.groupOver && this.tabDragged)
+    if(!this.groupDragged && this.groupOver && this.tabDragged)//when tab is dragged into a group
     {
       var groupId = this.groupOver.getAttribute('data-reactid').split('$')[1];
       var tabId = this.tabDragged.getAttribute('data-reactid').split('$')[1];
@@ -222,9 +245,12 @@ module.exports = React.createClass({
         }
 
         this.setState({groups: groups});
+        GroupLogic.saveGroups(groups);
+        this.forceUpdate();
       }
       this.tabDragged.style.display = "block";
       this.tabDragged.parentNode.removeChild(this.tabPlaceholder);
+      this.groupOver.style.border='none';
       return;
     }
 
@@ -242,19 +268,19 @@ module.exports = React.createClass({
     var tabs = this.state.tabs;
 
     var draggedIndex = Array.prototype.indexOf.call(this.tabDragged.parentNode.children, this.tabDragged);
-    if (index < draggedIndex){
-      //draggedIndex--;
-    }
+
 
     var from = draggedIndex;
     var to = index;//Number(this.tabOver.dataset.id);
 
     this.tabDragged=null;
-    if (!this.isAllGroupActive()){
+
+
+    if (!this.isAllGroupActive()){//if tab is dragged around inside a group
       var groupIndex=this.getGroupIndex(this.state.activeGroup);
       var tabIndex=this.state.groups[groupIndex].tabs[from];
 
-
+      //console.log(groupIndex+' '+tabIndex+' '+to);
       if (from == to) return;
       if(from < to) to--;
 
@@ -264,6 +290,8 @@ module.exports = React.createClass({
         var temp =groups[groupIndex].tabs[to];
         groups[groupIndex].tabs.splice(to, 0, groups[groupIndex].tabs.splice(from, 1)[0]);
         this.setState({groups: groups});
+        GroupLogic.saveGroups(groups);
+        //this.forceUpdate();
       }
       return;
     }
@@ -301,19 +329,29 @@ module.exports = React.createClass({
     this.tabDragged.style.display = "none";
     this.tabOver = e.target;
     // Inside the dragOver method
-    var relY = e.clientY - this.tabOver.offsetTop-63;
-    var height = this.tabOver.offsetHeight / 2;
+
+    var indexTabOver=-1;
+    if(this.tabPlaceholder && this.props.multiColumn){
+
+      try {
+        indexTabOver = Array.prototype.indexOf.call(this.tabOver.parentNode.children, this.tabOver);
+      }
+      catch(ex){}
+    }
+
+
+    var relY=e.clientY -63-this.pinOffset-1;
     var parent = e.target.parentNode;
-    if(relY > height) {
-      parent.insertBefore(this.tabPlaceholder, e.target.nextElementSibling);
+    var isFirstChild=indexTabOver==0;
+
+    var up=relY < this.lastTabDragY;
+    this.lastTabDragY=relY;
+
+    if(up || isFirstChild){
+      parent.insertBefore(this.tabPlaceholder, e.target);
     }
     else {
-      if(this.props.multiColumn && e.target.previousElementSibling && e.target.previousElementSibling.previousElementSibling){
-        parent.insertBefore(this.tabPlaceholder, e.target.previousElementSibling.previousElementSibling);
-      }
-      else {
-        parent.insertBefore(this.tabPlaceholder, e.target);
-      }
+      parent.insertBefore(this.tabPlaceholder, e.target.nextSibling);
     }
   },
   groupDragStart: function(e) {
@@ -334,25 +372,26 @@ module.exports = React.createClass({
     catch(ex){}
     // Update state
     var groups = this.state.groups;
+    var draggedIndex = Array.prototype.indexOf.call(this.groupDragged.parentNode.children, this.groupDragged);
 
-    var from = this.getGroupIndex(this.groupDragged.dataset.id);
+
+    var from = draggedIndex-1;
+    //var from = this.getGroupIndex(this.groupDragged.dataset.id)-1;
     var to = index-1;//Number(this.tabOver.dataset.id);
     if (from == to) return;
     if(from < to) to--;
   //  if(this.tabNodePlacement == "after") to++;
+
     groups.splice(to, 0, groups.splice(from, 1)[0]);
     this.setState({groups: groups});
-
+    GroupLogic.saveGroups(this.state.groups);
     this.groupDragged=null;
+    this.forceUpdate();
   },
   groupDragOver: function(e) {
     e.preventDefault();
 
-    if(!this.groupDragged && this.tabDragged)
-    {
-      this.groupOver = e.target;
-      return;
-    }
+
 
     //only 2 levels to keep it simple: check if we are over another tab
     if(!e.target.classList.contains("tab-group")&&!e.target.classList.contains("group-placeholder")){
@@ -362,9 +401,23 @@ module.exports = React.createClass({
         return;
       }
     }
+
+    if(!this.groupDragged && this.tabDragged)
+    {
+      if(e.target)
+      if(this.groupOver){
+        this.groupOver.style.border='none';
+      }
+      this.groupOver = e.target;
+
+      this.groupOver.style.border='1px dashed #eee';
+      return;
+    }
+
     this.groupDragged.style.display = "none";
     this.groupOver = e.target;
     // Inside the dragOver method
+
     var relY = e.clientY - this.groupOver.offsetTop-63;
     var height = this.groupOver.offsetHeight / 2;
     var parent = e.target.parentNode;
@@ -409,6 +462,11 @@ module.exports = React.createClass({
   handleGroupContextMenuSelect: function(action){
     console.log(action);
   },
+  componentDidUpdate: function(prevProps, prevState){
+    if(this.thereArePinnedNodes){
+      this.pinOffset=React.findDOMNode(this.refs.pinList).offsetHeight;
+    }
+  },
 
 
   render: function () {
@@ -443,6 +501,7 @@ module.exports = React.createClass({
 
 
     } else {
+
       var activeGroup=this.getActiveGroup();
 
       if(activeGroup){
@@ -491,11 +550,11 @@ module.exports = React.createClass({
 
       }
     },this);
-    var thereArePinnedNodes=false;
+    this.thereArePinnedNodes=false;
     var pinNodes = this.state.tabs.map(function (tab, i) {
       if(tab.pinned){
-        thereArePinnedNodes=true;
-        console.log(tab.favicon);
+        this.thereArePinnedNodes=true;
+
         return (
           <Tab ref={tab.id}
           id={tab.id}
@@ -549,7 +608,7 @@ module.exports = React.createClass({
     }
     var pinNodesClasses = classNames({
       'tab-pin-list': true,
-      'hidden': !thereArePinnedNodes
+      'hidden': !this.thereArePinnedNodes
 
     });
 
@@ -577,10 +636,10 @@ module.exports = React.createClass({
 
           <div className="tab-group-bar"></div>
             <div className="tab-list">
-            <ul className={pinNodesClasses}>
+            <ul ref="pinList" className={pinNodesClasses}>
               {pinNodes}
             </ul>
-            <ul onDragOver={this.tabDragOver}>
+            <ul className="unpinned-tabs" onDragOver={this.tabDragOver}>
               {tabNodes}
             </ul>
           </div>
