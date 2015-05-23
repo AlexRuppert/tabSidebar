@@ -3,10 +3,12 @@
 
 var Tab = require('./Tab.jsx');
 var TabGroup = require('./TabGroup.jsx');
+var Colors = require('./Colors.jsx');
 var TabLogic = require('../logic/Tab.js');
 var GroupLogic = require('../logic/Group.js');
 var ThumbnailCache = require('../logic/ThumbnailCache.js');
 var TabContextMenu = require('./TabContextMenu.jsx');
+var GroupContextMenu = require('./GroupContextMenu.jsx');
 var ContextMenu = require('./ContextMenu.jsx');
 var allGroupId = GroupLogic.allGroupId;
 
@@ -66,8 +68,9 @@ module.exports = React.createClass({
   },
   componentDidMount: function(){
     ThumbnailCache.init();
-    TabLogic.setUpEventListeners(this);
+    TabLogic.init();
     TabLogic.getTabs(this);
+
     TabLogic.setToCurrentTab(this);
     ThumbnailCache.scheduleCleanup(this);
 
@@ -75,7 +78,7 @@ module.exports = React.createClass({
   },
   loadGroups(){
     GroupLogic.loadGroups(this);
-
+    TabLogic.setUpEventListeners(this);
   },
   /*componentWillUpdate(object nextProps, object nextState){
     for(var i; i < nextState.tabs.length; i++){
@@ -123,7 +126,7 @@ module.exports = React.createClass({
   },
   createNewGroup: function (name, color) {
     var groups = this.state.groups;
-    groups.push({title:name, id: 'g'+name, tabs:[], color:color})
+    groups.push({title:name, id: GroupLogic.getNewGroupId(), tabs:[], color:color})
     this.setState({groups: groups});
     GroupLogic.saveGroups(this.state.groups);
     this.forceUpdate();
@@ -198,7 +201,54 @@ module.exports = React.createClass({
       //activeTab:(id!=this.state.activeTab)?this.state.activeTab:(newTabs.length>0?newTabs[0].id:'')
     });
   },
+  handleEditTabGroup: function(id){
+    if(id==GroupLogic.allGroupId)
+      return;
+    var index=this.getGroupIndex(id);
+    var self=this;
+    if(index>=0){
+      this.props.handleEditTabGroup(this.state.groups[index], function(title, color){
+        self.state.groups[index].title=title;
+        self.state.groups[index].color=color;
+        GroupLogic.saveGroups(self.state.groups);
+        self.forceUpdate();
+      });
+    }
+  },
+  cloneGroup:function (id){
+
+    if(id==GroupLogic.allGroupId){
+      var groups=this.state.groups;
+      var newId=GroupLogic.getNewGroupId();
+      var cloneTabs=[];
+      for(var i=0;i < this.state.tabs.length; i++){
+        cloneTabs.push(this.state.tabs[i].id);
+      }
+      groups.push({title:'all - clone', id: newId, tabs:cloneTabs, color:Colors.getColorByHash(Colors.backgroundColors, newId)});
+      this.setState({groups:groups});
+      GroupLogic.saveGroups(groups);
+      this.forceUpdate();
+    }
+    else {
+      var index=this.getGroupIndex(id);
+      if(index>=0){
+        var groups=this.state.groups;
+        var groupSource=groups[index];
+        var newId=GroupLogic.getNewGroupId();
+        var cloneTabs=[];
+        for(var i=0;i < groupSource.tabs.length; i++){
+          cloneTabs.push(groupSource.tabs[i]);
+        }
+        groups.push({title:groupSource.title, id: newId, tabs:cloneTabs, color:Colors.getColorByHash(Colors.backgroundColors, newId)});
+        this.setState({groups:groups});
+        GroupLogic.saveGroups(groups);
+        this.forceUpdate();
+      }
+    }
+  },
   handleGroupClosed: function(id) {
+    if(id==GroupLogic.allGroupId)
+      return;
     var newGroups = this.state.groups.filter(function( obj ) {
         return obj.id != id;
     });
@@ -231,6 +281,7 @@ module.exports = React.createClass({
       var groups = this.state.groups;
       var target= this.getGroupIndex(groupId);
       var current = this.getGroupIndex(this.state.activeGroup)
+      var tab = this.state.tabs[this.getTabIndex(tabId)];
 
       if(target >= 0){
         if(this.getTabIndexInGroup(groups[target],+tabId) < 0){
@@ -291,7 +342,7 @@ module.exports = React.createClass({
         groups[groupIndex].tabs.splice(to, 0, groups[groupIndex].tabs.splice(from, 1)[0]);
         this.setState({groups: groups});
         GroupLogic.saveGroups(groups);
-        //this.forceUpdate();
+        this.forceUpdate();
       }
       return;
     }
@@ -456,11 +507,39 @@ module.exports = React.createClass({
         break;
     }
   },
-  handleGroupContextMenuOpen: function(id, event){
-    this.refs.GroupContextMenu.handleContextMenu(id, event);
+  handleGroupContextMenuOpen: function(props, event){
+    this.refs.GroupContextMenu.handleContextMenu(props, event);
   },
-  handleGroupContextMenuSelect: function(action){
-    console.log(action);
+  handleGroupContextMenuSelect: function(id,action){
+    console.log(id+''+action);
+    var index = this.getGroupIndex(id);
+
+
+      switch(action){
+        case 'newgroup':
+          this.props.handleNewTabGroup();
+          break;
+        case 'clonegroup':
+          this.cloneGroup(id);
+          break;
+        case 'editgroup':
+          this.handleEditTabGroup(id);
+          break;
+        case 'closegroup':
+          this.handleGroupClosed(id);
+          break;
+        case 'closeothergroups':
+          if(id!=GroupLogic.allGroupId){
+            var group=this.state.groups[index];
+            var groups=[];
+            groups.push(group);
+            this.setState({groups:groups});
+            GroupLogic.saveGroups(groups);
+            this.forceUpdate();
+          }
+          break;
+      }
+
   },
   componentDidUpdate: function(prevProps, prevState){
     if(this.thereArePinnedNodes){
@@ -505,11 +584,20 @@ module.exports = React.createClass({
       var activeGroup=this.getActiveGroup();
 
       if(activeGroup){
+        var usedTabIds=[];
         for(var i = 0; i < activeGroup.tabs.length;i++){
-          var tabIndex = this.getTabIndex(+this.getActiveGroup().tabs[i]);
+          var tabIndex = this.getTabIndex(activeGroup.tabs[i]);
           if(tabIndex>=0 && tabIndex < this.state.tabs.length){
+
+            usedTabIds.push(this.getActiveGroup().tabs[i]);
             tabsToMap.push(this.state.tabs[tabIndex]);
           }
+        }
+        //delete non-present tabs to save memory
+        if( activeGroup.tabs.length != usedTabIds.length){
+          activeGroup.tabs=usedTabIds;
+
+          GroupLogic.saveGroups(this.state.groups);
         }
       }
     }
@@ -625,7 +713,7 @@ module.exports = React.createClass({
           <ContextMenu ref="TabContextMenu" items={TabContextMenu} handleSelect={this.handleTabContextMenuSelect}>
 
           </ContextMenu>
-          <ContextMenu ref="GroupContextMenu" items={TabContextMenu} handleSelect={this.handleGroupContextMenuSelect}>
+          <ContextMenu ref="GroupContextMenu" items={GroupContextMenu} handleSelect={this.handleGroupContextMenuSelect}>
 
           </ContextMenu>
 

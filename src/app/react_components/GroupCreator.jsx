@@ -2,6 +2,9 @@
 "use strict";
 var Colors = require('./Colors.jsx');
 module.exports = React.createClass({
+
+  isEditMode: false,
+  afterEditCallback: null,
   shouldComponentUpdate: function(nextProps, nextState) {
     return (this.state.isVisible!=nextState.isVisible);
   },
@@ -10,37 +13,58 @@ module.exports = React.createClass({
       isVisible:false
     }
   },
-  showDialog: function(){
+  showDialog: function(group, callback){
 
+    this.isEditMode=(typeof group !== 'undefined' && typeof callback === 'function');
     this.setState({isVisible:true});
-    var color = Colors.getRandomColor(Colors.backgroundColors);
-    React.findDOMNode(this.refs.colorInput).value=color;
+    var color = '#3fa';
+    var title = '';
+    var acceptText ='Create Group';
 
-    //otherwise there is no focus
+    if(!this.isEditMode){
+      color = Colors.getRandomColor(Colors.backgroundColors);
+    }
+    else {
+
+      this.afterEditCallback=callback;
+
+      color = group.color;
+      title = group.title;
+    }
+
+
     var self=this;
-    setTimeout(function(){React.findDOMNode(self.refs.groupNameInput).focus();}, 0);
+    setTimeout(function(){
+      var inputNode= React.findDOMNode(self.refs.groupNameInput);
+      React.findDOMNode(self.refs.colorInput).value=color;
+      inputNode.value=title;
+      inputNode.focus();
+      inputNode.select();
+    }, 0);
   },
 
   handleCreateClick: function() {
 
-    var name = React.findDOMNode(this.refs.groupNameInput).value.trim();
+    var title = React.findDOMNode(this.refs.groupNameInput).value.trim();
     var color = this.refs.colorInput.getDOMNode().value;
 
-    if(name.length>0){
+    if(title.length>0){
+
       this.handleCloseClick();
-      this.props.handleCreate(name,color);
+      if(this.isEditMode){
+        this.afterEditCallback(title,color);
+      }
+      else{
+        this.props.handleCreate(title,color);
+      }
+
     }
   },
   handleCloseClick: function() {
     this.setState({isVisible:false});
     this.refs.groupNameInput.getDOMNode().value='';
   },
-  componentDidMount:function(){
-    var self=this;
-    opr.sidebarAction.onBlur.addListener(function () {
-      self.handleCloseClick();
-    });
-  },
+
   handleInputKeyDown: function(e) {
     var eventKey=e.nativeEvent.which;
 
@@ -54,7 +78,7 @@ module.exports = React.createClass({
       'group-creator': true,
       'hidden': !this.state.isVisible
     });
-
+    var acceptText = this.isEditMode?'Save changes':'Create group';
     return (
       <div className={classes}>
 
@@ -64,8 +88,8 @@ module.exports = React.createClass({
           <input ref="colorInput" type="color" defaultValue="#ffaadd"/>
         </div>
         <span className="vspacer05"/>
-        <button className="text-button" onClick={this.handleCreateClick}>
-          <i className="fa fa-plus-square"/> Create Group
+        <button ref="acceptButton" className="text-button" onClick={this.handleCreateClick}>
+          <i className="fa fa-plus-square"/> {acceptText}
         </button>
       </div>
     );

@@ -27,9 +27,9 @@ module.exports = React.createClass({
   },
   handleContextMenu: function(event) {
     //TODO: remove for release
-    return;
+
     event.nativeEvent.preventDefault();
-    this.props.onContextMenu(this.props.id, event);
+    this.props.onContextMenu(this.props, event);
   },
   componentWillReceiveProps: function(nextProps) {
 

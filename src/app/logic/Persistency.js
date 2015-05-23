@@ -9,7 +9,8 @@ module.exports = {
     showCloseButtons: true,
     showGroups: true,
     showNewOnTabs: true,
-    groups: []
+    groups: [],
+    tabIds: []
     
   },
   currentState: {},

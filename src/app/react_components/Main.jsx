@@ -46,6 +46,9 @@ module.exports = React.createClass({
   handleNewTabGroup: function(){
     this.refs.groupCreator.showDialog();
   },
+  handleEditTabGroup: function(group, callback){
+    this.refs.groupCreator.showDialog(group, callback);
+  },
   handleNewTabGroupCreated: function(name, color){
     this.refs.tabList.createNewGroup(name,color);
   },
@@ -66,6 +69,8 @@ module.exports = React.createClass({
           handleCreate={this.handleNewTabGroupCreated}/>
           <TabList
           ref="tabList"
+          handleNewTabGroup={this.handleNewTabGroup}
+          handleEditTabGroup={this.handleEditTabGroup}
           viewState={this.state.viewState}
           multiColumn={this.state.multiColumn}
           showCloseButtons={this.state.showCloseButtons}

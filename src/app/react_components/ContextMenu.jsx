@@ -24,7 +24,7 @@ module.exports = React.createClass({
   },
   componentDidMount:function(){
     var self=this;
-    opr.sidebarAction.onBlur.addListener(function () {      
+    opr.sidebarAction.onBlur.addListener(function () {
       self.closeMenu();
     });
   },
@@ -40,7 +40,7 @@ module.exports = React.createClass({
     var newX = event.nativeEvent.clientX;
     var newY = event.nativeEvent.clientY;
     var contextMenuWidth = this.props.items.length*25;
-    var contextMenuHeight = 150;
+    var contextMenuHeight = 170;
     var maxWidth = document.body.clientWidth;
     var maxHeight = document.body.clientHeight;
 

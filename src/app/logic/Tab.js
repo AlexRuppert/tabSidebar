@@ -1,6 +1,17 @@
 ﻿"use strict";
 var ThumbnailCache = require('./ThumbnailCache.js');
-module.exports = {  
+module.exports = {
+  init: function () {
+    this.Persistency = chrome.extension.getBackgroundPage().persistency;
+  },
+  updateTabIds: function(tabs){
+    var ids = [];
+    for (var i = 0; i < tabs.length; i++) {
+      
+      ids.push({ id: tabs[i].id, url: tabs[i].url });
+    }
+    this.Persistency.updateState({ tabIds: ids });
+  },
   getTabs: function (tabList) {
     var self = this;
     chrome.tabs.query({ currentWindow: true }, function (tabs) {
@@ -8,8 +19,15 @@ module.exports = {
         tabs[i].favicon = self.getFavIcon(tabs[i].url, tabs[i].favIconUrl);
         tabs[i].thumbnail = ThumbnailCache.loadFromCache(tabs[i]);
       }
+      self.updateTabIds(tabs);
       tabList.setState({ tabs: tabs });
     });
+    /*if (!chrome.extension.getBackgroundPage().sameSession) {
+      setTimeout(function () {
+        console.log("2nd load");
+        self.getTabs(tabList);
+      }, 1000);
+    }*/
   },
   setToCurrentTab: function (tabList) {
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -69,7 +87,10 @@ module.exports = {
         var tabs = tabList.state.tabs;
         tab.favicon = self.getFavIcon(tab.url, tab.favIconUrl);
         tab.newlyCreated = true;
-        tabs.splice(tab.index, 0, tab)
+        tabs.splice(tab.index, 0, tab);
+
+        self.updateTabIds(tabs);
+
         tabList.setState({ tabs: tabs });
         tabList.forceUpdate();
       }
@@ -86,14 +107,16 @@ module.exports = {
         return;
 
       var changeObject = {};
+      var changeObjectEmpty = true;
       var pinnedChanged = tabs[index].pinned != tab.pinned;
 
-      if (changeInfo.state != 'loading' && (typeof tab.favIconUrl !== 'undefined') &&
+      if (changeInfo.state != 'loading' && (typeof tab.favIconUrl !== 'undefined') && tabList.refs[tabId] &&
         (tabList.refs[tabId].state.favicon.length <= 0
         || tabs[index].faviconUrl != tab.favIconUrl)) {
         tabs[index].faviconUrl = tab.faviconUrl;
 
         changeObject.favicon = self.getFavIcon(tab.url, tab.favIconUrl);
+        changeObjectEmpty = false;
         tabs[index].favicon = changeObject.favicon;
       }
 
@@ -107,24 +130,35 @@ module.exports = {
 
       if (changeInfo.status) {
         changeObject.isLoading = (changeInfo.status == 'loading');
+        changeObjectEmpty = false;
       }
 
       if (oldTitle != tab.title) {
         changeObject.title = tab.title;
+        changeObjectEmpty = false;
       }
       //console.log(tab.favIconUrl);
-      //console.log(changeObject);
+     
       
       if (pinnedChanged) {
         tabList.forceUpdate();
       }
-      tabList.refs[tabId].setState(changeObject);
+      if (tabList.refs[tabId] && !changeObjectEmpty) {
+        
+        tabList.refs[tabId].setState(changeObject);
+        console.log(tabList.refs[tabId].state.favicon);
+      }
       //tabList.setState({ tabs: tabs });
     });
-
+    chrome.windows.onRemoved.addListener(function (windowId) {
+      self.updateTabIds(tabs);
+    });
     chrome.tabs.onMoved.addListener(function (tabId, moveInfo) {
       var tabs = tabList.state.tabs;
       tabs.splice(moveInfo.toIndex, 0, tabs.splice(moveInfo.fromIndex, 1)[0]);
+
+      self.updateTabIds(tabs);
+
       tabList.setState({ tabs: tabs });
       tabList.forceUpdate();
     });
@@ -135,6 +169,9 @@ module.exports = {
       if (index > -1) {
         tabs.splice(index, 1);
       }
+
+      self.updateTabIds(tabs);
+
       tabList.setState({ tabs: tabs });
       tabList.forceUpdate();
     });

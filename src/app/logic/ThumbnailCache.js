@@ -45,9 +45,13 @@ module.exports = {
     var self = this;
     try {
       chrome.tabs.captureVisibleTab(function (dataUrl) {
-        self.resizeThumbnail(dataUrl, self.desiredWidth, function (img) {
-          callback(tab.id, img);
-        });
+        if (chrome.runtime.lastError) {
+        }
+        else{
+          self.resizeThumbnail(dataUrl, self.desiredWidth, function (img) {
+            callback(tab.id, img);
+          });
+        }
       });
     }
     catch (e) {
