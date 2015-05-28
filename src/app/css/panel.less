@@ -8,7 +8,8 @@
 
 @tabHeight: 28px;
 @tabThumbnailHeight: 137px;
-@tabGroupListWidth: 20px;
+@tabGroupListWidth: 24px;
+@bottomBarHeight: 28px;
 
 body, html {
   width: 100%;
@@ -194,6 +195,14 @@ input[type="color"] {
   float: right;
 }
 
+.hspacer02 {
+  margin: 0 2px;
+}
+
+.hspacer05 {
+  margin: 0 5px;
+}
+
 .vspacer05 {
   display: block;
   margin: 5px 0;
@@ -274,9 +283,34 @@ input[type="color"] {
     }
   }
 
+  .bottom-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: @bottomBarHeight;
+    width: 100%;
+    z-index: 9;
+    background-color: @activeColor;
+    border-top: 1px solid @borderColor;
+    display: flex;
+
+    button {
+      flex: 1 0 0;
+      height: 100%;
+      border-top: none!important;
+      border-bottom: none!important;
+
+      &:hover, &:active {
+        border-top: none!important;
+        border-bottom: none!important;
+      }
+    }
+  }
+
   .tab-container {
     top: 63px;
-    bottom: 0;
+    bottom: @bottomBarHeight;
     overflow-y: auto;
     overflow-x: hidden;
     position: absolute;
@@ -431,28 +465,24 @@ input[type="color"] {
 
       .title {
         text-overflow: clip;
-
-        &:before {
-          content: '';
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          left: 0;
-          top: 0;
-          background: linear-gradient(to right,transparent 60%, lighten(@activeColor,100%) 100%);
-        }
       }
 
-      &:not(.active) {
-        .title:before {
-          background: linear-gradient(to right,transparent 60%, @baseColor 100%);
-        }
+      &:before {
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: linear-gradient(to right,transparent 60%, lighten(@activeColor,100%) 100%);
       }
 
-      &:hover {
-        .title:before {
-          background: linear-gradient(to right,transparent 60%, @activeColor 100%);
-        }
+      &:not(.active):before {
+        background: linear-gradient(to right,transparent 60%, @baseColor 100%);
+      }
+
+      &:hover:before {
+        background: linear-gradient(to right,transparent 60%, @activeColor 100%);
       }
     }
 
@@ -603,6 +633,7 @@ input[type="color"] {
     height: @tabHeight;
     float: left;
     width: 100%;
+    box-shadow: 0 1px 5px #000 inset;
 
     &.multi-column {
       width: 50%;

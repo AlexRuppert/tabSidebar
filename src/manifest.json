@@ -5,7 +5,7 @@
   "description": "A sidebar extension for tab management.",
   "version": "1.0",
   "options_page": "app/options.html",
-  "background": {"scripts": ["app/logic/background.js"]},
+  "background": {"scripts": ["app/logic/background.js"],  "persistent": true},
 
   "permissions": ["tabs","storage","opera://favicon/", "chrome://favicon/", "<all_urls>"],
   "icons": { "16": "app/media/icons/tabSidebar_16.png",

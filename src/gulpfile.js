@@ -11,7 +11,7 @@ var minifyHTML = require('gulp-minify-html');
 
 var path = {
   REACT: './app/react_components/**/*.jsx',
-  REACT_ENTRY: './app/react_components/root.jsx',
+  REACT_ENTRY: './app/react_components/main/root.js',
   REACT_BUILD: 'react.built.js',
   REACT_DEST: './app/js',
 
