@@ -6,7 +6,7 @@ module.exports = [
   {
     type: Constants.menus.menuTypes.ITEM,
     title: Strings.groupContextMenu.NEW_GROUP,
-    icon: 'fa-plus',
+    icon: 'fa-plus-square',
     action: Constants.menus.contextMenu.groupActions.NEW_GROUP
   },
   {
@@ -18,7 +18,7 @@ module.exports = [
   {
     type: Constants.menus.menuTypes.ITEM,
     title: Strings.groupContextMenu.EDIT_GROUP,
-    icon: 'fa-refresh',
+    icon: 'fa-edit',
     action: Constants.menus.contextMenu.groupActions.EDIT_GROUP
   },
   {

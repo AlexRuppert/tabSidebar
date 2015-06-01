@@ -1,8 +1,8 @@
 ﻿'use strict';
-var Constants = require('../util/Constants.js');
-var Helpers = require('../util/Helpers.js');
-module.exports = {
+
+window.Persistency = {
   currentState: {},
+  initialized: false,
   defaultState: {
     groups: [],
     multiColumn: false,
@@ -10,16 +10,24 @@ module.exports = {
     showGroups: true,
     showNewOnTabs: true,
     tabIds: [],
-    viewState: Constants.viewStates.NORMAL_VIEW
+    twoGroupColumns: false,
+    viewState: 'normalview'
   },
   loaded: false,
   storage: chrome.storage.local,
 
   init: function () {
-    var persistency = Constants.globalProperties.PERSISTENCY;
-    if (!chrome.extension.getBackgroundPage().hasOwnProperty(persistency)) {
-      chrome.extension.getBackgroundPage()[persistency] = this;
-      this.mergeDefault(this.currentState, this.defaultState);
+    if (!this.initialized) {
+      var persistency = 'persistency';
+      if (!chrome.extension.getBackgroundPage().hasOwnProperty(persistency)) {
+        chrome.extension.getBackgroundPage()[persistency] = this;
+        this.mergeDefault(this.currentState, this.defaultState);
+      } else {
+        var saved = chrome.extension.getBackgroundPage()[persistency];
+        this.currentState = saved.currentState;
+        this.loaded = saved.loaded;
+      }
+      this.inialized = true;
     }
   },
   getState: function () {

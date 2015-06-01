@@ -9,12 +9,15 @@ var ViewMenu = require('./ViewMenu.js');
 module.exports = React.createClass({
   getInitialState: function () {
     return {
-      openedMenu: Constants.menus.menuBar.openStates.NONE
+      openedMenu: Constants.menus.menuBar.openStates.NONE,
+      showingRecentTabs: false
     }
   },
   shouldComponentUpdate: function (nextProps, nextState) {
     if (this.state.openedMenu != nextState.openedMenu)
-      return true;    
+      return true;
+    if (this.state.showingRecentTabs != nextState.showingRecentTabs)
+      return true;
     return false;
   },
   handleMenuOpen: function (menu) {
@@ -45,14 +48,28 @@ module.exports = React.createClass({
   },
   handleNewTabGroup: function () {
     this.props.handleNewTabGroup();
-  },
-  handleOpenSettings: function () {
-    chrome.tabs.create({ url: Constants.paths.OPTIONS });
+  },  
+  handleShowRecentTabs: function () {
+    if(this.state.showingRecentTabs) {
+      this.props.showRecentTabs(false);
+      this.setState({ showingRecentTabs: false });
+    }
+    else{
+      this.props.showRecentTabs(true);
+      this.setState({ showingRecentTabs: true });
+    }
   },
   render: function () {
     var self = this;
     var tabGroupClasses = classNames({
       'hidden': !this.props.showGroups
+    });
+    var showRecentClasses = classNames({
+      'fa fa-trash': !this.state.showingRecentTabs,
+      'fa fa-navicon': this.state.showingRecentTabs
+    });
+    var showRecentButtonClasses = classNames({
+      'selected': this.state.showingRecentTabs
     });
      return (
        <div
@@ -82,15 +99,11 @@ module.exports = React.createClass({
            notchOffset = { this.props.showGroups?47:35 }
            isVisible = { this.state.openedMenu == Constants.menus.menuBar.openStates.VIEW }/>
          <button
-           title = { Strings.menuBar.CLOSED_TABS }>
+           className = { showRecentButtonClasses }
+           title = { this.state.showingRecentTabs?Strings.menuBar.TABS:Strings.menuBar.CLOSED_TABS }
+           onClick = { this.handleShowRecentTabs }>
            <i
-             className = "fa fa-trash"/>
-         </button>
-         <button
-           title = { Strings.menuBar.SETTINGS }
-           onClick = { this.handleOpenSettings }>
-           <i
-             className = "fa fa-cog"/>
+           className = { showRecentClasses }/>
          </button>
        </div>
      );

@@ -3,10 +3,10 @@
 console = chrome.extension.getBackgroundPage().console;
 
 var Main = require('./Main.jsx');
-var Persistency = require('./Persistency.js');
-
 
 Persistency.init();
+TabManager.init();
+GroupManager.init();
 Persistency.loadState(function () {
   
   React.render(

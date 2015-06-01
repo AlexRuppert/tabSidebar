@@ -11,7 +11,8 @@ module.exports = React.createClass({
       thumbnail: this.props.thumbnail || '',
       favicon: this.props.favicon || '',
       title: this.props.title || '',
-      isLoading: false
+      isLoading: false,
+      isSelected: false
     };
   },
   getDefaultProps: function () {
@@ -30,6 +31,8 @@ module.exports = React.createClass({
     if (this.state.isActive != nextState.isActive)
       return true;
     if (this.state.notVisited != nextState.notVisited)
+      return true;
+    if (this.state.isSelected != nextState.isSelected)
       return true;
     if (this.state.title != nextState.title)
       return true;
@@ -67,7 +70,6 @@ module.exports = React.createClass({
     }
     if (event.nativeEvent.which == 1) {
       this.setState({
-        isActive: true,
         notVisited: false
       });
     }
@@ -91,6 +93,7 @@ module.exports = React.createClass({
     var classes = classNames({
       'tab': true,
       'active': this.state.isActive,
+      'selected': this.state.isSelected,
       'compact-thumbnail': this.props.viewState == Constants.viewStates.COMPACT_VIEW,
       'tab-thumbnail': this.props.viewState == Constants.viewStates.THUMBNAIL_VIEW,
       'multi-column': this.props.multiColumn,

@@ -3,26 +3,34 @@
 
 var Constants = require('../util/Constants.js');
 var ContextMenu = require('../menus/ContextMenu.jsx');
-var GroupContextMenu = require('../menus/GroupContextMenu.js');
 var GroupLogic = require('../groups/Group.js');
 var Strings = require('../util/Strings.js');
 var Tab = require('./Tab.jsx');
 var TabContextMenu = require('../menus/TabContextMenu.js');
-var TabGroup = require('../groups/TabGroup.jsx');
+
+var TabGroupList = require('../groups/TabGroupList.jsx');
 var TabLogic = require('./Tab.js');
 var ThumbnailCache = require('./ThumbnailCache.js');
 
-module.exports = React.createClass({  
-  groupPlaceholder: document.createElement('div'),
+module.exports = React.createClass({
+ 
   lastTabDragY: 0,
   pinOffset: 0,
   selectedTabs: [],
   tabPlaceholder: document.createElement('li'),
-  createNewGroup: function (name, color) {
-    GroupLogic.createNewGroup(this, name, color);
+
+  activeGroupChanged: function(id){
+    
+    this.forceUpdate();
+  },
+  createNewGroup: function (name, color, filter) {
+    this.refs[Constants.refs.TAB_GROUP_LIST].createNewGroup(name, color, filter);
   },
   isSearchingTabs: function () {
     return this.state.searchTabsQuery.length > 0
+  },
+  getGroupList: function() {
+    return this.refs[Constants.refs.TAB_GROUP_LIST];
   },
   searchTabs: function (query) {
     if (typeof query === 'string') {
@@ -33,15 +41,15 @@ module.exports = React.createClass({
   },
   getInitialState: function () {
     return {
-      activeGroup: GroupLogic.loadLastActiveGroup(),
-      activeTab: 0,
-      groups: [],
-      searchTabsQuery: '',
-      tabs: []
+      
+      isVisible: true,
+      searchTabsQuery: ''
+      
     };
   },
   shouldComponentUpdate: function (nextProps, nextState) {
-    
+    if (this.state.isVisible != nextState.isVisible)
+      return true;
     if (this.props.viewState != nextProps.viewState)
       return true;
     if (this.props.multiColumn != nextProps.multiColumn)
@@ -50,12 +58,10 @@ module.exports = React.createClass({
       return true;
     if (this.props.showGroups != nextProps.showGroups)
       return true;
+    if (this.props.twoGroupColumns != nextProps.twoGroupColumns)
+      return true;
     if (this.props.showNewOnTabs != nextProps.showNewOnTabs)
       return true;
-    if (this.state.activeGroup != nextState.activeGroup) {
-      GroupLogic.saveLastActiveGroup(nextState.activeGroup);
-      return true;
-    }
     if (this.state.searchTabsQuery != nextState.searchTabsQuery)
       return true;
 
@@ -65,45 +71,28 @@ module.exports = React.createClass({
     var self = this;
     ThumbnailCache.init();
     TabLogic.init();
-    
+    GroupManager.addActiveGroupIdChangedListener(Constants.refs.TAB_LIST, this.activeGroupChanged);
     TabLogic.getTabs(this, function(){
       TabLogic.setToCurrentTab(self);
       ThumbnailCache.scheduleCleanup(self);
-      GroupLogic.loadGroups(self);
+      GroupLogic.loadGroups();
+      //self.refs[Constants.refs.TAB_GROUP_LIST].loadGroups();
       TabLogic.setUpEventListeners(self);
       self.forceUpdate();
     });
-    
+
   },
   componentDidUpdate: function (prevProps, prevState) {
     if (this.thereArePinnedNodes) {
-      this.pinOffset = React.findDOMNode(this.refs.pinList).offsetHeight;
+      this.pinOffset = React.findDOMNode(this.refs[Constants.refs.PIN_LIST]).offsetHeight;
     }
-  },
-  handleGroupClicked: function (id, event) {
-    GroupLogic.handleGroupClicked(this, id, event);
   },
   handleTabClicked: function (id, event) {
     TabLogic.handleTabClicked(this, id, event);
   },
-  handleGroupClosed: function (id) {
-    GroupLogic.handleGroupClosed(this, id);
-  },
   handleTabClosed: function (id) {
-    TabLogic.handleTabClosed(this, id);
-  },
-  handleEditTabGroup: function (id) {
-    GroupLogic.handleEditTabGroup(this, id);
-  },
-  groupDragStart: function (e) {
-    GroupLogic.groupDragStart(this, e);
-  },
-  groupDragOver: function (e) {
-    GroupLogic.groupDragOver(this, e);
-  },
-  groupDragEnd: function (e) {
-    GroupLogic.groupDragEnd(this, e);
-  },
+    TabLogic.handleTabClosed(id);
+  },  
   tabDragStart: function (e) {
     TabLogic.tabDragStart(this, e);
   },
@@ -113,8 +102,11 @@ module.exports = React.createClass({
   tabDragEnd: function (e) {
     TabLogic.tabDragEnd(this, e);
   },
+  handleEditTabGroup: function (group, callback){
+    this.props.handleEditTabGroup(group, callback);
+  },
   handleTabContextMenuOpen: function (props, event) {
-    this.refs.TabContextMenu.handleContextMenu(props, event);
+    this.refs[Constants.refs.TAB_CONTEXT_MENU].handleContextMenu(props, event);
   },
   handleTabContextMenuSelect: function (id, action) {
     switch (action) {
@@ -140,37 +132,8 @@ module.exports = React.createClass({
         break;
     }
   },
-  handleGroupContextMenuOpen: function (props, event) {
-    this.refs.GroupContextMenu.handleContextMenu(props, event);
-  },
-  handleGroupContextMenuSelect: function (id, action) {
-    var index = GroupLogic.getGroupIndex(this, id);
-    switch (action) {
-      case Constants.menus.contextMenu.groupActions.NEW_GROUP:
-        this.props.handleNewTabGroup();
-        break;
-      case Constants.menus.contextMenu.groupActions.CLONE_GROUP:
-        GroupLogic.cloneGroup(this, id);
-        break;
-      case Constants.menus.contextMenu.groupActions.EDIT_GROUP:
-        this.handleEditTabGroup(id);
-        break;
-      case Constants.menus.contextMenu.groupActions.CLOSE_GROUP:
-        this.handleGroupClosed(id);
-        break;
-      case Constants.menus.contextMenu.groupActions.CLOSE_OTHER_GROUPS:
-        if (id != GroupLogic.allGroupId) {
-          var group = this.state.groups[index];
-          var groups = [];
-          groups.push(group);
-          GroupLogic.setStateAndUpdate(this, groups);
-        }
-        break;
-    }
-  },
-
   render: function () {
-    
+
     var tabPlaceholderClasses = classNames({
       'tab-placeholder': true,
       'multi-column': this.props.multiColumn,
@@ -179,7 +142,6 @@ module.exports = React.createClass({
     });
 
     this.tabPlaceholder.className = tabPlaceholderClasses;
-    this.groupPlaceholder.className = 'group-placeholder';
 
     var tabsToShow = TabLogic.getTabsToShow(this);
 
@@ -212,7 +174,7 @@ module.exports = React.createClass({
       }
     }, this);
     this.thereArePinnedNodes = false;
-    var pinNodes = this.state.tabs.map(function (tab, i) {
+    var pinNodes = TabManager.getTabs().map(function (tab, i) {
       if (tab.pinned) {
         this.thereArePinnedNodes = true;
 
@@ -239,68 +201,34 @@ module.exports = React.createClass({
       }
     }, this);
 
-    var groups = [];
-    var groupNodes = [];
-    if (this.props.showGroups) {
-      groups.push({ 
-        id: Constants.groups.ALL_GROUP_ID,
-        title: Strings.groups.ALL_GROUP,
-        color: Constants.groups.ALL_GROUP_COLOR
-      });
-      groups = groups.concat(this.state.groups)
-      groupNodes = groups.map(function (group, i) {
-        return (
-          <TabGroup
-            ref = { group.id }
-            id = { group.id }
-            index = { i }
-            key = { group.id }
-            title = { group.title }
-            color = { group.color }
-            isActive = { this.state.activeGroup == group.id }
-            onContextMenu = { this.handleGroupContextMenuOpen }
-            onDragEnd = { this.groupDragEnd }
-            onDragStart = { this.groupDragStart }
-            onGroupClicked = { this.handleGroupClicked }
-            onGroupClosed = { this.handleGroupClosed }
-          />
-        );
-      }, this);
-    }
     var pinNodesClasses = classNames({
       'tab-pin-list': true,
       'hidden': !this.thereArePinnedNodes
     });
-
-    var groupListClasses = classNames({
-      'tab-group-list': true,
-      'hidden': !this.props.showGroups
+    var tabContainerClasses = classNames({
+      'tab-container': true,
+      'hidden': !this.state.isVisible
     });
-
     return (
       <div
-        className = "tab-container">
+        className = { tabContainerClasses }>
         <div
           className = "tab-list-container">
           <ContextMenu
-            ref = "TabContextMenu"
+            ref = { Constants.refs.TAB_CONTEXT_MENU }
             items = { TabContextMenu }
             handleSelect = { this.handleTabContextMenuSelect }/>
-          <ContextMenu
-            ref = "GroupContextMenu"
-            items = { GroupContextMenu }
-            handleSelect = { this.handleGroupContextMenuSelect }/>
-          <div
-            className = { groupListClasses }
-            onDragOver = { this.groupDragOver }>
-            { groupNodes }
-          </div>
-          <div
-            className = "tab-group-bar"/>
+          
+          <TabGroupList
+            ref = { Constants.refs.TAB_GROUP_LIST }
+            isVisible = { this.props.showGroups }
+            parent = {this}
+            handleEditTabGroup = { this.handleEditTabGroup }
+            twoColumns = {this.props.twoGroupColumns}/>
           <div
             className = "tab-list">
             <ul
-              ref="pinList"
+              ref= { Constants.refs.PIN_LIST }
               className = { pinNodesClasses }>
               { pinNodes }
             </ul>

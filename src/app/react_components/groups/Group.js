@@ -6,21 +6,20 @@ var Helpers = require('../util/Helpers.js')
 var Strings = require('../util/Strings.js')
 
 module.exports = {
-  Persistency: null,
-
-  cloneGroup: function (tabList, id) {
+  cloneGroup: function (groupList, id) {
+    var tabs = TabManager.getTabs();
     var title = Strings.groups.ALL_GROUP_CLONE;
     var newId = this.getNewGroupId();
-    var groups = tabList.state.groups;
+    var groups = GroupManager.getGroups();
     var cloneTabs = [];
 
     if (id == Constants.groups.ALL_GROUP_ID) {
-      for (var i = 0; i < tabList.state.tabs.length; i++) {
-        cloneTabs.push(tabList.state.tabs[i].id);
+      for (var i = 0; i < tabs.length; i++) {
+        cloneTabs.push(tabs[i].id);
       }
     }
     else {
-      var index = this.getGroupIndex(tabList, id);
+      var index = this.getGroupIndex(id);
       if (index >= 0) {
         var groupSource = groups[index];
         title = groupSource.title;
@@ -33,17 +32,34 @@ module.exports = {
       }
     }
     groups.push({ title: title, id: newId, tabs: cloneTabs, color: Colors.getColorByHash(Colors.backgroundColors, newId) });
-    this.setGroupsAndUpdate(tabList, groups, true);
+    this.setGroupsAndSave(groups);
   },
-  createNewGroup: function (tabList, name, color) {
-    var groups = tabList.state.groups;
-    groups.push({ title: name, id: this.getNewGroupId(), tabs: [], color: color })
-    this.setGroupsAndUpdate(tabList, groups, true);
+  createNewGroup: function (groupList, name, color, filter) {
+    var groups = GroupManager.getGroups();
+    var newGroup = {};
+    if (typeof filter === 'undefined') {
+      newGroup = { title: name, id: this.getNewGroupId(), tabs: [], color: color };
+    }
+    else {
+      newGroup = {
+        title: name,
+        id: this.getNewGroupId(),
+        tabs: [], color: color,
+        filter: true,
+        filterBy: filter.filterBy,
+        filterValue: filter.filterValue,
+        sortBy: filter.sortBy,
+        sortDirection: filter.sortDirection
+      };
+    }
+    groups.push(newGroup);
+    this.setGroupsAndSave(groups);
   },
-  getActiveGroup: function (tabList) {
-    var index = this.getGroupIndex(tabList, tabList.state.activeGroup);
+  getActiveGroup: function () {
+    var groups = GroupManager.getGroups();
+    var index = this.getGroupIndex(GroupManager.getActiveGroupId());
     if (index >= 0) {
-      return tabList.state.groups[index];
+      return groups[index];
     }
     return null;
   },
@@ -114,9 +130,10 @@ module.exports = {
     }
     return mapping;
   },
-  getGroupIndex: function (tabList, id) {
-    for (var i = 0; i < tabList.state.groups.length; i++) {
-      if (tabList.state.groups[i].id == id) {
+  getGroupIndex: function (id) {
+    var groups = GroupManager.getGroups();
+    for (var i = 0; i < groups.length; i++) {
+      if (groups[i].id == id) {
         return i;
       }
     }
@@ -138,7 +155,7 @@ module.exports = {
     e.dataTransfer.effectAllowed = 'move';
     tabList.groupOver = e.currentTarget;
   },
-  groupDragOver: function (tabList, e) {
+  groupDragOver: function (groupList, tabList, e) {
     e.preventDefault();
 
     //only 2 levels to keep it simple: check if we are over another tab
@@ -165,26 +182,52 @@ module.exports = {
     tabList.groupOver = e.target;
     // Inside the dragOver method
 
+    var indexGroupOver = -1;
+    if (groupList.groupPlaceholder && true) {
+      try {
+        indexGroupOver = Array.prototype.indexOf.call(
+          tabList.groupOver.parentNode.children, tabList.groupOver);
+      }
+      catch (ex) { }
+    }
+
+    var relY = e.clientY - Constants.offsets.TAB_LIST_TOP;
+    var parent = e.target.parentNode;
+    var isFirstChild = indexGroupOver == 0;
+
+    var up = relY < tabList.lastTabDragY;
+    tabList.lastTabDragY = relY;
+
+    if (up || isFirstChild) {
+      parent.insertBefore(groupList.groupPlaceholder, e.target);
+    }
+    else {
+      parent.insertBefore(groupList.groupPlaceholder, e.target.nextSibling);
+    }
+    
+      groupList.updateGroupHeights(50);
+    
+    /*
     var relY = e.clientY - tabList.groupOver.offsetTop - Constants.offsets.TAB_LIST_TOP;
     var height = tabList.groupOver.offsetHeight / 2;
     var parent = e.target.parentNode;
     if (relY > height) {
-      parent.insertBefore(tabList.groupPlaceholder, e.target.nextElementSibling);
+      parent.insertBefore(groupList.groupPlaceholder, e.target.nextElementSibling);
     }
     else {
-      parent.insertBefore(tabList.groupPlaceholder, e.target);
-    }
+      parent.insertBefore(groupList.groupPlaceholder, e.target);
+    }*/
   },
-  groupDragEnd: function (tabList, e) {
+  groupDragEnd: function (groupList, tabList, e) {
     tabList.groupDragged.style.display = 'block';
     var index = 0;
     try {
-      index = Array.prototype.indexOf.call(tabList.groupDragged.parentNode.children, tabList.groupPlaceholder);
-      tabList.groupDragged.parentNode.removeChild(tabList.groupPlaceholder);
+      index = Array.prototype.indexOf.call(tabList.groupDragged.parentNode.children, groupList.groupPlaceholder);
+      tabList.groupDragged.parentNode.removeChild(groupList.groupPlaceholder);
     }
     catch (ex) { }
     // Update state
-    var groups = tabList.state.groups;
+    var groups = GroupManager.getGroups();
     var draggedIndex = Array.prototype.indexOf.call(tabList.groupDragged.parentNode.children, tabList.groupDragged);
 
     var from = draggedIndex - 1;
@@ -196,77 +239,80 @@ module.exports = {
 
     groups.splice(to, 0, groups.splice(from, 1)[0]);
     tabList.groupDragged = null;
-    this.setGroupsAndUpdate(tabList, groups, true);
+    this.setGroupsAndSave(groups);
   },
-  handleEditTabGroup: function (tabList, id) {
+  handleEditTabGroup: function (groupList, id) {
     if (id == Constants.groups.ALL_GROUP_ID)
       return;
-    var index = this.getGroupIndex(tabList, id);
+    var groups = GroupManager.getGroups();
+    var index = this.getGroupIndex(groupList, id);
     var self = this;
     if (index >= 0) {
-      tabList.props.handleEditTabGroup(tabList.state.groups[index], function (title, color) {
-        tabList.state.groups[index].title = title;
-        tabList.state.groups[index].color = color;
+      groupList.props.handleEditTabGroup(groups[index], function (title, color) {
+        groups[index].title = title;
+        groups[index].color = color;
 
-        self.setGroupsAndUpdate(tabList, tabList.state.groups, true);
+        self.setGroupsAndSave(groups);
       });
     }
   },
-  handleGroupClicked: function (tabList, id, event) {
+  handleGroupClicked: function (groupList, id, event) {
     event = event.nativeEvent;
     if (event.which == 1) {
-      var activeGroup = tabList.state.activeGroup;
+      var activeGroup = GroupManager.getActiveGroupId();
       if (activeGroup != id) {
-        if (tabList.refs[activeGroup]) {
-          tabList.refs[activeGroup].setState({ isActive: false });
+        if (groupList.refs[activeGroup]) {
+          groupList.refs[activeGroup].setState({ isActive: false });
         }
-
-        tabList.setState({ activeGroup: id });
+        GroupManager.setActiveGroupId(id);
       }
     }
     else if (event.which == 2) {
-      this.handleGroupClosed(tabList, id);
+      this.handleGroupClosed(groupList, id);
     }
   },
-  handleGroupClosed: function (tabList, id) {
+  handleGroupClosed: function (groupList, id) {
     if (id == Constants.groups.ALL_GROUP_ID)
       return;
-    var newGroups = tabList.state.groups.filter(function (obj) {
+    var groups = GroupManager.getGroups();
+    var newGroups = groups.filter(function (obj) {
       return obj.id != id;
     });
+    var activeGroup = GroupManager.getActiveGroupId();
     var newActiveGroup =
-      (id == tabList.state.activeGroup ? Constants.groups.ALL_GROUP_ID : tabList.state.activeGroup);
+      (id == activeGroup ? Constants.groups.ALL_GROUP_ID : activeGroup);
 
-    tabList.setState({ activeGroup: newActiveGroup });
-    this.setGroupsAndUpdate(tabList, newGroups, true);
+    GroupManager.setActiveGroupId(newActiveGroup);
+    this.setGroupsAndSave(newGroups);
   },
   init: function () {
-    this.Persistency = chrome.extension.getBackgroundPage()[Constants.globalProperties.PERSISTENCY];
   },
-  isAllGroupActive: function (tabList) {
-    return tabList.state.activeGroup == Constants.groups.ALL_GROUP_ID;
+  isAllGroupActive: function () {
+    var activeGroup = GroupManager.getActiveGroupId();
+    return activeGroup == Constants.groups.ALL_GROUP_ID;
   },
-  loadGroups: function (tabList) {
+  loadGroups: function () {
     this.init();
-    var groups = this.Persistency.getState().groups;
+    var tabs = TabManager.getTabs();
+    var groups = Persistency.getState().groups;
 
     var sameSession = true;
     if (!chrome.extension.getBackgroundPage().hasOwnProperty(Constants.globalProperties.SAME_SESSION)) {
       chrome.extension.getBackgroundPage()[Constants.globalProperties.SAME_SESSION] = true;
       sameSession = false;
     }
-    
+
     var ids = [];
-    for (var i = 0; i < tabList.state.tabs.length; i++) {
-      var id = tabList.state.tabs[i].id;
-      var url = tabList.state.tabs[i].url;
+    for (var i = 0; i < tabs.length; i++) {
+      var id = tabs[i].id;
+      var url = tabs[i].url;
       var length = Math.min(url.length, Constants.groups.TAB_URL_LENGTH);
       url = url.substring(0, length);
       ids.push({ id: id, url: url });
     }
 
     if (!sameSession) {
-      var oldIds = this.Persistency.getState().tabIds;
+      var oldIds = Persistency.getState().tabIds;
 
       var mapping = this.getBestIdMapping(oldIds, ids);
 
@@ -278,7 +324,7 @@ module.exports = {
         }
       }
     }
-    
+
     var changed = false;
     for (var i = 0; i < groups.length; i++) {
       var newTabs = [];
@@ -297,30 +343,17 @@ module.exports = {
         groups[i].tabs = newTabs;
       }
     }
+
+    GroupManager.setGroups(groups);
     if (changed || !sameSession) {
-      this.saveGroups(groups);
+      this.saveGroups();
     }
-
-    tabList.setState({ groups: groups });
-    //console.log(this.Persistency.getState().groups);
-    
   },
-  loadLastActiveGroup: function () {
-    if (chrome.extension.getBackgroundPage()[Constants.globalProperties.LAST_ACTIVE_GROUP])
-      return chrome.extension.getBackgroundPage()[Constants.globalProperties.LAST_ACTIVE_GROUP];
-
-    return Constants.groups.ALL_GROUP_ID;
+  saveGroups: function () {
+    Persistency.updateState({ groups: GroupManager.getGroups() });
   },
-  saveGroups: function (groups) {   
-    this.Persistency.updateState({ groups: groups });
-  },
-  saveLastActiveGroup: function (lastActiveGroup) {
-    chrome.extension.getBackgroundPage()[Constants.globalProperties.LAST_ACTIVE_GROUP] = lastActiveGroup;
-  },
-  setGroupsAndUpdate: function (tabList, groups, redraw) {
-    tabList.setState({ groups: groups });
-    this.saveGroups(groups);
-    if (redraw)
-      tabList.forceUpdate();
+  setGroupsAndSave: function (groups) {
+    GroupManager.setGroups(groups);
+    this.saveGroups();
   }
 }

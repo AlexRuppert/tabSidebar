@@ -1,4 +1,5 @@
 ﻿@activeColor: #f5f6f7;
+@selectedColor: #FFC28F;
 @borderColor: #8d8d8d;
 @baseColor: #dbdbdb;
 @iconColor: #585858;
@@ -8,8 +9,9 @@
 
 @tabHeight: 28px;
 @tabThumbnailHeight: 137px;
-@tabGroupListWidth: 24px;
+@tabGroupListWidth: 18px;
 @bottomBarHeight: 28px;
+@menuBarHeight: 63px;
 
 body, html {
   width: 100%;
@@ -213,7 +215,45 @@ input[type="color"] {
   margin: 10px 0;
 }
 
+.flexible {
+  flex: 1 0 0;
+}
+
 #main {
+  .recent-list {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    position: absolute;
+    top: @menuBarHeight;
+    bottom: @bottomBarHeight;
+
+    .recent-tab {
+      display: block;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding: 0 5px;
+      height: 20px;
+      cursor: default;
+
+      &:hover {
+        background-color: @selectedColor;
+      }
+
+      img {
+        width: 16px;
+        height: 16px;
+        margin-top: 2px;
+        float: left;
+        margin-right: 5px;
+      }
+    }
+  }
+
   .menu-bar {
     .search-bar;
     padding: 0;
@@ -296,20 +336,23 @@ input[type="color"] {
     display: flex;
 
     button {
-      flex: 1 0 0;
+      margin: 0;
       height: 100%;
-      border-top: none!important;
-      border-bottom: none!important;
+      border-top: none !important;
+      border-bottom: none !important;
+      border-left: 1px solid @activeColor;
+      border-right: 1px solid @activeColor;
 
       &:hover, &:active {
-        border-top: none!important;
-        border-bottom: none!important;
+        border-top: none !important;
+        border-bottom: none !important;
+        border-color: @activeColor;
       }
     }
   }
 
   .tab-container {
-    top: 63px;
+    top: @menuBarHeight;
     bottom: @bottomBarHeight;
     overflow-y: auto;
     overflow-x: hidden;
@@ -327,13 +370,24 @@ input[type="color"] {
     left: 0;
     top: 0;
     z-index: -1;
-  }
 
+    &.two-columns{
+       width: @tabGroupListWidth*2;
+    }
+  }
+  .tab-group-list-container {
+    height: 100%;
+  }
   .tab-group-list {
     width: @tabGroupListWidth;
     background-color: @darkBackgroundColor;
+    height: 100%;
 
+    &.two-columns{
+       width: @tabGroupListWidth*2;
+    }
     .tab-group {
+      float: left;
       background-color: @baseColor;
       -webkit-writing-mode: vertical-rl;
       transform: rotate(-180deg);
@@ -341,7 +395,11 @@ input[type="color"] {
       overflow: hidden;
       white-space: nowrap;
       margin: 0;
-      padding: 10px 0;
+      padding: 5px 0;
+      min-height: 38px;
+      max-height: 100px;
+      text-overflow: ellipsis;
+      text-align: center;
       box-sizing: border-box;
       line-height: @tabGroupListWidth;
       width: @tabGroupListWidth;
@@ -351,9 +409,23 @@ input[type="color"] {
       background: #FF7400;
       position: relative;
       text-shadow: 0 0 1px #000;
+      border-bottom: 1px solid #fff;
+      .fa {
+        color: #fff;
+        text-shadow: none;
+        transform: rotate(90deg);
+        margin-bottom: 5px;
+      }
 
       &:not(:first-child) {
-        border-bottom: 1px solid #fff;
+        
+      }
+
+     
+
+      &:hover {
+        background-image: url('../media/img/whitepixel.png');
+        background-blend-mode: soft-light;
       }
 
       &.active {
@@ -363,6 +435,10 @@ input[type="color"] {
         background-color: @activeColor !important;
         text-shadow: none;
         border-left: 1px solid @borderColor;
+
+        .fa {
+          color: @fontColor;
+        }
       }
     }
   }
@@ -427,7 +503,7 @@ input[type="color"] {
 
     &.small {
       height: 20px !important;
-      padding: 0;
+      padding: 0 0 0 1px;
 
       .title {
         margin-left: 18px !important;
@@ -507,6 +583,7 @@ input[type="color"] {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+      cursor: default;
 
       &.extended {
         margin-right: 0;
@@ -623,6 +700,14 @@ input[type="color"] {
     background-color: lighten(@activeColor,100%);
   }
 
+  .selected {
+    background-color: @selectedColor;
+
+    &.active {
+      background-color: lighten(@selectedColor,13%);
+    }
+  }
+
   .fa {
     color: @iconColor;
     text-shadow: 0 1px 1px @activeColor;
@@ -650,32 +735,51 @@ input[type="color"] {
   }
 
   .group-placeholder {
-    height: @tabGroupListWidth;
+    height: @tabGroupListWidth*2;
     width: @tabGroupListWidth;
     background: @darkBackgroundColor;
+    float: left;
     box-sizing: border-box;
-    border: 1px dashed @borderColor;
+    border: 1px dashed #fff;
   }
 
   .group-creator {
     position: absolute;
     z-index: 100;
-    left: @tabGroupListWidth+5;
-    right: 5px;
+    left: @tabGroupListWidth+2;
+    right: 2px;
     padding: 5px;
     background: @activeColor;
     border: 1px solid @borderColor;
     top: 73px;
+    overflow-x: hidden;
+    overflow-y: auto;
 
     .property-container {
       display: flex;
       flex-direction: row;
       margin-top: 20px;
+    }
 
-      input[type="text"] {
-        width: 100%;
-        flex: 1 0 0;
-      }
+    label {
+      display: block;
+      margin-top: 7px;
+      margin-bottom: 2px;
+    }
+
+    select {
+      width: 100%;
+      flex: 1 0 0;
+      height: 26px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      flex: 1 0 0;
+    }
+
+    input[type="checkbox"] {
+      margin-bottom: 1px;
     }
 
     .color-picker {

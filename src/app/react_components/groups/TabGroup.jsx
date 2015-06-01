@@ -37,17 +37,24 @@ module.exports = React.createClass({
       'tab-group': true,
       'active': this.state.isActive
     });
+    var filterIconClasses = classNames({
+      'fa fa-filter': true,
+      'hidden': !this.props.isFilter
+    });
     var color = this.props.color ? this.props.color : Colors.getColorByHash(Colors.backgroundColors, this.props.title)
     return (
       <div
         className = { classes }
         style = { {backgroundColor: this.props.color} }
         data-id = { this.props.index }
+        id = { this.props.id }
+        title = { this.props.title }
         draggable = "true"
-        onClick = { this.handleClick }
+        onMouseDown = { this.handleClick }
         onContextMenu = { this.handleContextMenu }
         onDragStart = { this.props.onDragStart }
         onDragEnd = { this.props.onDragEnd }>
+        <i className = { filterIconClasses }/>
         { this.props.title }
       </div>
     );

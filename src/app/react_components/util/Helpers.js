@@ -3,6 +3,9 @@
 var Constants = require('./Constants.js')
 
 module.exports = {
+  escapeRegExp: function (str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\+\?\.\\\^\$\|]/g, '\\$&').replace('*','.*');
+  },
   scrollTo: function (element, to, duration) {
     var start = element.scrollTop,
         change = to - start,
@@ -29,5 +32,16 @@ module.exports = {
     if (t < 1) return c / 2 * t * t + b;
     t--;
     return -c / 2 * (t * (t - 2) - 1) + b;
+  },
+
+  sortBy: function (field, asc) {
+    var dir = asc ? 1 : -1;
+    return function (a, b) {
+      if (a[field] > b[field])
+        return -dir;
+      if (a[field] < b[field])
+        return dir;
+      return 0;
+    };
   }
 }

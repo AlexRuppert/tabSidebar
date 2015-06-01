@@ -1,12 +1,31 @@
 ﻿'use strict';
 
 module.exports = {
+  groupCreator: {
+    ASCENDING: 'ascending',
+    DESCENDING: 'descending',
+    LAST_VISITED: 'lastVisited',
+    LAST_VISITED_GREATER: 'lastVisitedGreater',
+    LAST_VISITED_LOWER: 'lastVisitedLower',
+    NONE: 'none',
+    OPENED: 'opened',
+    OPENED_GREATER: 'openedGreater',
+    OPENED_LOWER: 'openedLower',
+    TITLE: 'title',
+    TITLE_CONTAINS: 'titleContains',
+    URL: 'url',
+    URL_CONTAINS: 'urlContains'
+  },
   globalProperties: {
     LAST_ACTIVE_GROUP: 'lastActiveGroup',
     PERSISTENCY: 'persistency',
     SAME_SESSION: 'sameSession',
     THUMBNAIL_CACHE: 'thumbnailCache',
-    THUMBNAIL_CACHE_SIZE: 'thumbnailCacheSize'
+    THUMBNAIL_CACHE_SIZE: 'thumbnailCacheSize',
+
+
+    TAB_MANAGER: 'tabManager',
+    GROUP_MANAGER: 'groupManager'
   },
   groups: {
     ALL_GROUP_COLOR: '#ff5900',
@@ -56,9 +75,23 @@ module.exports = {
   paths: {
     OPTIONS: 'app/options.html'
   },
-  refs: {
+  refs: {    
+    COLOR_INPUT: 'colorInput',
+    CREATE_TAB_FILTER_CHECKBOX: 'createFilterCheckbox',
+    FILTER_BY: 'filterBySelect',
+    FILTER_BY_VALUE: 'filterByValue',
     GROUP_CREATOR: 'groupCreator',
+    GROUP_CONTEXT_MENU: 'GroupContextMenu',
+    GROUP_NAME_INPUT: 'groupNameInput',
+    PIN_LIST: 'pin_list',
+    RECENT_LIST: 'recentList',
     SEARCH_BOX: 'searchBox',
+    SORT_BY: 'sortBySelect',
+    SORT_DIRECTION: 'sortDirection',
+    TAB_CONTEXT_MENU: 'TabContextMenu',
+    TAB_GROUP_CONTAINER: 'tabGroupConteiner',
+    TAB_GROUP_LIST: 'tabGroupList',
+
     TAB_LIST: 'tabList'
   },
   thumbnails: {

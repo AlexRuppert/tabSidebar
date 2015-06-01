@@ -56,7 +56,8 @@ module.exports = {
     catch (e) {
     }
   },
-  cleanUpCache: function (tabs) {
+  cleanUpCache: function () {
+    var tabs = TabManager.getTabs();
     for (var i = 0; i < tabs.length; i++) {
       var hash = this.hashThumbnail(tabs[i].id, tabs[i].url);
       if (this.cache[Constants.globalProperties.THUMBNAIL_CACHE].hasOwnProperty(hash)) {
@@ -87,10 +88,10 @@ module.exports = {
 
     if (!this.schedule) {
       setTimeout(function () {
-        self.cleanUpCache(tabList.state.tabs);
+        self.cleanUpCache();
       }, 1000 * 5);
       this.schedule = setInterval(function () {
-        self.cleanUpCache(tabList.state.tabs);
+        self.cleanUpCache();
       }, Constants.thumbnails.CLEANUP_INTERVAL);
     }
   },
@@ -105,8 +106,9 @@ module.exports = {
     return '';
   },
   updateThumbnail: function (tabList, index, id) {
+    var tabs = TabManager.getTabs();
     if (index > -1) {
-      var url = tabList.state.tabs[index].url;
+      var url = tabs[index].url;
       var hash = this.hashThumbnail(id, url);
 
       if (this.cache[Constants.globalProperties.THUMBNAIL_CACHE].hasOwnProperty(hash)) {
@@ -114,11 +116,11 @@ module.exports = {
         var now = Date.now();
 
         if (timestamp + Constants.thumbnails.MIN_UPDATE_DELAY > now) { //no new update yet allowed
-          if (tabList.state.tabs[index].hasThumbnail) { //we have already a thumbnail
+          if (tabs[index].hasThumbnail) { //we have already a thumbnail
             return;//abort
           }
           else { //need initial thumbnail, get from cache
-            tabList.state.tabs[index].thumbnail = this.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image;
+            tabs[index].thumbnail = this.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image;
             if (tabList.refs[id]) {
               tabList.refs[id].setState({ thumbnail: this.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image });
               return;
@@ -131,19 +133,19 @@ module.exports = {
       }
 
       var self = this;
-      this.createThumbnail(tabList.state.tabs[index], function (tabId, img) {
+      this.createThumbnail(tabs[index], function (tabId, img) {
         //console.log("I did a snapshot for " + tabId);
         if (tabList.refs[tabId]) {
           self.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].timestamp = Date.now();
           self.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image = img;
-          tabList.state.tabs[index].thumbnail = img;
+          tabs[index].thumbnail = img;
           tabList.refs[tabId].setState({ thumbnail: img });
         }
       });
     }
     //if user somehow creates too many thumbnails before cleanup kicks in
     if (this.cache[Constants.globalProperties.THUMBNAIL_CACHE_SIZE] > Constants.thumbnails.CRITICAL_CACHE_SIZE) {
-      this.cleanUpCache(tabList.state.tabs);
+      this.cleanUpCache();
     }
   }
 }
