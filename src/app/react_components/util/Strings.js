@@ -66,6 +66,7 @@ module.exports = {
     THUMBNAIL_VIEW: 'Thumbnail view',
     COMPACT_VIEW: 'Compact thumbnail view',
     SINGLE_COLUMN: 'Single tab column',
-    DOUBLE_COLUMN: 'Two tab columns'
+    DOUBLE_COLUMN: 'Two tab columns',
+    TREE_VIEW: 'Tree view'
   }
 }

@@ -52,7 +52,7 @@ module.exports = React.createClass({
       return true;
     if (this.props.viewState != nextProps.viewState)
       return true;
-    if (this.props.multiColumn != nextProps.multiColumn)
+    if (this.props.column != nextProps.column)
       return true;
     if (this.props.showCloseButtons != nextProps.showCloseButtons)
       return true;
@@ -136,11 +136,24 @@ module.exports = React.createClass({
 
     var tabPlaceholderClasses = classNames({
       'tab-placeholder': true,
-      'multi-column': this.props.multiColumn,
+      'multi-column': this.props.column == Constants.menus.menuBar.viewActions.DOUBLE_COLUMN,
       'thumbnail': this.props.viewState == Constants.viewStates.THUMBNAIL_VIEW,
       'small': this.props.viewState == Constants.viewStates.SMALL_VIEW
     });
 
+    var backgroundInfo = Persistency.getState().background;
+    var backgroundStyle = {};
+    var tabOpacity = 100;
+    if(backgroundInfo.show){
+      tabOpacity = backgroundInfo.tabOpacity;
+      backgroundStyle = {
+        backgroundImage: 'url(' + (backgroundInfo.image) + ')',
+        backgroundPositionX: backgroundInfo.offset + '%',
+        WebkitFilter: 'blur(' + backgroundInfo.blur + 
+          'px) opacity(' + backgroundInfo.opacity + 
+          '%) grayscale(' + backgroundInfo.grayscale + '%)'
+      };
+    }
     this.tabPlaceholder.className = tabPlaceholderClasses;
 
     var tabsToShow = TabLogic.getTabsToShow(this);
@@ -162,18 +175,21 @@ module.exports = React.createClass({
             onTabClosed = { this.handleTabClosed }
             favicon = { tab.favicon }
             isLoading = { tab.status == 'loading' }
-            multiColumn = { this.props.multiColumn }
+            column = { this.props.column }
             newlyCreated = { tab.newlyCreated }
+            opacity = { tabOpacity }
             showClose = { this.props.showCloseButtons }
             showNewOnTabs = { this.props.showNewOnTabs }
             thumbnail = { tab.thumbnail }
             viewState = { this.props.viewState }
+
           />
 
         );
       }
     }, this);
     this.thereArePinnedNodes = false;
+    
     var pinNodes = TabManager.getTabs().map(function (tab, i) {
       if (tab.pinned) {
         this.thereArePinnedNodes = true;
@@ -194,6 +210,7 @@ module.exports = React.createClass({
             favicon = { tab.favicon }
             isLoading = { tab.status == 'loading' }
             isPinned = { true }
+            opacity = { tabOpacity }
             showClose = { false }
             showNewOnTabs = { this.props.showNewOnTabs }
           />
@@ -209,11 +226,16 @@ module.exports = React.createClass({
       'tab-container': true,
       'hidden': !this.state.isVisible
     });
+    
+   
     return (
       <div
         className = { tabContainerClasses }>
         <div
           className = "tab-list-container">
+          <div 
+            className = { 'tab-list-background' } 
+            style = { backgroundStyle }/>
           <ContextMenu
             ref = { Constants.refs.TAB_CONTEXT_MENU }
             items = { TabContextMenu }

@@ -27,6 +27,7 @@ module.exports = React.createClass({
     if (!this.state.isVisible) {
       return;
     }
+    
     var isFixed = typeof fixed !== 'undefined';
     if (isFixed) {
       var now = Date.now();
@@ -34,7 +35,8 @@ module.exports = React.createClass({
         return;
       }
       this.lastHeightsUpdate = now;
-    }
+    } 
+    
 
     var parent = React.findDOMNode(this.refs[Constants.refs.TAB_GROUP_CONTAINER]);
     if (!parent) {
@@ -55,21 +57,26 @@ module.exports = React.createClass({
 
         children[i].style.height = '';
         children[i+1].style.height = '';
-
-
-        var selfHeight = children[i].clientHeight;
-        var neighborHeight = children[i+1].clientHeight;
         
-        if (selfHeight < neighborHeight) {
+        if (this.props.twoColumns) {
+          var selfHeight = children[i].clientHeight;
+          var neighborHeight = children[i+1].clientHeight;
+        
+          if (selfHeight < neighborHeight) {
 
-          children[i].style.height = neighborHeight + 'px';
-          children[i+1].style.height = neighborHeight + 'px';
-        }
-        else if (neighborHeight < selfHeight) {
-          children[i].style.height = selfHeight + 'px';
-          children[i+1].style.height = selfHeight + 'px';
+            children[i].style.height = neighborHeight + 'px';
+            children[i+1].style.height = neighborHeight + 'px';
+          }
+          else if (neighborHeight < selfHeight) {
+            children[i].style.height = selfHeight + 'px';
+            children[i+1].style.height = selfHeight + 'px';
+          }
         }
       }
+      if(children.length % 2 == 1) {
+        children[children.length-1].style.height = '';
+      }
+      
     }
     
   },

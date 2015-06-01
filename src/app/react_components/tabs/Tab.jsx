@@ -18,7 +18,7 @@ module.exports = React.createClass({
   getDefaultProps: function () {
     return {
       viewState: Constants.viewStates.NORMAL_VIEW,
-      multiColumn: false,
+      column:  Constants.menus.menuBar.viewActions.SINGLE_COLUMN,
       showClose: false,
       isPinned: false,
       isSmall: false,
@@ -40,7 +40,7 @@ module.exports = React.createClass({
       return true;
     if (this.props.viewState != nextProps.viewState)
       return true;
-    if (this.props.multiColumn != nextProps.multiColumn)
+    if (this.props.column != nextProps.column)
       return true;
     if (this.props.isPinned != nextProps.isPinned)
       return true;
@@ -96,7 +96,7 @@ module.exports = React.createClass({
       'selected': this.state.isSelected,
       'compact-thumbnail': this.props.viewState == Constants.viewStates.COMPACT_VIEW,
       'tab-thumbnail': this.props.viewState == Constants.viewStates.THUMBNAIL_VIEW,
-      'multi-column': this.props.multiColumn,
+      'multi-column': this.props.column == Constants.menus.menuBar.viewActions.DOUBLE_COLUMN,
       'pinned': this.props.isPinned,
       'small': this.props.viewState == Constants.viewStates.SMALL_VIEW,
       'not-visited': this.state.notVisited
@@ -127,11 +127,19 @@ module.exports = React.createClass({
       'tabClose fa fa-times': true,
       'hidden': !(this.props.showClose && !this.props.isPinned)
     });
+
+    var tabStyle = {};
+    if(this.props.opacity < 100) {
+      tabStyle = {
+        backgroundColor: 'rgba(219, 219, 219, ' + this.props.opacity/100 + ')'
+      }
+    }
     return (
       <li
         className = { classes }
         data-id = { this.props.index }
         draggable = { !this.props.isPinned }
+        style = { tabStyle }
         title = { this.state.title }
         onDragStart = { this.props.onDragStart }
         onDragEnd = { this.props.onDragEnd }

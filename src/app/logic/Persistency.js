@@ -4,8 +4,17 @@ window.Persistency = {
   currentState: {},
   initialized: false,
   defaultState: {
+    background: {
+      show: true,
+      image: 'http://i.imgur.com/8rSgyBO.jpg',
+      offset: 65,
+      blur: 4,
+      opacity: 70,
+      grayscale: 0,
+      tabOpacity: 75
+    },
     groups: [],
-    multiColumn: false,
+    column: 'single',
     showCloseButtons: true,
     showGroups: true,
     showNewOnTabs: true,
@@ -54,17 +63,22 @@ window.Persistency = {
   mergeDefault: function (target, source) {
     var changed = false;
     for (var property in source) {
-      if (source.hasOwnProperty(property)// only if target has property not set
-        && !target.hasOwnProperty(property)) {
+      if (source.hasOwnProperty(property)) {// only if target has property not set
         var sourceProperty = source[property];
         changed = true;
         if (typeof sourceProperty === 'object') { // for nested objects
+          if (!target.hasOwnProperty(property)) {
+            target[property] = {};
+          }
           var tempResult = this.mergeDefault(target[property], sourceProperty);
           if (tempResult) {
             changed = tempResult
           }
         }
-        target[property] = sourceProperty;
+        else if (!target.hasOwnProperty(property)) {
+          target[property] = sourceProperty;
+        }
+        
       }
     }
     return changed;

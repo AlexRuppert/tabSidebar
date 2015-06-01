@@ -9,7 +9,7 @@
 
 @tabHeight: 28px;
 @tabThumbnailHeight: 137px;
-@tabGroupListWidth: 18px;
+@tabGroupListWidth: 20px;
 @bottomBarHeight: 28px;
 @menuBarHeight: 63px;
 
@@ -371,21 +371,25 @@ input[type="color"] {
     top: 0;
     z-index: -1;
 
-    &.two-columns{
-       width: @tabGroupListWidth*2;
+    &.two-columns {
+      width: @tabGroupListWidth*2;
     }
   }
+
   .tab-group-list-container {
     height: 100%;
+    z-index: 4;
   }
+
   .tab-group-list {
     width: @tabGroupListWidth;
     background-color: @darkBackgroundColor;
     height: 100%;
 
-    &.two-columns{
-       width: @tabGroupListWidth*2;
+    &.two-columns {
+      width: @tabGroupListWidth*2;
     }
+
     .tab-group {
       float: left;
       background-color: @baseColor;
@@ -410,6 +414,7 @@ input[type="color"] {
       position: relative;
       text-shadow: 0 0 1px #000;
       border-bottom: 1px solid #fff;
+
       .fa {
         color: #fff;
         text-shadow: none;
@@ -418,10 +423,7 @@ input[type="color"] {
       }
 
       &:not(:first-child) {
-        
       }
-
-     
 
       &:hover {
         background-image: url('../media/img/whitepixel.png');
@@ -463,6 +465,13 @@ input[type="color"] {
     border-top: 1px solid @borderColor;
     box-sizing: border-box;
     bottom: 0;
+
+    .tab-list-background {
+      background-size: cover;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+    }
 
     .tab-list {
       flex: 1 0 0;

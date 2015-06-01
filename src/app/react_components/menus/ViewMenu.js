@@ -41,5 +41,11 @@ module.exports = [
       title: Strings.viewMenu.DOUBLE_COLUMN,
       icon: 'fa-columns',
       action: Constants.menus.menuBar.viewActions.DOUBLE_COLUMN
+    },
+    {
+      type: Constants.menus.menuTypes.ITEM,
+      title: Strings.viewMenu.TREE_VIEW,
+      icon: 'fa-tree',
+      action: Constants.menus.menuBar.viewActions.TREE_VIEW
     }
 ];

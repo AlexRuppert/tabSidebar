@@ -39,9 +39,9 @@ module.exports = React.createClass({
     });
     //self.refs[Constants.refs.TAB_LIST].loadGroups();
   },
-  handleColumnChange: function (multi) {
-    Persistency.updateState({ multiColumn: multi });
-    this.setState({ multiColumn: multi });
+  handleColumnChange: function (column) {
+    Persistency.updateState({ column: column });
+    this.setState({ column: column });
   },
   handleEditTabGroup: function (group, callback) {
     this.refs[Constants.refs.GROUP_CREATOR].showDialog(group, callback);
@@ -92,7 +92,7 @@ module.exports = React.createClass({
           ref = { Constants.refs.TAB_LIST }
           handleEditTabGroup = { this.handleEditTabGroup }
           handleNewTabGroup = { this.handleNewTabGroup }
-          multiColumn = { this.state.multiColumn }
+          column = { this.state.column }
           showCloseButtons = { this.state.showCloseButtons }
           showGroups = { this.state.showGroups }
           showNewOnTabs = { this.state.showNewOnTabs }

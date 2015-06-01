@@ -34,10 +34,9 @@ module.exports = React.createClass({
         this.props.handleViewChange(action);
         break;
       case Constants.menus.menuBar.viewActions.SINGLE_COLUMN:
-        this.props.handleColumnChange(false);
-        break;
       case Constants.menus.menuBar.viewActions.DOUBLE_COLUMN:
-        this.props.handleColumnChange(true);
+      case Constants.menus.menuBar.viewActions.TREE_VIEW:
+        this.props.handleColumnChange(action);
         break;
       default:
         break;
@@ -96,7 +95,7 @@ module.exports = React.createClass({
          <MenuBarMenu
            items = { ViewMenu }
            handleSelect = { this.handleMenuSelect }
-           notchOffset = { this.props.showGroups?47:35 }
+           notchOffset = { this.props.showGroups?60:35 }
            isVisible = { this.state.openedMenu == Constants.menus.menuBar.openStates.VIEW }/>
          <button
            className = { showRecentButtonClasses }

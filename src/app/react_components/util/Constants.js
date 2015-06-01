@@ -60,7 +60,8 @@ module.exports = {
       },
       viewActions: {
         DOUBLE_COLUMN: 'multicolumntabs',
-        SINGLE_COLUMN: 'singlecolumntabs'
+        SINGLE_COLUMN: 'singlecolumntabs',
+        TREE_VIEW: 'treeView'
       }
     },
     menuTypes: {
