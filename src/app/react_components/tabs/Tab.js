@@ -35,6 +35,13 @@ module.exports = {
       }
     }
   },
+  changeTabCollapse: function (tabList, collapse) {
+    var tabs = TabManager.getTabs();
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].collapsed = collapse;
+    }
+    this.setTabsAndUpdate(tabList, tabs, true);
+  },
   clearSelectedTabs: function (tabList) {
     if (tabList.selectedTabs.length > 0) {
       for (var i = 0; i < tabList.selectedTabs.length; i++) {
@@ -80,9 +87,15 @@ module.exports = {
         }
       }
     }
-    
+
     this.buildTree(this.tabsToShow, this.tabSortHelper, root, nodes, 0);
     return this.tabsToShow;
+  },
+  collapseTabs: function (tabList) {
+    this.changeTabCollapse(tabList, true);
+  },
+  expandTabs: function (tabList) {
+    this.changeTabCollapse(tabList, false);
   },
   getFavIcon: function (url, favicon) {
     var result = chrome.runtime.getURL('app/media/fav/default.png');
@@ -458,7 +471,7 @@ module.exports = {
   },
   tabDragEnd: function (tabList, e) {
     var tabs = [];
-    
+
     if (tabList.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
       tabs = this.tabsToShow;
     }
@@ -476,7 +489,6 @@ module.exports = {
       var target = GroupLogic.getGroupIndex(groupId);
       var current = GroupLogic.getGroupIndex(activeGroupId)
 
-      
       var tab = tabs[this.getTabIndex(tabId)];
 
       var tabsToMove = [tabId].concat(tabList.selectedTabs);

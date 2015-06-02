@@ -20,11 +20,16 @@ module.exports = React.createClass({
   tabPlaceholder: document.createElement('li'),
 
   activeGroupChanged: function(id){
-    
     this.forceUpdate();
+  },
+  collapseTabs: function () {
+    TabLogic.collapseTabs(this);
   },
   createNewGroup: function (name, color, filter) {
     this.refs[Constants.refs.TAB_GROUP_LIST].createNewGroup(name, color, filter);
+  },
+  expandTabs: function () {
+    TabLogic.expandTabs(this);
   },
   isSearchingTabs: function () {
     return this.state.searchTabsQuery.length > 0

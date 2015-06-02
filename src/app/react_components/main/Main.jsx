@@ -39,12 +39,19 @@ module.exports = React.createClass({
     });
     //self.refs[Constants.refs.TAB_LIST].loadGroups();
   },
+
+  handleCollapseTabs: function () {
+    this.refs[Constants.refs.TAB_LIST].collapseTabs();
+  },
   handleColumnChange: function (column) {
     Persistency.updateState({ column: column });
     this.setState({ column: column });
   },
   handleEditTabGroup: function (group, callback) {
     this.refs[Constants.refs.GROUP_CREATOR].showDialog(group, callback);
+  },
+  handleExpandTabs: function () {
+    this.refs[Constants.refs.TAB_LIST].expandTabs();
   },
   handleNewTabGroup: function () {
     this.refs[Constants.refs.GROUP_CREATOR].showDialog();
@@ -99,6 +106,9 @@ module.exports = React.createClass({
           twoGroupColumns = { this.state.twoGroupColumns }
           viewState = { this.state.viewState }/>
         <BottomBar 
+          column = { this.state.column }
+          handleCollapseTabs = { this.handleCollapseTabs }
+          handleExpandTabs = { this.handleExpandTabs }
           handleScrollToTop = { this.handleScrollToTop }
           />
       </div>

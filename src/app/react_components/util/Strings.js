@@ -2,9 +2,10 @@
 
 module.exports = {
   bottomBar: {
-    SETTINGS: 'Settings',
     COLLAPSE_TABS: 'Collapse tabs',
-    EXPAND_TABS: 'Expand tabs'
+    EXPAND_TABS: 'Expand tabs',
+    GO_TO_TOP: 'Go to top',
+    SETTINGS: 'Settings'
   },
   groupContextMenu: {
     CLONE_GROUP: 'Clone group',
