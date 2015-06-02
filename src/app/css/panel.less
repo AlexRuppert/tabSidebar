@@ -400,12 +400,13 @@ input[type="color"] {
       white-space: nowrap;
       margin: 0;
       padding: 5px 0;
+      
       min-height: 38px;
       max-height: 100px;
       text-overflow: ellipsis;
       text-align: center;
       box-sizing: border-box;
-      line-height: @tabGroupListWidth;
+      line-height: @tabGroupListWidth - 2;
       width: @tabGroupListWidth;
       cursor: default;
       font-weight: 500;
@@ -419,7 +420,7 @@ input[type="color"] {
         color: #fff;
         text-shadow: none;
         transform: rotate(90deg);
-        margin-bottom: 5px;
+        margin-bottom: 3px;
       }
 
       &:not(:first-child) {
@@ -491,8 +492,45 @@ input[type="color"] {
     width: 100%;
     height: @tabHeight;
     border-right: 1px solid @borderColor;
+    
+    &.tree-node{
+      border-left: 1px solid @borderColor;
+    }
+    .tree-collapse {
+      width: 16px;
+      height: 16px;
+      float: left;
+      box-sizing: border-box;
+      padding: 0 3px;
+      margin-left: -2px;
+      margin-right: 4px;
+
+      &:hover {
+        & > i {
+          color: darken(@iconColor,80%) !important;
+        }
+      }
+
+      i {
+        color: lighten(@iconColor,15%);
+        font-size: 1.1em;
+        line-height: 0;
+      }
+    }
 
     .mainline {
+      &.first-node:before {
+        content: "";
+        width: 6px;
+        height: 13px;
+        position: absolute;
+        
+        left: -8px;
+        top: 0;
+        border-left: 1px dotted #000;
+        border-bottom: 1px dotted #000;
+      }
+
       display: flex;
     }
     /* &:not(:first-child) {
@@ -502,8 +540,8 @@ input[type="color"] {
       //border-bottom: 2px solid @borderColor;
     }
 
-    &:not(.active):hover {
-      background-color: lighten(@baseColor, 10%);
+    &:not(.active):not(.selected):hover {
+      background-color: lighten(@baseColor, 7%)!important;
     }
 
     &.multi-column {
@@ -512,7 +550,7 @@ input[type="color"] {
 
     &.small {
       height: 20px !important;
-      padding: 0 0 0 1px;
+      padding: 1px 0 0 1px;
 
       .title {
         margin-left: 18px !important;
@@ -571,11 +609,6 @@ input[type="color"] {
       }
     }
 
-    i {
-      position: absolute;
-      padding: 2px;
-    }
-
     .favicon {
       width: 16px;
       height: 16px;
@@ -607,6 +640,11 @@ input[type="color"] {
       /*transform: translateY(-60%);*/
       padding: 1px 2px;
       z-index: 1;
+
+      i {
+        position: absolute;
+        padding: 2px;
+      }
 
       &:not(:active):hover {
         color: @activeColor;
@@ -710,10 +748,12 @@ input[type="color"] {
   }
 
   .selected {
-    background-color: @selectedColor;
-
+    background-color: @selectedColor!important;
+    &:hover {
+      background-color: lighten(@selectedColor,7%)!important;
+    }
     &.active {
-      background-color: lighten(@selectedColor,13%);
+      background-color: lighten(@selectedColor,13%)!important;
     }
   }
 

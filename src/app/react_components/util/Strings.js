@@ -1,18 +1,23 @@
 ﻿'use strict';
 
 module.exports = {
+  bottomBar: {
+    SETTINGS: 'Settings',
+    COLLAPSE_TABS: 'Collapse tabs',
+    EXPAND_TABS: 'Expand tabs'
+  },
   groupContextMenu: {
     CLONE_GROUP: 'Clone group',
     CLOSE_GROUP: 'Close group',
     CLOSE_OTHER_GROUPS: 'Close other groups',
-    EDIT_GROUP: 'Edit group',    
+    EDIT_GROUP: 'Edit group',
     NEW_GROUP: 'New group'
   },
   groupCreator: {
     ASCENDING: 'ascending',
     CREATE_FILTER: 'Create as tab filter',
     CREATE_GROUP: 'Create group',
-    DESCENDING: 'descending',   
+    DESCENDING: 'descending',
     FILTER_BY: 'Filter by:',
     FILTER_VALUE: 'Filter value:',
     FILTER_VALUE_PLACEHOLDER: 'use * as wildcard',
@@ -44,7 +49,7 @@ module.exports = {
     CLOSED_TABS: 'Recently closed tabs',
     NEW_TAB: 'New tab',
     NEW_TAB_GROUP: 'New tab group',
-    SETTINGS: 'Settings',
+
     TABS: 'Show opened tabs',
     VIEW_MENU: 'View'
   },

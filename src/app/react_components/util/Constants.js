@@ -70,13 +70,14 @@ module.exports = {
       SUBMENU: 'submenu'
     }
   },
+  
   offsets: {
     TAB_LIST_TOP: 63
   },
   paths: {
     OPTIONS: 'app/options.html'
   },
-  refs: {    
+  refs: {
     COLOR_INPUT: 'colorInput',
     CREATE_TAB_FILTER_CHECKBOX: 'createFilterCheckbox',
     FILTER_BY: 'filterBySelect',

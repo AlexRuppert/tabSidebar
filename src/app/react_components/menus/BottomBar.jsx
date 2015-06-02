@@ -15,10 +15,22 @@ module.exports = React.createClass({
     return (
       <div className = { "bottom-bar" }>
         <button
-          title = { Strings.menuBar.SETTINGS }
+          title = { Strings.bottomBar.SETTINGS }
           onClick = { this.handleOpenSettings }>
           <i
             className = "fa fa-cog"/>
+        </button>
+        <button
+          title = { Strings.bottomBar.EXPAND_TABS }
+          onClick = { this.handleOpenSettings }>
+          <i
+          className = "fa fa-plus-square-o"/>
+          </button>
+        <button
+          title = { Strings.bottomBar.COLLAPSE_TABS }
+          onClick = { this.handleOpenSettings }>
+          <i
+          className = "fa fa-minus-square-o"/>
         </button>
         <button 
           className = "flexible"

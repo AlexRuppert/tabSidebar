@@ -132,6 +132,13 @@ module.exports = React.createClass({
         break;
     }
   },
+
+
+  
+
+  handleTabCollapsed: function (id){
+    TabLogic.handleTabCollapsed(this, id);
+  },
   render: function () {
 
     var tabPlaceholderClasses = classNames({
@@ -157,9 +164,16 @@ module.exports = React.createClass({
     this.tabPlaceholder.className = tabPlaceholderClasses;
 
     var tabsToShow = TabLogic.getTabsToShow(this);
+    //trees
+    if (this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+      tabsToShow  = TabLogic.createTabTree(tabsToShow);
+    }
+
+  
 
     var tabNodes = tabsToShow.map(function (tab, i) {
       if (!tab.pinned) {
+        
         return (
           <Tab
             ref = { tab.id }
@@ -173,9 +187,16 @@ module.exports = React.createClass({
             onDragStart = { this.tabDragStart }
             onTabClicked = { this.handleTabClicked }
             onTabClosed = { this.handleTabClosed }
+            column = { this.props.column }
             favicon = { tab.favicon }
             isLoading = { tab.status == 'loading' }
-            column = { this.props.column }
+
+            level = { tab.level }
+            firstNode = { tab.firstNode }
+            parentNode = { tab.parentNode }
+            collapsed = { tab.collapsed }
+            onTabCollapsed = { this.handleTabCollapsed }
+
             newlyCreated = { tab.newlyCreated }
             opacity = { tabOpacity }
             showClose = { this.props.showCloseButtons }

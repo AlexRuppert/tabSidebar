@@ -18,10 +18,14 @@ module.exports = React.createClass({
   getDefaultProps: function () {
     return {
       viewState: Constants.viewStates.NORMAL_VIEW,
+      collapsed: false,
       column:  Constants.menus.menuBar.viewActions.SINGLE_COLUMN,
-      showClose: false,
+      firstNode: false,
       isPinned: false,
       isSmall: false,
+      level: 0,
+      parentNode: false,
+      showClose: false,
       showNewOnTabs: true
     };
   },
@@ -37,6 +41,14 @@ module.exports = React.createClass({
     if (this.state.title != nextState.title)
       return true;
     if (this.state.favicon != nextState.favicon)
+      return true;
+    if (this.props.collapsed != nextProps.collapsed)
+      return true;
+    if (this.props.firstNode != nextProps.firstNode)
+      return true;
+    if (this.props.parentNode != nextProps.parentNode)
+      return true;
+    if (this.props.level != nextProps.level)
       return true;
     if (this.props.viewState != nextProps.viewState)
       return true;
@@ -89,6 +101,10 @@ module.exports = React.createClass({
   handleTabCloseMouseDown: function (event) {
     event.stopPropagation()
   }, 
+  handleCollapse: function (event) {
+    event.stopPropagation();    
+    this.props.onTabCollapsed(this.props.id);
+  },
   render: function () {
     var classes = classNames({
       'tab': true,
@@ -98,6 +114,7 @@ module.exports = React.createClass({
       'tab-thumbnail': this.props.viewState == Constants.viewStates.THUMBNAIL_VIEW,
       'multi-column': this.props.column == Constants.menus.menuBar.viewActions.DOUBLE_COLUMN,
       'pinned': this.props.isPinned,
+      'tree-node': this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW && this.props.level > 0 ,
       'small': this.props.viewState == Constants.viewStates.SMALL_VIEW,
       'not-visited': this.state.notVisited
         && this.props.newlyCreated && this.props.showNewOnTabs
@@ -129,11 +146,35 @@ module.exports = React.createClass({
     });
 
     var tabStyle = {};
-    if(this.props.opacity < 100) {
-      tabStyle = {
-        backgroundColor: 'rgba(219, 219, 219, ' + this.props.opacity/100 + ')'
+    if (this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+      var indent = 18;
+      if(this.props.viewState == Constants.viewStates.SMALL_VIEW){
+        indent = 17;
       }
+      tabStyle = {
+        marginLeft: indent * this.props.level + 'px',
+        width: 'calc(100% - ' + indent * this.props.level + 'px)'
+      }
+    };
+    if(!this.state.isActive && this.props.opacity < 100) {
+      tabStyle['backgroundColor'] = 'rgba(219, 219, 219, ' + this.props.opacity/100 + ')';
     }
+
+    var mainlineClasses = classNames({
+      'mainline': true,
+      'first-node': this.props.firstNode && this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW
+    });
+
+    var treeCollapseClasses = classNames({
+      'tree-collapse': true,
+      'hidden': !this.props.parentNode || this.props.column != Constants.menus.menuBar.viewActions.TREE_VIEW
+    });
+
+    var treeCollapseIconClasses = classNames({
+      'fa': true,
+      'fa-plus-square-o': this.props.collapsed,
+      'fa-minus-square-o': !this.props.collapsed
+    });
     return (
       <li
         className = { classes }
@@ -146,7 +187,14 @@ module.exports = React.createClass({
         onContextMenu = { this.handleContextMenu }
         onMouseDown = { this.handleClick }>
         <div
-          className = "mainline">
+          className = { treeCollapseClasses } 
+          onMouseDown = { this.handleCollapse }>
+          <i
+            className = { treeCollapseIconClasses }/>
+        </div>
+        <div
+            className = { mainlineClasses }>
+         
           <img
             className = { faviconClasses }
             src = { this.state.favicon }/>

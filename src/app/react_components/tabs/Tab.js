@@ -6,6 +6,35 @@ var Helpers = require('../util/Helpers.js');
 var ThumbnailCache = require('./ThumbnailCache.js');
 
 module.exports = {
+  tabSortHelper: {},
+  tabsToShow: [],
+  buildTree: function (tree, tabSortHelper, children, nodes, level) {
+    children = children.sort(function (a, b) {
+      if (tabSortHelper[a] < tabSortHelper[b]) {
+        return -1;
+      }
+      else if (tabSortHelper[a] > tabSortHelper[b]) {
+        return 1;
+      }
+      return 0;
+    });
+    for (var i = 0; i < children.length; i++) {
+      var id = children[i];
+      var tab = TabManager.getTabs()[this.getTabIndex(+id)];
+      tab.level = level;
+      if (level > 0 && i == 0) {
+        tab.firstNode = true;
+      }
+      tree.push(tab);
+      var subChildren = nodes[id].children;
+      if (subChildren.length > 0) {
+        tab.parentNode = true;
+        if (!tab.collapsed) {
+          this.buildTree(tree, tabSortHelper, subChildren, nodes, level + 1);
+        }
+      }
+    }
+  },
   clearSelectedTabs: function (tabList) {
     if (tabList.selectedTabs.length > 0) {
       for (var i = 0; i < tabList.selectedTabs.length; i++) {
@@ -17,6 +46,43 @@ module.exports = {
       }
       tabList.selectedTabs = [];
     }
+  },
+  createTabTree: function (tabArray) {
+    this.tabSortHelper = {}
+    var nodes = {};
+    this.tabsToShow = [];
+    //first create a flat lookup object
+    for (var i = 0; i < tabArray.length; i++) {
+      var tab = tabArray[i];
+      this.tabSortHelper[tab.id] = i;
+      tab.firstNode = false;
+      tab.parentNode = false;
+
+      if (!tab.hasOwnProperty('openerTabId')) {
+        nodes[tab.id] = { parent: null, children: [] };
+      }
+      else {
+        nodes[tab.id] = { parent: tab.openerTabId, children: [] };
+      }
+    }
+    //then create a tree structure
+    var root = [];
+    for (var key in nodes) {
+      if (nodes.hasOwnProperty(key)) {
+        if (!nodes[key].parent) {
+          root.push(key);
+        }
+        else if (nodes[nodes[key].parent]) {
+          nodes[nodes[key].parent].children.push(key);
+        }
+        else {
+          root.push(key);
+        }
+      }
+    }
+    
+    this.buildTree(this.tabsToShow, this.tabSortHelper, root, nodes, 0);
+    return this.tabsToShow;
   },
   getFavIcon: function (url, favicon) {
     var result = chrome.runtime.getURL('app/media/fav/default.png');
@@ -53,6 +119,8 @@ module.exports = {
       for (var i = 0; i < tabs.length; i++) {
         tabs[i].favicon = self.getFavIcon(tabs[i].url, tabs[i].favIconUrl);
         tabs[i].thumbnail = ThumbnailCache.loadFromCache(tabs[i]);
+        tabs[i].collapsed = false;
+        tabs[i].level = 0;
       }
       self.setTabsAndUpdate(tabList, tabs, false);
       callback();
@@ -199,8 +267,13 @@ module.exports = {
   handleTabClosed: function (id) {
     chrome.tabs.remove(id);
   },
+  handleTabCollapsed: function (tabList, id) {
+    var index = this.getTabIndex(id);
+    var tab = TabManager.getTabs()[index];
+    tab.collapsed = !tab.collapsed;
+    tabList.forceUpdate();
+  },
   init: function () {
-    
   },
   setTabsAndUpdate: function (tabList, tabs, redraw) {
     this.updateTabIds(tabs);
@@ -242,7 +315,6 @@ module.exports = {
     });
     chrome.tabs.onCreated.addListener(function (tab) {
       if (!tab.url.startsWith('chrome-devtools://')) {
-        
         tab.favicon = self.getFavIcon(tab.url, tab.favIconUrl);
         tab.newlyCreated = true;
         tabs.splice(tab.index, 0, tab);
@@ -265,7 +337,7 @@ module.exports = {
       self.setTabsAndUpdate(tabList, tabs, true);
     });
 
-    chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {      
+    chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
       var index = self.getTabIndex(tabId);
       if (index > -1) {
         tabs.splice(index, 1);
@@ -276,7 +348,6 @@ module.exports = {
       if (tab.url.startsWith('chrome-devtools://'))
         return;
 
-     
       var index = self.getTabIndex(tabList, tabId);
 
       if (index < 0)
@@ -301,12 +372,16 @@ module.exports = {
       var thumbnail = tabs[index].thumbnail;
       var favicon = tabs[index].favicon;
       var oldTitle = tabs[index].title;
+      var level = tabs[index].level;
+      var collapsed = tabs[index].collapsed;
 
       tabs[index] = tab;
       tabs[index].newlyCreated = newlyCreated;
       tabs[index].hasThumbnail = hasThumbnail;
       tabs[index].thumbnail = thumbnail;
       tabs[index].favicon = favicon;
+      tabs[index].level = level;
+      tabs[index].collapsed = collapsed;
 
       if (changeInfo.status) {
         changeObject.isLoading = (changeInfo.status == 'loading');
@@ -382,7 +457,14 @@ module.exports = {
     }
   },
   tabDragEnd: function (tabList, e) {
-    var tabs = TabManager.getTabs();
+    var tabs = [];
+    
+    if (tabList.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+      tabs = this.tabsToShow;
+    }
+    else {
+      tabs = TabManager.getTabs();
+    }
     var groups = GroupManager.getGroups();
     var activeGroupId = GroupManager.getActiveGroupId();
 
@@ -391,11 +473,10 @@ module.exports = {
       var groupId = tabList.groupOver.getAttribute('data-reactid').split('$')[1];
       var tabId = tabList.tabDragged.getAttribute('data-reactid').split('$')[1];
 
-     
-     
-
       var target = GroupLogic.getGroupIndex(groupId);
       var current = GroupLogic.getGroupIndex(activeGroupId)
+
+      
       var tab = tabs[this.getTabIndex(tabId)];
 
       var tabsToMove = [tabId].concat(tabList.selectedTabs);
@@ -432,7 +513,7 @@ module.exports = {
       }
       catch (ex) { }
       // Update state
-      
+
       var draggedIndex = Array.prototype.indexOf.call(tabList.tabDragged.parentNode.children, tabList.tabDragged);
 
       var from = draggedIndex;
@@ -446,7 +527,6 @@ module.exports = {
         if (from == to) return;
         if (from < to) to--;
 
-        
         if (groupIndex >= 0 && tabIndex >= 0) {
           var temp = groups[groupIndex].tabs[to];
           groups[groupIndex].tabs.splice(to, 0, groups[groupIndex].tabs.splice(from, 1)[0]);
@@ -465,6 +545,10 @@ module.exports = {
         }
       }
       tabList.tabDragged = null;
+      //for tree tabs
+      if (tabList.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+        to = this.tabSortHelper[this.tabsToShow[to].id];
+      }
       chrome.tabs.move(tabs[draggedIndex + pinnedCount].id, { index: to + pinnedCount });
     }
     if (tabList.groupOver) {

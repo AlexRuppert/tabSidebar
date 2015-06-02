@@ -19,7 +19,7 @@ module.exports = React.createClass({
     }
     return {
       viewState: Constants.viewStates.NORMAL_VIEW,
-      multiColumn: false,
+      column: Constants.menus.menuBar.viewActions.SINGLE_COLUMN,
       showCloseButtons: true,
       showGroups: true,
       showNewOnTabs: true,
@@ -31,7 +31,7 @@ module.exports = React.createClass({
     var state = Persistency.getState();
     self.setState({
       viewState: state.viewState,
-      multiColumn: state.multiColumn,
+      column: state.column,
       showCloseButtons: state.showCloseButtons,
       showGroups: state.showGroups,
       showNewOnTabs: state.showNewOnTabs,
