@@ -95,16 +95,7 @@ module.exports = {
       }, Constants.thumbnails.CLEANUP_INTERVAL);
     }
   },
-  loadFromCache: function (tab) {
-    var url = tab.url;
-    var hash = this.hashThumbnail(tab.id, url);
 
-    if (this.cache[Constants.globalProperties.THUMBNAIL_CACHE].hasOwnProperty(hash)
-      && this.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image) { //only do something if it is cached
-      return this.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image;
-    }
-    return '';
-  },
   updateThumbnail: function (tabList, index, id) {
     var tabs = TabManager.getTabs();
     if (index > -1) {
@@ -116,15 +107,8 @@ module.exports = {
         var now = Date.now();
 
         if (timestamp + Constants.thumbnails.MIN_UPDATE_DELAY > now) { //no new update yet allowed
-          if (tabs[index].hasThumbnail) { //we have already a thumbnail
+          if (tabs[index].thumbnail) { //we have already a thumbnail
             return;//abort
-          }
-          else { //need initial thumbnail, get from cache
-            tabs[index].thumbnail = this.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image;
-            if (tabList.refs[id]) {
-              tabList.refs[id].setState({ thumbnail: this.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image });
-              return;
-            }
           }
         } //else fall through
       } else {
@@ -134,10 +118,8 @@ module.exports = {
 
       var self = this;
       this.createThumbnail(tabs[index], function (tabId, img) {
-        //console.log("I did a snapshot for " + tabId);
         if (tabList.refs[tabId]) {
           self.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].timestamp = Date.now();
-          self.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image = img;
           tabs[index].thumbnail = img;
           tabList.refs[tabId].setState({ thumbnail: img });
         }

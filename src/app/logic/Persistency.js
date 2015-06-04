@@ -19,6 +19,9 @@ window.Persistency = {
     showGroups: true,
     showNewOnTabs: true,
     tabIds: [],
+    treeTabs: {
+      closeChildren: 'none'
+    },
     twoGroupColumns: false,
     viewState: 'normalview'
   },
@@ -66,8 +69,9 @@ window.Persistency = {
       if (source.hasOwnProperty(property)) {// only if target has property not set
         var sourceProperty = source[property];
         changed = true;
-        if (typeof sourceProperty === 'object') { // for nested objects
-          if (!target.hasOwnProperty(property)) {
+        if (typeof sourceProperty === 'object'
+        && Object.prototype.toString.call(sourceProperty) !== '[object Array]') { // for nested objects
+          if (!target.hasOwnProperty(property)) {            
             target[property] = {};
           }
           var tempResult = this.mergeDefault(target[property], sourceProperty);
@@ -75,10 +79,10 @@ window.Persistency = {
             changed = tempResult
           }
         }
+
         else if (!target.hasOwnProperty(property)) {
           target[property] = sourceProperty;
         }
-        
       }
     }
     return changed;

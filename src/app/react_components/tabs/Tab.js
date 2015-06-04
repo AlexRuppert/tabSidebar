@@ -346,7 +346,8 @@ module.exports = {
   },
   initNewTab: function (tab) {
     tab.favicon = this.getFavIcon(tab.url, tab.favIconUrl);
-    tab.thumbnail = ThumbnailCache.loadFromCache(tab);
+    //tab.thumbnail = ThumbnailCache.loadFromCache(tab);
+    tab.thumbnail = false;
     tab.collapsed = false;
     tab.level = 0;
     tab.openedTime = Date.now();
@@ -368,24 +369,7 @@ module.exports = {
     }
 
     return target;
-    /*var newlyCreated = tabs[index].newlyCreated;
-    var hasThumbnail = tabs[index].hasThumbnail;
-    var thumbnail = tabs[index].thumbnail;
-    var favicon = tabs[index].favicon;
-
-    var level = tabs[index].level;
-    var collapsed = tabs[index].collapsed;
-    var visitedTime = tabs[index].visitedTime;
-    var openedTime = tabs[index].openedTime;
-
-    tabs[index].newlyCreated = newlyCreated;
-    tabs[index].hasThumbnail = hasThumbnail;
-    tabs[index].thumbnail = thumbnail;
-    tabs[index].favicon = favicon;
-    tabs[index].level = level;
-    tabs[index].collapsed = collapsed;
-    tabs[index].visitedTime = visitedTime;
-    tabs[index].openedTime = openedTime;*/
+    
   },
   setTabsAndUpdate: function (tabList, tabs, redraw) {
     this.updateTabIds(tabs);
@@ -409,7 +393,7 @@ module.exports = {
     var tabs = TabManager.getTabs();
     setInterval(function () {
       self.checkTimedGroupFilters(tabList);
-    }, 3000);
+    }, 1000);
 
     chrome.tabs.onActivated.addListener(function (activeInfo) {
       if (activeInfo.tabId) {
@@ -428,7 +412,7 @@ module.exports = {
             self.checkTimedGroupFilters(tabList);
           }
         }
-
+        
         if (tabList.refs[activeInfo.tabId]) {
           tabList.refs[activeInfo.tabId].setState({ isActive: true });
         }

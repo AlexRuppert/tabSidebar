@@ -9,6 +9,12 @@ module.exports = React.createClass({
       isActive:  this.props.isActive || false
     };
   },
+  getDefaultProps: function () {
+    return {
+      color: '#fa3',
+      title: ''
+    }
+  },
   shouldComponentUpdate: function (nextProps, nextState) {
     if (this.state.isActive != nextState.isActive)
       return true;

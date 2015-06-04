@@ -107,9 +107,9 @@ module.exports = React.createClass({
     GroupManager.addActiveGroupIdChangedListener(Constants.refs.TAB_LIST, this.activeGroupChanged);
     TabLogic.getTabs(this, function(forceUpdateTabs){
       TabLogic.setToCurrentTab(self);
-      ThumbnailCache.scheduleCleanup(self);
+     // ThumbnailCache.scheduleCleanup(self);
       GroupLogic.loadGroups();
-      //self.refs[Constants.refs.TAB_GROUP_LIST].loadGroups();
+      
       TabLogic.setUpEventListeners(self);
       self.ready = true;
       self.rerenderIfNeeded();

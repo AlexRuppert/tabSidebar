@@ -17,14 +17,15 @@ module.exports = React.createClass({
   createNewGroup: function (name, color, filter) {
     GroupLogic.createNewGroup(this, name, color, filter);
   },  
-  groupsChanged: function () {    
+  groupsChanged: function () {
     this.forceUpdate();
   },
 
-  updateGroupHeights: function (fixed) {    
+  updateGroupHeights: function (fixed) {
+    
     if (!this.state.isVisible) {
       return;
-    }    
+    }
     var isFixed = typeof fixed !== 'undefined';
     if (isFixed) {
       var now = Date.now();
@@ -162,7 +163,9 @@ module.exports = React.createClass({
         title: Strings.groups.ALL_GROUP,
         color: Constants.groups.ALL_GROUP_COLOR
       });
-      groupsToShow = groupsToShow.concat(GroupManager.getGroups());
+      if(GroupManager.getGroups().length > 0) {
+        groupsToShow = groupsToShow.concat(GroupManager.getGroups());
+      }
       var activeGroupId = GroupManager.getActiveGroupId();
       
       groupNodes = groupsToShow.map(function (group, i) {

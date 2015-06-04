@@ -37,7 +37,7 @@ module.exports = React.createClass({
       showNewOnTabs: state.showNewOnTabs,
       twoGroupColumns: state.twoGroupColumns
     });
-    //self.refs[Constants.refs.TAB_LIST].loadGroups();
+    
   },
 
   handleCollapseTabs: function () {
@@ -104,7 +104,7 @@ module.exports = React.createClass({
           showGroups = { this.state.showGroups }
           showNewOnTabs = { this.state.showNewOnTabs }
           twoGroupColumns = { this.state.twoGroupColumns }
-          viewState = { this.state.viewState }/>
+          viewState = { this.state.viewState } />
         <BottomBar 
           column = { this.state.column }
           handleCollapseTabs = { this.handleCollapseTabs }

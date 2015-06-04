@@ -36,6 +36,7 @@ module.exports = {
   },
   createNewGroup: function (groupList, name, color, filter) {
     var groups = GroupManager.getGroups();
+    console.log(groups);
     var newGroup = {};
     if (typeof filter === 'undefined') {
       newGroup = { title: name, id: this.getNewGroupId(), tabs: [], color: color };
@@ -295,7 +296,7 @@ module.exports = {
     this.init();
     var tabs = TabManager.getTabs();
     var groups = Persistency.getState().groups;
-
+    
     var sameSession = true;
     if (!chrome.extension.getBackgroundPage().hasOwnProperty(Constants.globalProperties.SAME_SESSION)) {
       chrome.extension.getBackgroundPage()[Constants.globalProperties.SAME_SESSION] = true;

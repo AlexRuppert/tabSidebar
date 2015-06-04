@@ -20,7 +20,7 @@
     "gulp-uglify": "^1.1.0",
     "http-server": "^0.6.1",
     "rc-menu": "^2.2.4",
-    "react": "0.13.0",
+    "react": "0.13.3",
     "reactify": "^1.1.0",
     "tmp": "0.0.23",
     "vinyl-source-stream": "^1.1.0",
