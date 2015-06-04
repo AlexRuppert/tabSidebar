@@ -8,6 +8,7 @@ var ThumbnailCache = require('./ThumbnailCache.js');
 module.exports = {
   tabSortHelper: {},
   tabsToShow: [],
+  lastTabIdsShown: [],
   buildTree: function (tree, tabSortHelper, children, nodes, level) {
     children = children.sort(function (a, b) {
       if (tabSortHelper[a] < tabSortHelper[b]) {
@@ -41,6 +42,19 @@ module.exports = {
       tabs[i].collapsed = collapse;
     }
     this.setTabsAndUpdate(tabList, tabs, true);
+  },
+  checkTimedGroupFilters: function (tabList) {
+    var group = GroupLogic.getActiveGroup();
+    if (group && group.filter) {
+      if (group.filterBy == Constants.groupCreator.LAST_VISITED_GREATER
+        || group.filterBy == Constants.groupCreator.LAST_VISITED_LOWER
+        || group.filterBy == Constants.groupCreator.OPENED_GREATER
+        || group.filterBy == Constants.groupCreator.OPENED_LOWER
+        || group.sortBy == Constants.groupCreator.OPENED
+        || group.sortBy == Constants.groupCreator.LAST_VISITED) {
+        tabList.rerenderIfNeeded();
+      }
+    }
   },
   clearSelectedTabs: function (tabList) {
     if (tabList.selectedTabs.length > 0) {
@@ -94,6 +108,7 @@ module.exports = {
   collapseTabs: function (tabList) {
     this.changeTabCollapse(tabList, true);
   },
+
   expandTabs: function (tabList) {
     this.changeTabCollapse(tabList, false);
   },
@@ -128,15 +143,36 @@ module.exports = {
   },
   getTabs: function (tabList, callback) {
     var self = this;
+
     chrome.tabs.query({ currentWindow: true }, function (tabs) {
+      var originalTabs = TabManager.getTabs();
+      var forceUpdateTabs = [];
       for (var i = 0; i < tabs.length; i++) {
-        tabs[i].favicon = self.getFavIcon(tabs[i].url, tabs[i].favIconUrl);
-        tabs[i].thumbnail = ThumbnailCache.loadFromCache(tabs[i]);
-        tabs[i].collapsed = false;
-        tabs[i].level = 0;
+        var index = self.getTabIndex(tabs[i].id);
+        if (index >= 0) {
+          var oldTitle = originalTabs[index].title;
+          var oldUrl = originalTabs[index].url;
+          tabs[i] = self.preserveTabProperties(originalTabs[index], tabs[i]);
+
+          var changed = false;
+          if (tabs[i].url != oldUrl) {
+            tabs[i].favicon = this.getFavIcon(tabs[i].url, tabs[i].favIconUrl);
+            changed = true;
+          }
+          if (tabs[i].title != oldTitle) {
+            changed = true;
+          }
+          if (changed) {
+            forceUpdateTabs.push({ id: tabs[i].id, title: tabs[i].title, favicon: tabs[i].favicon });
+          }
+        }
+        else {
+          self.initNewTab(tabs[i]);
+        }
       }
       self.setTabsAndUpdate(tabList, tabs, false);
-      callback();
+
+      callback(forceUpdateTabs);
     });
   },
   getTabsToShow: function (tabList) {
@@ -182,6 +218,12 @@ module.exports = {
             var filterFunc = {};
             var filterValueLower = activeGroup.filterValue.toLowerCase();
 
+            var numVal = 0;
+            var now = Date.now();
+            if (Helpers.isInt(filterValueLower.trim())) {
+              numVal = +filterValueLower.trim() * 60 * 1000;//min -> ms
+            }
+
             var filterValueRegex = new RegExp(Helpers.escapeRegExp(filterValueLower));
             switch (activeGroup.filterBy) {
               case Constants.groupCreator.TITLE_CONTAINS:
@@ -195,12 +237,24 @@ module.exports = {
                 }
                 break;
               case Constants.groupCreator.LAST_VISITED_GREATER:
+                filterFunc = function (obj) {
+                  return now - obj.visitedTime >= numVal;
+                }
                 break;
               case Constants.groupCreator.LAST_VISITED_LOWER:
+                filterFunc = function (obj) {
+                  return now - obj.visitedTime <= numVal;
+                }
                 break;
               case Constants.groupCreator.OPENED_GREATER:
+                filterFunc = function (obj) {
+                  return now - obj.openedTime >= numVal;
+                }
                 break;
               case Constants.groupCreator.OPENED_LOWER:
+                filterFunc = function (obj) {
+                  return now - obj.openedTime <= numVal;
+                }
                 break;
               default:
                 filterFunc = function (obj) {
@@ -213,14 +267,16 @@ module.exports = {
           var ascending = activeGroup.sortDirection == Constants.groupCreator.ASCENDING;
           switch (activeGroup.sortBy) {
             case Constants.groupCreator.TITLE:
-              sortFunc = Helpers.sortBy('title', ascending);
+              sortFunc = Helpers.sortBy('title', 'string', ascending);
               break;
             case Constants.groupCreator.URL:
-              sortFunc = Helpers.sortBy('url', ascending);
+              sortFunc = Helpers.sortBy('url', 'string', ascending);
               break;
             case Constants.groupCreator.LAST_VISITED:
+              sortFunc = Helpers.sortBy('visitedTime', '', !ascending);
               break;
             case Constants.groupCreator.OPENED:
+              sortFunc = Helpers.sortBy('openedTime', '', !ascending);
               break;
             default:
           }
@@ -284,15 +340,59 @@ module.exports = {
     var index = this.getTabIndex(id);
     var tab = TabManager.getTabs()[index];
     tab.collapsed = !tab.collapsed;
-    tabList.forceUpdate();
+    tabList.rerenderIfNeeded();
   },
   init: function () {
+  },
+  initNewTab: function (tab) {
+    tab.favicon = this.getFavIcon(tab.url, tab.favIconUrl);
+    tab.thumbnail = ThumbnailCache.loadFromCache(tab);
+    tab.collapsed = false;
+    tab.level = 0;
+    tab.openedTime = Date.now();
+    tab.visitedTime = 0;
+  },
+  preserveTabProperties: function (target, source) {
+    var properties = [
+      'newlyCreated', 'hasThumbnail', 'thumbnail',
+      'favicon', 'level', 'collapsed', 'visitedTime', 'openedTime'];
+    var obj = {};
+    for (var i = 0; i < properties.length; i++) {
+      obj[properties[i]] = target[properties[i]];
+    }
+
+    target = source;
+
+    for (var i = 0; i < properties.length; i++) {
+      target[properties[i]] = obj[properties[i]];
+    }
+
+    return target;
+    /*var newlyCreated = tabs[index].newlyCreated;
+    var hasThumbnail = tabs[index].hasThumbnail;
+    var thumbnail = tabs[index].thumbnail;
+    var favicon = tabs[index].favicon;
+
+    var level = tabs[index].level;
+    var collapsed = tabs[index].collapsed;
+    var visitedTime = tabs[index].visitedTime;
+    var openedTime = tabs[index].openedTime;
+
+    tabs[index].newlyCreated = newlyCreated;
+    tabs[index].hasThumbnail = hasThumbnail;
+    tabs[index].thumbnail = thumbnail;
+    tabs[index].favicon = favicon;
+    tabs[index].level = level;
+    tabs[index].collapsed = collapsed;
+    tabs[index].visitedTime = visitedTime;
+    tabs[index].openedTime = openedTime;*/
   },
   setTabsAndUpdate: function (tabList, tabs, redraw) {
     this.updateTabIds(tabs);
     TabManager.setTabs(tabs);
+
     if (redraw)
-      tabList.forceUpdate();
+      tabList.rerenderIfNeeded();
   },
   setToCurrentTab: function (tabList) {
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -307,6 +407,9 @@ module.exports = {
   setUpEventListeners: function (tabList) {
     var self = this;
     var tabs = TabManager.getTabs();
+    setInterval(function () {
+      self.checkTimedGroupFilters(tabList);
+    }, 3000);
 
     chrome.tabs.onActivated.addListener(function (activeInfo) {
       if (activeInfo.tabId) {
@@ -317,21 +420,28 @@ module.exports = {
             tabList.refs[tabRef].setState({ isActive: false });
           }
         }
+        var index = self.getTabIndex(activeInfo.tabId);
+        if (index >= 0) {
+          tabs[index].visitedTime = Date.now();
+          var group = GroupLogic.getActiveGroup();
+          if (group && group.filter) {
+            self.checkTimedGroupFilters(tabList);
+          }
+        }
 
         if (tabList.refs[activeInfo.tabId]) {
           tabList.refs[activeInfo.tabId].setState({ isActive: true });
         }
-        else {
-        }
+
         TabManager.setActiveTabId(activeInfo.tabId);
       }
     });
     chrome.tabs.onCreated.addListener(function (tab) {
       if (!tab.url.startsWith('chrome-devtools://')) {
-        tab.favicon = self.getFavIcon(tab.url, tab.favIconUrl);
+        self.initNewTab(tab);
         tab.newlyCreated = true;
         tabs.splice(tab.index, 0, tab);
-        self.setTabsAndUpdate(tabList, tabs, true);
+        console.log("new");
         //if we are currently in a group, add tab to group
         if (!GroupLogic.isAllGroupActive()) {
           var groups = GroupManager.getGroups();
@@ -339,10 +449,16 @@ module.exports = {
 
           var groupIndex = GroupLogic.getGroupIndex(activeGroupId);
           if (groupIndex >= 0) {
-            groups[groupIndex].tabs.push(tab.id);
-            GroupLogic.setGroupsAndSave(groups);
+            if (!groups[groupIndex].filter) {
+              groups[groupIndex].tabs.push(tab.id);
+              GroupLogic.setGroupsAndSave(groups);
+            }
+            else {
+              self.checkTimedGroupFilters(tabList);
+            }
           }
         }
+        self.setTabsAndUpdate(tabList, tabs, true);
       }
     });
     chrome.tabs.onMoved.addListener(function (tabId, moveInfo) {
@@ -361,16 +477,17 @@ module.exports = {
       if (tab.url.startsWith('chrome-devtools://'))
         return;
 
-      var index = self.getTabIndex(tabList, tabId);
+      var index = self.getTabIndex(tabId);
 
       if (index < 0)
         return;
 
       var changeObject = {};
       var changeObjectEmpty = true;
+      var tabs = TabManager.getTabs();
       var pinnedChanged = tabs[index].pinned != tab.pinned;
 
-      if (changeInfo.state != 'loading' && (typeof tab.favIconUrl !== 'undefined') && tabList.refs[tabId] &&
+      if (/*changeInfo.state != 'loading' && */(typeof tab.favIconUrl !== 'undefined') && tabList.refs[tabId] &&
         (tabList.refs[tabId].state.favicon.length <= 0
         || tabs[index].faviconUrl != tab.favIconUrl)) {
         tabs[index].faviconUrl = tab.faviconUrl;
@@ -380,21 +497,8 @@ module.exports = {
         tabs[index].favicon = changeObject.favicon;
       }
 
-      var newlyCreated = tabs[index].newlyCreated;
-      var hasThumbnail = tabs[index].hasThumbnail;
-      var thumbnail = tabs[index].thumbnail;
-      var favicon = tabs[index].favicon;
       var oldTitle = tabs[index].title;
-      var level = tabs[index].level;
-      var collapsed = tabs[index].collapsed;
-
-      tabs[index] = tab;
-      tabs[index].newlyCreated = newlyCreated;
-      tabs[index].hasThumbnail = hasThumbnail;
-      tabs[index].thumbnail = thumbnail;
-      tabs[index].favicon = favicon;
-      tabs[index].level = level;
-      tabs[index].collapsed = collapsed;
+      tabs[index] = self.preserveTabProperties(tabs[index], tab);
 
       if (changeInfo.status) {
         changeObject.isLoading = (changeInfo.status == 'loading');
@@ -407,10 +511,20 @@ module.exports = {
       }
 
       if (pinnedChanged) {
-        tabList.forceUpdate();
+        tabList.rerenderIfNeeded();
       }
+
       if (tabList.refs[tabId] && !changeObjectEmpty) {
         tabList.refs[tabId].setState(changeObject);
+
+        if (!changeObject.isLoading) {
+          var group = GroupLogic.getActiveGroup();
+
+          //update if we are in a filter group
+          if (group && group.filter) {
+            tabList.rerenderIfNeeded();
+          }
+        }
       }
       //tabList.setState({ tabs: tabs });
     });
@@ -494,14 +608,17 @@ module.exports = {
       var tabsToMove = [tabId].concat(tabList.selectedTabs);
       this.clearSelectedTabs(tabList);
       if (target >= 0) {
-        for (var i = 0; i < tabsToMove.length; i++) {
-          if (GroupLogic.getTabIndexInGroup(groups[target], tabsToMove[i]) < 0) {
-            groups[target].tabs.push(tabsToMove[i]);
+        //filter groups do not get any tabs manually
+        if (!groups[target].filter) {
+          for (var i = 0; i < tabsToMove.length; i++) {
+            if (GroupLogic.getTabIndexInGroup(groups[target], tabsToMove[i]) < 0) {
+              groups[target].tabs.push(tabsToMove[i]);
+            }
           }
         }
       }
       if (target >= 0 || groupId == Constants.groups.ALL_GROUP_ID) {
-        if (!GroupLogic.isAllGroupActive() && current >= 0) {
+        if (!GroupLogic.isAllGroupActive() && current >= 0 && !groups[target].filter) {
           for (var i = 0; i < tabsToMove.length; i++) {
             var tabIndexInGroup = GroupLogic.getTabIndexInGroup(groups[current], tabsToMove[i]);
             if (tabIndexInGroup >= 0) {

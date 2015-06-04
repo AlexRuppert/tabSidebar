@@ -4,7 +4,12 @@ var Constants = require('./Constants.js')
 
 module.exports = {
   escapeRegExp: function (str) {
-    return str.replace(/[\-\[\]\/\{\}\(\)\+\?\.\\\^\$\|]/g, '\\$&').replace('*','.*');
+    return str.replace(/[\-\[\]\/\{\}\(\)\+\?\.\\\^\$\|]/g, '\\$&').replace('*', '.*');
+  },
+  isInt: function (value) {
+    return !isNaN(value) &&
+           parseInt(Number(value)) == value &&
+           !isNaN(parseInt(value, 10));
   },
   scrollTo: function (element, to, duration) {
     var start = element.scrollTop,
@@ -34,14 +39,28 @@ module.exports = {
     return -c / 2 * (t * (t - 2) - 1) + b;
   },
 
-  sortBy: function (field, asc) {
+  sortBy: function (field, type, asc) {
     var dir = asc ? 1 : -1;
-    return function (a, b) {
-      if (a[field] > b[field])
-        return -dir;
-      if (a[field] < b[field])
-        return dir;
-      return 0;
-    };
+
+    if (type == 'string') {
+      return function (a, b) {
+        var x = a[field].toLowerCase();
+        var y = b[field].toLowerCase();
+        if (x > y)
+          return -dir;
+        if (x < y)
+          return dir;
+        return 0;
+      };
+    }
+    else {
+      return function (a, b) {
+        if (a[field] > b[field])
+          return -dir;
+        if (a[field] < b[field])
+          return dir;
+        return 0;
+      };
+    }
   }
 }

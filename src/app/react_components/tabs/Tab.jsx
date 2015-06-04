@@ -30,6 +30,8 @@ module.exports = React.createClass({
     };
   },
   shouldComponentUpdate: function (nextProps, nextState) {
+    
+    
     if (this.state.isLoading != nextState.isLoading)
       return true;
     if (this.state.isActive != nextState.isActive)
@@ -40,6 +42,9 @@ module.exports = React.createClass({
       return true;
     if (this.state.title != nextState.title)
       return true;
+    
+
+      
     if (this.state.favicon != nextState.favicon)
       return true;
     if (this.props.collapsed != nextProps.collapsed)
@@ -71,6 +76,7 @@ module.exports = React.createClass({
     return false;
   },
   componentWillUpdate: function (nextProps, nextState) {
+    
     if (nextState.isActive && this.state.notVisited) {
       this.setState({ notVisited: false });
     }

@@ -16,11 +16,12 @@ module.exports = React.createClass({
  
   lastTabDragY: 0,
   pinOffset: 0,
+  ready: false,
   selectedTabs: [],
   tabPlaceholder: document.createElement('li'),
-
+  lastTabsToShowIds: [],
   activeGroupChanged: function(id){
-    this.forceUpdate();
+    this.rerenderIfNeeded();
   },
   collapseTabs: function () {
     TabLogic.collapseTabs(this);
@@ -36,6 +37,33 @@ module.exports = React.createClass({
   },
   getGroupList: function() {
     return this.refs[Constants.refs.TAB_GROUP_LIST];
+  },
+  rerenderIfNeeded: function(){
+    this.tabsToShow = TabLogic.getTabsToShow(this);
+    //trees
+    if (this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+      this.tabsToShow  = TabLogic.createTabTree(this.tabsToShow);
+    }
+    var same = true;
+    if (this.lastTabsToShowIds.length != this.tabsToShow.length){
+      same = false;
+    }
+    else {
+      for (var i = 0; i < this.lastTabsToShowIds.length; i++) {
+        if(this.tabsToShow[i].id != this.lastTabsToShowIds[i]) {
+          same = false;
+          break;
+        }
+      }
+    }
+
+    if (!same){
+      this.lastTabsToShowIds = [];
+      for (var i = 0; i < this.tabsToShow.length; i++) {
+        this.lastTabsToShowIds.push(this.tabsToShow[i].id);
+      }
+      this.forceUpdate();
+    }
   },
   searchTabs: function (query) {
     if (typeof query === 'string') {
@@ -72,18 +100,27 @@ module.exports = React.createClass({
 
     return false;
   },
-  componentWillMount: function () {
+  componentDidMount: function () {
     var self = this;
     ThumbnailCache.init();
     TabLogic.init();
     GroupManager.addActiveGroupIdChangedListener(Constants.refs.TAB_LIST, this.activeGroupChanged);
-    TabLogic.getTabs(this, function(){
+    TabLogic.getTabs(this, function(forceUpdateTabs){
       TabLogic.setToCurrentTab(self);
       ThumbnailCache.scheduleCleanup(self);
       GroupLogic.loadGroups();
       //self.refs[Constants.refs.TAB_GROUP_LIST].loadGroups();
       TabLogic.setUpEventListeners(self);
-      self.forceUpdate();
+      self.ready = true;
+      self.rerenderIfNeeded();
+      for (var i = 0; i < forceUpdateTabs.length; i++) {
+        if(self.refs[forceUpdateTabs[i].id]){
+          self.refs[forceUpdateTabs[i].id].setState({
+            title: forceUpdateTabs[i].title,
+            favicon: forceUpdateTabs[i].favicon,
+          });
+        }
+      }
     });
 
   },
@@ -145,7 +182,15 @@ module.exports = React.createClass({
     TabLogic.handleTabCollapsed(this, id);
   },
   render: function () {
-
+    
+    if(!this.ready){
+      return (
+        <div>
+        </div>
+        );
+      }
+    
+    console.log('TabList updated ' + Date.now());
     var tabPlaceholderClasses = classNames({
       'tab-placeholder': true,
       'multi-column': this.props.column == Constants.menus.menuBar.viewActions.DOUBLE_COLUMN,
@@ -168,17 +213,12 @@ module.exports = React.createClass({
     }
     this.tabPlaceholder.className = tabPlaceholderClasses;
 
-    var tabsToShow = TabLogic.getTabsToShow(this);
-    //trees
-    if (this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
-      tabsToShow  = TabLogic.createTabTree(tabsToShow);
-    }
+   
 
   
 
-    var tabNodes = tabsToShow.map(function (tab, i) {
+    var tabNodes = this.tabsToShow.map(function (tab, i) {
       if (!tab.pinned) {
-        
         return (
           <Tab
             ref = { tab.id }

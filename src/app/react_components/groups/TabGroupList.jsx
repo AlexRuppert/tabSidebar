@@ -17,17 +17,14 @@ module.exports = React.createClass({
   createNewGroup: function (name, color, filter) {
     GroupLogic.createNewGroup(this, name, color, filter);
   },  
-  groupsChanged: function () {
-    
+  groupsChanged: function () {    
     this.forceUpdate();
   },
 
-  updateGroupHeights: function (fixed) {
-    
+  updateGroupHeights: function (fixed) {    
     if (!this.state.isVisible) {
       return;
-    }
-    
+    }    
     var isFixed = typeof fixed !== 'undefined';
     if (isFixed) {
       var now = Date.now();
@@ -54,7 +51,6 @@ module.exports = React.createClass({
           children[i+1].style.height = fixed + 'px';
       }
       else {
-
         children[i].style.height = '';
         children[i+1].style.height = '';
         
@@ -76,9 +72,7 @@ module.exports = React.createClass({
       if(children.length % 2 == 1) {
         children[children.length-1].style.height = '';
       }
-      
-    }
-    
+    }    
   },
   getInitialState: function () {
     this.groupPlaceholder.className = 'group-placeholder';
@@ -191,23 +185,23 @@ module.exports = React.createClass({
         );
       }, this);
     }
-      console.log("GroupistUpdated " +Date.now());
-      return (
-        <div className = "tab-group-list-container">
-          <ContextMenu
-            ref = { Constants.refs.GROUP_CONTEXT_MENU }
-            items = { GroupContextMenu }
-            handleSelect = { this.handleGroupContextMenuSelect }/>
+     
+    return (
+      <div className = "tab-group-list-container">
+        <ContextMenu
+          ref = { Constants.refs.GROUP_CONTEXT_MENU }
+          items = { GroupContextMenu }
+          handleSelect = { this.handleGroupContextMenuSelect }/>
 
-          <div
-            ref = { Constants.refs.TAB_GROUP_CONTAINER }
-            className = { groupListClasses }
-            onDragOver = { this.groupDragOver }>
-            { groupNodes }
-          </div>
-          <div
-            className = { groupBarClasses }/>
+        <div
+          ref = { Constants.refs.TAB_GROUP_CONTAINER }
+          className = { groupListClasses }
+          onDragOver = { this.groupDragOver }>
+          { groupNodes }
         </div>
+        <div
+          className = { groupBarClasses }/>
+      </div>
     );
   }
 });

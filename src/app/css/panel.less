@@ -433,7 +433,7 @@ input[type="color"] {
 
       &.active {
         z-index: 2;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 1);
         color: @fontColor;
         background-color: @activeColor !important;
         text-shadow: none;
@@ -519,6 +519,11 @@ input[type="color"] {
     }
 
     .mainline {
+      i {
+        margin-top:1px;
+        margin-left:1px;
+        position: absolute;
+      }
       &.first-node:before {
         content: "";
         width: 6px;

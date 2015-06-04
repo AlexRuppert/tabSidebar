@@ -317,6 +317,10 @@ module.exports = {
       var mapping = this.getBestIdMapping(oldIds, ids);
 
       for (var i = 0; i < groups.length; i++) {
+        //clear any mistakently saved tabs in group
+        if (groups[i].filter && groups[i].tabs.length > 0) {
+          groups[i].tabs = [];
+        }
         for (var j = 0; j < groups[i].tabs.length; j++) {
           if (mapping.hasOwnProperty(groups[i].tabs[j])) {
             groups[i].tabs[j] = mapping[groups[i].tabs[j]];
