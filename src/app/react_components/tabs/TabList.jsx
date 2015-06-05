@@ -290,6 +290,8 @@ module.exports = React.createClass({
     });
     var tabContainerClasses = classNames({
       'tab-container': true,
+      'slim-bar': Persistency.getState().scrollBar == Constants.scrollBar.SLIM,
+      'hidden-bar': Persistency.getState().scrollBar == Constants.scrollBar.HIDDEN,
       'hidden': !this.state.isVisible
     });
     

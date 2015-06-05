@@ -14,16 +14,23 @@ window.Persistency = {
       tabOpacity: 75
     },
     groups: [],
-    column: 'single',
-    showCloseButtons: true,
-    showGroups: true,
-    showNewOnTabs: true,
-    tabIds: [],
-    treeTabs: {
-      closeChildren: 'none'
+    groupSettings: {
+      showGroups: true,
+      twoGroupColumns: false
     },
-    twoGroupColumns: false,
-    viewState: 'normalview'
+    tabSettings: {
+      column: 'single',
+      showCloseButtons: true,
+      showNewOnTabs: true,
+      viewState: 'normalview'
+    },
+    scrollBar: 'default',
+    tabIds: [],
+    treeSettings: {
+      showTreesInFilters: false,
+      closeChildren: 'never',
+      maxLevel: 2
+    },
   },
   loaded: false,
   storage: chrome.storage.local,
@@ -71,7 +78,7 @@ window.Persistency = {
         changed = true;
         if (typeof sourceProperty === 'object'
         && Object.prototype.toString.call(sourceProperty) !== '[object Array]') { // for nested objects
-          if (!target.hasOwnProperty(property)) {            
+          if (!target.hasOwnProperty(property)) {
             target[property] = {};
           }
           var tempResult = this.mergeDefault(target[property], sourceProperty);
@@ -89,8 +96,12 @@ window.Persistency = {
   },
   reset: function () {
     this.currentState = {};
-    self.mergeDefault(self.currentState, self.defaultState);
+    chrome.extension.getBackgroundPage()['persistency'].currentState = {};
+    chrome.extension.getBackgroundPage()['persistency'].loaded = false;
+    this.mergeDefault(this.currentState, this.defaultState);
     this.storage.clear();
+    this.storage.clear();
+    this.saveState();
   },
   saveState: function () {
     this.storage.set(this.currentState);

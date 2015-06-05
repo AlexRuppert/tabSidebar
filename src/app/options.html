@@ -12,53 +12,163 @@
       <div id="content">
         <div id="title">
           <img src="media/icons/tabSidebar_48.png" />
-          <h1>Tab Sidebar Settings</h1>
-         
+          <h1 class="trans">TAB_SIDEBAR_SETTINGS</h1>
         </div>
-        <label class="text-center"><i class="fa fa-exclamation-triangle"></i> For changes to take effect, you need to close and then reopen Tab Sidebar in your side panel.</label>
+
         <section>
           <h3 class="section-header">Tab appearance</h3>
           <div class="checkbox" title="asd">
             <label>
-              <input id="show-close-on-tabs" type="checkbox">
+              <input data-property="tabSettings.showCloseButtons" type="checkbox">
               <span>Show close button on tabs</span>
             </label>
           </div>
           <div class="checkbox" title="asd">
             <label>
-              <input id="show-new-on-tabs" type="checkbox">
+              <input data-property="tabSettings.showNewOnTabs" type="checkbox">
               <span>Show indicator for unvisited tabs</span>
             </label>
           </div>
         </section>
 
         <section>
-          <h3 class="section-header">Tab behavior</h3>
+          <h3 class="section-header">Tab trees</h3>
+          <div class="checkbox" title="asd">
+            <label>
+              <input data-property="treeSettings.showTreesInFilters" type="checkbox">
+              <span>Use tree view also in filter groups</span>
+            </label>
+          </div>
+          <div class="complex-input" title="asd">
+            <label>
+              <span>Max tree level:</span> <label>20</label><br />
+              <input data-property="treeSettings.maxLevel" type="range" min="1" max="10">
+            </label>
+          </div>
+        </section>
+
+        <section>
+          <h3 class="section-header">Tab tree closing behavior</h3>
+          <div class="radio" title="asd">
+            <label>
+              <input type="radio" name="tree-close" data-property="treeSettings.closeChildren" value="never" checked="checked">
+              <span>Do not close children, when parent is closed</span>
+            </label>
+          </div>
+          <div class="radio" title="asd">
+            <label>
+              <input type="radio" name="tree-close" data-property="treeSettings.closeChildren" value="collapsed">
+              <span>Close children only, if parent is collapsed</span>
+            </label>
+          </div>
+          <div class="radio" title="asd">
+            <label>
+              <input type="radio" name="tree-close" data-property="treeSettings.closeChildren" value="always">
+              <span>Always close children, when parent is closed</span>
+            </label>
+          </div>
         </section>
 
         <section>
           <h3 class="section-header">Group appearance</h3>
           <div class="checkbox" title="asd">
             <label>
-              <input id="show-groups" type="checkbox">
-              <span>Show groups bar</span>
+              <input data-property="groupSettings.showGroups" type="checkbox">
+              <span>Show group bar</span>
             </label>
           </div>
         </section>
 
         <section>
-          <h3 class="section-header">Group behavior</h3>
-          
+          <h3 class="section-header">Scroll bar</h3>
+          <div class="radio" title="asd">
+            <label>
+              <input type="radio" name="scroll-bar" data-property="scrollBar" value="default" checked="checked">
+              <span>Use default scroll bar</span>
+            </label>
+          </div>
+          <div class="radio" title="asd">
+            <label>
+              <input type="radio" name="scroll-bar" data-property="scrollBar" value="slim">
+              <span>Use slim scroll bar</span>
+            </label>
+          </div>
+          <div class="radio" title="asd">
+            <label>
+              <input type="radio" name="scroll-bar" data-property="scrollBar" value="hidden">
+              <span>Hide scroll bar</span>
+            </label>
+          </div>
         </section>
+
+        <!--<section>
+          <h3 class="section-header">Animations</h3>
+          <div class="checkbox" title="asd">
+            <label>
+              <input id="use-animations" type="checkbox">
+              <span>Use animations</span>
+            </label>
+          </div>
+        </section>-->
+
         <section>
-          <h3 class="section-header">Reset</h3>
-          <button id="reset-settings">Reset to default</button>
+          <h3 class="section-header">Background</h3>
+          <div class="checkbox" title="asd">
+            <label>
+              <input data-property="background.show" type="checkbox">
+              <span>Use background</span>
+            </label>
+          </div>
+          <div class="complex-input" title="asd">
+            <label>
+              <span>Background image</span><br />
+              <img class="preview" src=""/>
+              <br />
+              <span>Background file</span><br />
+              <input data-property="background.image" type="file"><br /><br />
+              <span>Url:</span><br />
+              <input data-property="background.image" type="text">
+            </label>
+          </div>
+          <div class="complex-input" title="asd">
+            <label>
+              <span>X-offset:</span> <label>15</label>%<br />
+              <input data-property="background.offset" type="range" min="0" max="100">
+            </label>
+          </div>
+          <div class="complex-input" title="asd">
+            <label>
+              <span>Image blur:</span> <label>15</label>px<br />
+              <input data-property="background.blur" type="range" min="0" max="10">
+            </label>
+          </div>
+          <div class="complex-input" title="asd">
+            <label>
+              <span>Image opacity:</span> <label>15</label>%<br />
+              <input data-property="background.opacity" type="range" min="0" max="100">
+            </label>
+          </div>
+          <div class="complex-input" title="asd">
+            <label>
+              <span>Image grayscale filter:</span> <label>15</label>%<br />
+              <input data-property="background.grayscale" type="range" min="0" max="100">
+            </label>
+          </div>
+          <div class="complex-input" title="asd">
+            <label>
+              <span>Tab opacity:</span> <label>15</label>%<br />
+              <input data-property="background.tabOpacity" type="range" min="0" max="100">
+            </label>
+          </div>
+        </section>
+
+        <h3 class="section-header">Reset everything</h3>
+        <button id="reset-settings">Reset to default</button>
         </section>
       </div>
     </div>
   </div>
   <script src="logic/Persistency.js"></script>
   <script src="js/options.built.js"></script>
-  
 </body>
 </html>

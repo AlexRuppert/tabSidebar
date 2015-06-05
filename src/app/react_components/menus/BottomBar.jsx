@@ -18,7 +18,8 @@ module.exports = React.createClass({
     this.props.handleScrollToTop();
   },
   render: function () {
-    var collapseConteinerClasses = classNames({
+    var collapseContainerClasses = classNames({
+      'collapsed-container': true,
       'hidden': this.props.column != Constants.menus.menuBar.viewActions.TREE_VIEW
     });
     return (
@@ -29,7 +30,7 @@ module.exports = React.createClass({
           <i
             className = "fa fa-cog"/>
         </button>
-        <div className = { collapseConteinerClasses }>
+        <div className = { collapseContainerClasses }>
           <button
             title = { Strings.bottomBar.EXPAND_TABS }
             onClick = { this.handleExpandTabs }>

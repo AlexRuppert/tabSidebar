@@ -13,6 +13,9 @@
 @bottomBarHeight: 28px;
 @menuBarHeight: 63px;
 
+@scrollBarTrackColor: #fff;
+@scrollBarThumbColor: #bebebe;
+
 body, html {
   width: 100%;
   height: 100%;
@@ -219,6 +222,23 @@ input[type="color"] {
   flex: 1 0 0;
 }
 
+.slim-bar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.hidden-bar::-webkit-scrollbar {
+  width: 0;
+}
+
+.slim-bar::-webkit-scrollbar-track {
+  background-color: @scrollBarTrackColor;
+}
+
+.slim-bar::-webkit-scrollbar-thumb {
+  background-color: @scrollBarThumbColor;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
 #main {
   .recent-list {
     width: 100%;
@@ -347,6 +367,28 @@ input[type="color"] {
         border-top: none !important;
         border-bottom: none !important;
         border-color: @activeColor;
+
+        &:first-child {
+          border-left: none !important;
+        }
+      }
+    }
+
+    .collapsed-container {
+      button {
+        margin-top: 1px;
+        border-top: 1px solid @activeColor !important;
+        border-bottom: 1px solid @activeColor !important;
+
+        &:hover, &:active {
+          border-top: 1px solid @borderColor !important;
+          border-bottom: 1px solid @borderColor !important;
+          border-color: @borderColor;
+
+          &:first-child {
+            border-left: 1px solid @borderColor !important;
+          }
+        }
       }
     }
   }
@@ -400,7 +442,6 @@ input[type="color"] {
       white-space: nowrap;
       margin: 0;
       padding: 5px 0;
-      
       min-height: 38px;
       max-height: 100px;
       text-overflow: ellipsis;
@@ -492,10 +533,11 @@ input[type="color"] {
     width: 100%;
     height: @tabHeight;
     border-right: 1px solid @borderColor;
-    
-    &.tree-node{
+
+    &.tree-node {
       border-left: 1px solid @borderColor;
     }
+
     .tree-collapse {
       width: 16px;
       height: 16px;
@@ -520,16 +562,16 @@ input[type="color"] {
 
     .mainline {
       i {
-        margin-top:1px;
-        margin-left:1px;
+        margin-top: 1px;
+        margin-left: 1px;
         position: absolute;
       }
+
       &.first-node:before {
         content: "";
         width: 6px;
         height: 13px;
         position: absolute;
-        
         left: -8px;
         top: 0;
         border-left: 1px dotted #000;
@@ -546,7 +588,7 @@ input[type="color"] {
     }
 
     &:not(.active):not(.selected):hover {
-      background-color: lighten(@baseColor, 7%)!important;
+      background-color: lighten(@baseColor, 7%) !important;
     }
 
     &.multi-column {
@@ -753,12 +795,14 @@ input[type="color"] {
   }
 
   .selected {
-    background-color: @selectedColor!important;
+    background-color: @selectedColor !important;
+
     &:hover {
-      background-color: lighten(@selectedColor,7%)!important;
+      background-color: lighten(@selectedColor,7%) !important;
     }
+
     &.active {
-      background-color: lighten(@selectedColor,13%)!important;
+      background-color: lighten(@selectedColor,13%) !important;
     }
   }
 

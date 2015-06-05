@@ -2,9 +2,92 @@
 
 var Strings = require('../react_components/util/Strings.js');
 var Constants = require('../react_components/util/Constants.js');
+function getProperty(obj, prop) {
+  var parts = prop.split('.'),
+      last = parts.pop(),
+      l = parts.length,
+      i = 1;
 
-function update(updateObject) {
-  Persistency.updateState(updateObject);
+  var current = prop;
+  if (l > 0) {
+    current = parts[0];
+  }
+  else {
+    return obj[prop];
+  }
+
+  while ((obj = obj[current]) && i < l) {
+    current = parts[i];
+    i++;
+  }
+
+  if (obj) {
+    return obj[last];
+  }
+}
+
+function setProperty(obj, prop, value) {
+  var parts = prop.split('.'),
+      last = parts.pop(),
+      l = parts.length,
+      i = 1;
+
+  var current = prop;
+
+  if (l > 0) {
+    current = parts[0];
+  }
+  else {
+    obj[prop] = value;
+    return;
+  }
+
+  while ((obj = obj[current]) && i < l) {
+    current = parts[i];
+    i++;
+  }
+
+  if (obj) {
+    obj[last] = value;
+  }
+}
+function translate() {
+  document.title = chrome.i18n.getMessage('TAB_SIDEBAR_SETTINGS');
+  var els = document.querySelectorAll(".trans");
+  for (var i = 0; i < els.length; i++) {
+    els[i].innerText = chrome.i18n.getMessage(els[i].innerText.trim());
+  }
+}
+
+function setControls() {
+  var els = document.getElementsByTagName('input');
+  for (var i = 0; i < els.length; i++) {
+    var property = els[i].dataset.property;
+    if (property) {
+      switch (els[i].type) {
+        case 'checkbox':
+          setCheckbox(els[i], property);
+          break;
+        case 'range':
+          setRange(els[i], property);
+          break;
+        case 'file':
+          setFile(els[i], property);
+          break;
+        case 'radio':
+          setRadio(els[i], property);
+          break;
+        case 'text':
+          setText(els[i], property);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+}
+
+function reloadPanel() {
   var tabs = chrome.extension.getViews();
   var panel = null;
   for (var i = 0; i < tabs.length; i++) {
@@ -17,29 +100,112 @@ function update(updateObject) {
     panel.location.reload();
   }
 }
-function setCheckbox(id, property) {
-  var node = document.getElementById(id);
-  node.checked = Persistency.getState()[property];
-  node.addEventListener('click', function () {
-    var value = document.getElementById(id).checked;
-    var obj = {};
-    obj[property] = value;
-    update(obj);
+function update(updateObject) {
+  if (typeof updateObject !== 'undefined') {
+    Persistency.updateState(updateObject);
+  }
+  else {
+    Persistency.saveState();
+  }
+  reloadPanel();
+}
+function setCheckbox(node, property) {
+  var state = Persistency.getState();
+  node.checked = getProperty(state, property);
+  node.addEventListener('click', function (event) {
+    var value = event.target.checked;
+    setProperty(state, property, value);
+    update();
   });
 }
+
+function setText(node, property) {
+  var img = node.parentNode.getElementsByTagName('img')[0];
+  if (!img)
+    return;
+  var state = Persistency.getState();
+  img.src = getProperty(state, property);
+  node.value = getProperty(state, property);
+  node.addEventListener('change', function (event) {
+    var value = event.target.value;
+    img.src = value;
+    setProperty(state, property, value);
+    update();
+  });
+}
+
+function setFile(node, property) {
+  var img = node.parentNode.getElementsByTagName('img')[0];
+  if (!img)
+    return;
+  var state = Persistency.getState();
+  img.src = getProperty(state, property);
+  node.addEventListener('change', function (event) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      img.src = reader.result;
+      setProperty(state, property, reader.result);
+      update();
+    }
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  });
+}
+
+function setRadio(node, property) {
+  var state = Persistency.getState();
+  
+  var checkedValue = getProperty(state, property);
+  if (node.value == checkedValue) {
+    node.checked = 'true';
+  }
+  node.addEventListener('change', function (event) {
+    if (event.target.checked) {
+      setProperty(state, property, event.target.value);
+      update();
+    }
+  });
+}
+
+
+function setRange(node, property) {
+  var state = Persistency.getState();
+
+  node.value = getProperty(state, property);
+  var label = node.parentNode.getElementsByTagName('label')[0];
+  if (!label)
+    return;
+
+  label.innerHTML = node.value;
+  node.addEventListener('input', function (event) {
+    label.innerHTML = event.target.value;
+  });
+  node.addEventListener('change', function (event) {
+    var value = event.target.value;
+    setProperty(state, property, value);
+    label.innerHTML = value;
+    update();
+  });
+}
+
 function initControls() {
-  setCheckbox('show-close-on-tabs', 'showCloseButtons');
-  setCheckbox('show-groups', 'showGroups');
-  setCheckbox('show-new-on-tabs', 'showNewOnTabs');
+ 
+  setControls();
+  
   document.getElementById('reset-settings').addEventListener('click', function () {
     Persistency.reset();
     init();
+    reloadPanel();
+    //window.location.reload();
+    console.log(Persistency.getState());
   });
 }
 
 function init() {
   Persistency.init();
   Persistency.loadState(function () {
+    translate();
     initControls();
   });
 }

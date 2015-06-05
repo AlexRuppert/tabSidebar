@@ -57,7 +57,7 @@
     "message": "Zuletzt angeklickt"
   },
   "LAST_VISITED_GREATER" : {
-    "message": "LEtzter Click älter als (min)"
+    "message": "Letzter Click älter als (min)"
   },
   "LAST_VISITED_LOWER" : {
     "message": "Letzter Click jünger als (min)"
@@ -180,6 +180,11 @@
   },
   "TREE_VIEW" : {
     "message": "Baumansicht"
+  },
+
+
+  "TAB_SIDEBAR_SETTINGS" :  {
+    "message":  "Tab Sidebar Einstellungen"
   }
 
 }

@@ -19,7 +19,6 @@
   min-width: 780px;
   padding: 0 20px;
   position: relative;
-  
 }
 
 #content {
@@ -69,10 +68,20 @@ section {
     -webkit-margin-start: 10px;
   }
 }
-
+.preview {
+  max-width: 300px;
+  max-height: 300px;
+}
 .settings-row {
   margin: 0 0 6px 0;
   display: block;
+}
+
+.complex-input {
+  margin-top: 15px;
+  label > * {
+    margin-top: 5px;
+  }
 }
 
 .checkbox > *, .radio > * {
@@ -96,11 +105,13 @@ section {
   -webkit-flex: 1;
 }
 
-button, input[type='number'],
+button,
+input[type='number'],
 input[type='password'],
 input[type='search'],
 input[type='text'],
 input[type='url'],
+input[type='file'],
 input:not([type]),
 select,
 textarea {
@@ -108,11 +119,15 @@ textarea {
   font: inherit;
 }
 
-.text-center{
-  text-align:center;
+input[type='text']{
+  width: 100%;
+  max-width: 500px;
+}
+.text-center {
+  text-align: center;
   display: block;
 }
 
-.fa{
-  color:#555;
+.fa {
+  color: #555;
 }

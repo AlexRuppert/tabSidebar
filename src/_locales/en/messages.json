@@ -180,6 +180,11 @@
   },
   "TREE_VIEW" : {
     "message": "Tree view"
+  },
+
+
+  "TAB_SIDEBAR_SETTINGS" :  {
+    "message":  "Tab Sidebar Settings"
   }
 
 }

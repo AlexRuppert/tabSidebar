@@ -30,12 +30,12 @@ module.exports = React.createClass({
     var self = this;
     var state = Persistency.getState();
     self.setState({
-      viewState: state.viewState,
-      column: state.column,
-      showCloseButtons: state.showCloseButtons,
-      showGroups: state.showGroups,
-      showNewOnTabs: state.showNewOnTabs,
-      twoGroupColumns: state.twoGroupColumns
+      viewState: state.tabSettings.viewState,
+      column: state.tabSettings.column,
+      showCloseButtons: state.tabSettings.showCloseButtons,
+      showGroups: state.groupSettings.showGroups,
+      showNewOnTabs: state.tabSettings.showNewOnTabs,
+      twoGroupColumns: state.groupSettings.twoGroupColumns
     });
     
   },

@@ -96,6 +96,11 @@ module.exports = {
 
     TAB_LIST: 'tabList'
   },
+  scrollBar: {
+    DEFAULT: 'default',
+    HIDDEN: 'hidden',
+    SLIM: 'slim'
+  },
   thumbnails: {
     CLEANUP_INTERVAL: 60 * 1000 * 5,
     CRITICAL_CACHE_SIZE: 2000,

@@ -62,6 +62,8 @@ module.exports = React.createClass({
     var self = this;
     var recentListClasses = classNames({
       'recent-list': true,
+      'slim-bar': Persistency.getState().scrollBar == Constants.scrollBar.SLIM,
+      'hidden-bar': Persistency.getState().scrollBar == Constants.scrollBar.HIDDEN,
       'hidden': !this.state.isVisible
     });
     var recentTabs = this.state.recentTabList.map(function (tab, i) {
