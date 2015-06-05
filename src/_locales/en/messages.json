@@ -1,0 +1,185 @@
+﻿{
+  "COLLAPSE_TABS": {
+    "message": "Collapse tabs"
+  },
+  "EXPAND_TABS": {
+    "message": "Expand tabs"
+  },
+  "GO_TO_TOP" : {
+    "message": "Go to top"
+  },
+  "SETTINGS" : {
+    "message": "Settings"
+  },
+
+
+
+  "CLONE_GROUP" : {
+    "message": "Clone group"
+  },
+  "CLOSE_GROUP" : {
+    "message": "Close group"
+  },
+  "CLOSE_OTHER_GROUPS" : {
+    "message": "Close other groups"
+  },
+  "EDIT_GROUP" : {
+    "message": "Edit group"
+  },
+  "NEW_GROUP" : {
+    "message": "New group"
+  },
+
+
+
+  "ASCENDING" : {
+    "message": "ascending"
+  },
+  "CREATE_FILTER" : {
+    "message": "Create as tab filter"
+  },
+  "CREATE_GROUP" : {
+    "message": "Create group"
+  },
+  "DESCENDING" : {
+    "message": "descending"
+  },
+  "FILTER_BY" : {
+    "message": "Filter by:"
+  },
+  "FILTER_VALUE" : {
+    "message": "Filter value:"
+  },
+  "FILTER_VALUE_PLACEHOLDER" : {
+    "message": "use * as wildcard"
+  },
+  "LAST_VISITED" : {
+    "message": "Last clicked"
+  },
+  "LAST_VISITED_GREATER" : {
+    "message": "Last clicked greater (min)"
+  },
+  "LAST_VISITED_LOWER" : {
+    "message": "Last clicked lower (min)"
+  },
+  "NAME_PLACEHOLDER" : {
+    "message": "MyGroup"
+  },
+  "NONE" : {
+    "message": "none"
+  },
+  "OPENED" : {
+    "message": "Last created"
+  },
+  "OPENED_GREATER" : {
+    "message": "Last created greater (min)"
+  },
+  "OPENED_LOWER" : {
+    "message": "Last created lower (min)"
+  },
+  "SAVE_CHANGES" : {
+    "message": "Save changes"
+  },
+  "SORT_BY" : {
+    "message": "Sort by:"
+  },
+  "SORT_DIRECTION" : {
+    "message": "Sort direction:"
+  },
+  "TITLE" : {
+    "message": "Title"
+  },
+  "TITLE_CONTAINS" : {
+    "message": "Title contains"
+  },
+  "URL" : {
+    "message": "Url"
+  },
+  "URL_CONTAINS" : {
+    "message": "Url contains"
+  },
+
+
+
+  "ALL_GROUP" : {
+    "message": "all"
+  },
+  "ALL_GROUP_CLONE" : {
+    "message": "all - clone"
+  },
+
+
+  "CLEAR_BUTTON_TITLE" : {
+    "message": "Clear search"
+  },
+  "INPUT_PLACEHOLDER" : {
+    "message": "Search tabs..."
+  },
+
+
+  
+  "CLOSED_TABS" : {
+    "message": "Recently closed tabs"
+  },
+  "NEW_TAB" : {
+    "message": "New tab"
+  },
+  "NEW_TAB_GROUP" : {
+    "message": "New tab group"
+  },
+  "TABS" : {
+    "message": "Show opened tabs"
+  },
+  "VIEW_MENU" : {
+    "message": "View"
+  },
+
+
+
+  "CLONE_TAB" : {
+    "message": "Clone tab"
+  },
+  "CLOSE_TAB" : {
+    "message": "Close tab"
+  },
+  "CLOSE_OTHER_TABS" : {
+    "message": "Close other tabs"
+  },
+  "NEW_TAB" : {
+    "message": "New tab"
+  },
+  "PIN_TAB" : {
+    "message": "Pin tab"
+  },
+  "RELOAD_TAB" : {
+    "message": "Reload tab"
+  },
+  "UNPIN_TAB" : {
+    "message": "Unpin tab"
+  },
+
+
+
+  "NORMAL_VIEW" : {
+    "message": "Normal view"
+  },
+  "SMALL_VIEW" : {
+    "message": "Small tabs"
+  },
+  "THUMBNAIL_VIEW" : {
+    "message": "Thumbnail view"
+  },
+  "COMPACT_VIEW" : {
+    "message": "Compact thumbnail view"
+  },
+  "SINGLE_COLUMN" : {
+    "message": "Single tab column"
+  },
+  "DOUBLE_COLUMN" : {
+    "message": "Two tab columns"
+  },
+  "TREE_VIEW" : {
+    "message": "Tree view"
+  }
+
+}

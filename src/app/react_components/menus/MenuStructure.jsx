@@ -14,7 +14,9 @@ module.exports = {
           case Constants.menus.menuTypes.ITEM:
             return (
               <MenuItem
-                key = { item.action }>
+                key = { item.action }
+                title = { item.title }>
+                
                 <i
                   className = { 'fa ' + item.icon }/>
                 { item.title }

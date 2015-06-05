@@ -25,7 +25,7 @@ module.exports = React.createClass({
     return false;
   },
   handleClick: function (event) {
-    this.setState({ isActive: true });
+    //this.setState({ isActive: true });
     this.props.onGroupClicked(this.props.id, event);
   },
   handleCloseClicked: function (event) {

@@ -205,9 +205,9 @@ module.exports = {
     else {
       parent.insertBefore(groupList.groupPlaceholder, e.target.nextSibling);
     }
-    
-      groupList.updateGroupHeights(50);
-    
+
+    groupList.updateGroupHeights(50);
+
     /*
     var relY = e.clientY - tabList.groupOver.offsetTop - Constants.offsets.TAB_LIST_TOP;
     var height = tabList.groupOver.offsetHeight / 2;
@@ -259,11 +259,23 @@ module.exports = {
   },
   handleGroupClicked: function (groupList, id, event) {
     event = event.nativeEvent;
+
     if (event.which == 1) {
+      var groups = GroupManager.getGroups();
       var activeGroup = GroupManager.getActiveGroupId();
       if (activeGroup != id) {
-        if (groupList.refs[activeGroup]) {
-          groupList.refs[activeGroup].setState({ isActive: false });
+        for (var i = 0; i < groups.length; i++) {
+          var groupRef = groups[i].id;
+          if (groupRef != id
+            && groupList.refs[groupRef] && groupList.refs[groupRef].state.isActive) {
+            groupList.refs[groupRef].setState({ isActive: false });
+          }
+        }
+        if (id != Constants.groups.ALL_GROUP_ID) {
+          groupList.refs[Constants.groups.ALL_GROUP_ID].setState({ isActive: false });
+        }
+        if (groupList.refs[id]) {
+          groupList.refs[id].setState({ isActive: true });
         }
         GroupManager.setActiveGroupId(id);
       }
@@ -296,7 +308,7 @@ module.exports = {
     this.init();
     var tabs = TabManager.getTabs();
     var groups = Persistency.getState().groups;
-    
+
     var sameSession = true;
     if (!chrome.extension.getBackgroundPage().hasOwnProperty(Constants.globalProperties.SAME_SESSION)) {
       chrome.extension.getBackgroundPage()[Constants.globalProperties.SAME_SESSION] = true;

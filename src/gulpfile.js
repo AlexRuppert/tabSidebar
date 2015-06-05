@@ -81,7 +81,7 @@ gulp.task('release', function () {
     .pipe(source(path.OPTIONS_BUILD))
     .pipe(streamify(uglify()))
     .pipe(gulp.dest(path.RELEASE + path.OPTIONS_DEST));
-  gulp.src('./app/logic/background.js')
+  gulp.src('./app/logic/*.js')
   .pipe(uglify())
   .pipe(gulp.dest(path.RELEASE + "/app/logic"));
   //copy stuff
@@ -101,7 +101,8 @@ gulp.task('release', function () {
   gulp.src('./app/*.html')
   .pipe(minifyHTML())
   .pipe(gulp.dest(path.RELEASE + '/app/'));
-
+  gulp.src('./_locales/**/*.json')
+  .pipe(gulp.dest(path.RELEASE + '/_locales/'));
   //css
   gulp.src('./app/css/*.less')
   .pipe(less())

@@ -1,0 +1,185 @@
+﻿{
+  "COLLAPSE_TABS": {
+    "message": "Tabs einklappen"
+  },
+  "EXPAND_TABS": {
+    "message": "Tabs ausklappen"
+  },
+  "GO_TO_TOP" : {
+    "message": "Nach oben"
+  },
+  "SETTINGS" : {
+    "message": "Einstellungen"
+  },
+
+
+
+  "CLONE_GROUP" : {
+    "message": "Gruppe duplizieren"
+  },
+  "CLOSE_GROUP" : {
+    "message": "Gruppe schließen"
+  },
+  "CLOSE_OTHER_GROUPS" : {
+    "message": "Andere Gruppen schließen"
+  },
+  "EDIT_GROUP" : {
+    "message": "Gruppe bearbeiten"
+  },
+  "NEW_GROUP" : {
+    "message": "Neue Gruppe"
+  },
+
+
+
+  "ASCENDING" : {
+    "message": "aufsteigend"
+  },
+  "CREATE_FILTER" : {
+    "message": "Als Filter erstellen"
+  },
+  "CREATE_GROUP" : {
+    "message": "Gruppe erstellen"
+  },
+  "DESCENDING" : {
+    "message": "absteigend"
+  },
+  "FILTER_BY" : {
+    "message": "Filter:"
+  },
+  "FILTER_VALUE" : {
+    "message": "Filterwert:"
+  },
+  "FILTER_VALUE_PLACEHOLDER" : {
+    "message": "* als platzhalter benutzen"
+  },
+  "LAST_VISITED" : {
+    "message": "Zuletzt angeklickt"
+  },
+  "LAST_VISITED_GREATER" : {
+    "message": "LEtzter Click älter als (min)"
+  },
+  "LAST_VISITED_LOWER" : {
+    "message": "Letzter Click jünger als (min)"
+  },
+  "NAME_PLACEHOLDER" : {
+    "message": "Meine Gruppe"
+  },
+  "NONE" : {
+    "message": "kein"
+  },
+  "OPENED" : {
+    "message": "Zuletzt erstellt"
+  },
+  "OPENED_GREATER" : {
+    "message": "Zuletzt erstellt nach (min)"
+  },
+  "OPENED_LOWER" : {
+    "message": "Zuletzt erstellt vor (min)"
+  },
+  "SAVE_CHANGES" : {
+    "message": "Speichern"
+  },
+  "SORT_BY" : {
+    "message": "Sortierung:"
+  },
+  "SORT_DIRECTION" : {
+    "message": "Sortierrichtung:"
+  },
+  "TITLE" : {
+    "message": "Titel"
+  },
+  "TITLE_CONTAINS" : {
+    "message": "Titel enthält"
+  },
+  "URL" : {
+    "message": "Url"
+  },
+  "URL_CONTAINS" : {
+    "message": "Url enthält"
+  },
+
+
+
+  "ALL_GROUP" : {
+    "message": "alle"
+  },
+  "ALL_GROUP_CLONE" : {
+    "message": "alle - Kopie"
+  },
+
+
+  "CLEAR_BUTTON_TITLE" : {
+    "message": "Suche zurücksetzen"
+  },
+  "INPUT_PLACEHOLDER" : {
+    "message": "Durchsuche tabs..."
+  },
+
+
+  
+  "CLOSED_TABS" : {
+    "message": "Kürzlich geschlossene Tabs"
+  },
+  "NEW_TAB" : {
+    "message": "Neuer Tab"
+  },
+  "NEW_TAB_GROUP" : {
+    "message": "Neue Gruppe"
+  },
+  "TABS" : {
+    "message": "Zeige Tabs"
+  },
+  "VIEW_MENU" : {
+    "message": "Ansicht"
+  },
+
+
+
+  "CLONE_TAB" : {
+    "message": "Tab duplizieren"
+  },
+  "CLOSE_TAB" : {
+    "message": "Tab schließen"
+  },
+  "CLOSE_OTHER_TABS" : {
+    "message": "Andere Tabs schließen"
+  },
+  "NEW_TAB" : {
+    "message": "Neuer Tab"
+  },
+  "PIN_TAB" : {
+    "message": "Tab anheften"
+  },
+  "RELOAD_TAB" : {
+    "message": "Tab neu laden"
+  },
+  "UNPIN_TAB" : {
+    "message": "Tab lösen"
+  },
+
+
+
+  "NORMAL_VIEW" : {
+    "message": "Normale Ansicht"
+  },
+  "SMALL_VIEW" : {
+    "message": "Kleine Tabs"
+  },
+  "THUMBNAIL_VIEW" : {
+    "message": "Vorschaubilder"
+  },
+  "COMPACT_VIEW" : {
+    "message": "Kompakte Vorschaubilder"
+  },
+  "SINGLE_COLUMN" : {
+    "message": "Einspaltige Ansicht"
+  },
+  "DOUBLE_COLUMN" : {
+    "message": "Zweispaltige Ansicht"
+  },
+  "TREE_VIEW" : {
+    "message": "Baumansicht"
+  }
+
+}

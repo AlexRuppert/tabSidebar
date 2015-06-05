@@ -177,7 +177,7 @@ module.exports = React.createClass({
             key = { group.id }
             title = { group.title }
             color = { group.color }
-            isActive = { activeGroupId == group.id }
+            isActive = { activeGroupId == group.id}
             isFilter = { group.filter }
             onContextMenu = { this.handleGroupContextMenuOpen }
             onDragEnd = { this.groupDragEnd }

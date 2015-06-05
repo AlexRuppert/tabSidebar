@@ -95,7 +95,7 @@ module.exports = React.createClass({
          <MenuBarMenu
            items = { ViewMenu }
            handleSelect = { this.handleMenuSelect }
-           notchOffset = { this.props.showGroups?60:35 }
+           notchOffset = { this.props.showGroups?60:45 }
            isVisible = { this.state.openedMenu == Constants.menus.menuBar.openStates.VIEW }/>
          <button
            className = { showRecentButtonClasses }
