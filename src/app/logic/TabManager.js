@@ -13,6 +13,7 @@ window.TabManager = {
       else {
         var manager = chrome.extension.getBackgroundPage()[tabManager];
         this.tabs = manager.tabs;
+       
         this.activeTabId = manager.activeTabId;
       }
       this.initialized = true;
@@ -29,5 +30,6 @@ window.TabManager = {
   },
   setTabs: function (tabs) {
     this.tabs = tabs;
+    chrome.extension.getBackgroundPage()['tabManager'].tabs = this.tabs;
   }
 }

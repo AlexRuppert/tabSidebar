@@ -15,8 +15,13 @@ window.Persistency = {
     },
     groups: [],
     groupSettings: {
+      createNewTabs: 'next',
+      showBarBackground: true,
       showGroups: true,
       twoGroupColumns: false
+    },
+    iconSettings: {
+      gray: false
     },
     tabSettings: {
       column: 'single',
@@ -67,6 +72,7 @@ window.Persistency = {
         self.saveState();
       }
       self.loaded = true;
+     
       callback();
     });
   },
@@ -106,12 +112,29 @@ window.Persistency = {
   saveState: function () {
     this.storage.set(this.currentState);
   },
-  updateState: function (object) {
-    for (var property in object) {
-      if (object.hasOwnProperty(property)) {
-        this.currentState[property] = object[property];
+  updateStateRecursive: function (stateObj, updateObj) {
+    for (var property in updateObj) {
+      if (updateObj.hasOwnProperty(property)) {
+        var updateProperty = updateObj[property];
+        if (typeof updateProperty === 'object'
+          && Object.prototype.toString.call(updateProperty) !== '[object Array]'
+          && typeof stateObj[property] === 'object') {
+          this.updateStateRecursive(stateObj[property], updateProperty);
+        }
+        else {
+          stateObj[property] = updateProperty;
+        }
       }
     }
-    this.storage.set(object);
+  },
+  updateState: function (object) {
+    var obj = {};
+    this.updateStateRecursive(this.currentState, object);
+    for (var property in object) {
+      if (object.hasOwnProperty(property)) {
+        obj[property] = this.currentState[property]
+      }
+    }
+    this.storage.set(obj);
   }
 }

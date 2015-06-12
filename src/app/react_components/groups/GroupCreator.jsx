@@ -6,8 +6,9 @@ var Strings = require('../util/Strings.js');
 module.exports = React.createClass({
   isEditMode: false,
   afterEditCallback: null,
-
+  isFilter: false,
   showDialog: function (group, callback) {
+    this.isFilter = false;
     this.isEditMode = (typeof group !== 'undefined'
       && typeof callback === 'function');
     this.setState({ isVisible: true });
@@ -20,9 +21,16 @@ module.exports = React.createClass({
     }
     else {
       this.afterEditCallback = callback;
-
+      this.isFilter = group.filter;
+     
       color = group.color;
       title = group.title;
+      if(group.filter){
+        React.findDOMNode(this.refs[Constants.refs.FILTER_BY]).value = group.filterBy;
+        React.findDOMNode(this.refs[Constants.refs.FILTER_BY_VALUE]).value = group.filterValue;
+        React.findDOMNode(this.refs[Constants.refs.SORT_BY]).value = group.sortBy;
+        React.findDOMNode(this.refs[Constants.refs.SORT_DIRECTION]).value = group.sortDirection;
+      }
     }
     var self = this;
     setTimeout(function () {
@@ -68,13 +76,18 @@ module.exports = React.createClass({
 
     if (title.length > 0) {
       this.handleCloseClick();
+      var filter = null;
+      
+    
+      filter = this.getFilterSettings();
+     
       if (this.isEditMode) {
-        this.afterEditCallback(title, color);
+        if(!this.isFilter){
+          filter = null;
+        }
+        this.afterEditCallback(title, color, filter);
       }
       else {
-
-        var filter = this.getFilterSettings();
-        
         if(!this.state.showFilterSection
           || (filter.filterBy == Constants.groupCreator.NONE
           && filter.sortBy == Constants.groupCreator.NONE)) {
@@ -104,7 +117,8 @@ module.exports = React.createClass({
     });
 
     var filterSectionClasses = classNames({
-      'hidden': !this.state.showFilterSection || this.isEditMode
+      'hidden': (!this.state.showFilterSection && !this.isEditMode) 
+        || (this.isEditMode && !this.isFilter)
     });
     var checkBoxSectionClasses = classNames({
       'hidden': this.isEditMode

@@ -6,11 +6,11 @@ var Constants = require('../util/Constants.js');
 module.exports = React.createClass({
   getInitialState: function () {
     return {
-      isActive: false,
+      isActive: this.props.isActive,
       notVisited: true,
-      thumbnail: this.props.thumbnail || '',
-      favicon: this.props.favicon || '',
-      title: this.props.title || '',
+      thumbnail: this.props.thumbnail ,
+      favicon: this.props.favicon,
+      title: this.props.title,
       isLoading: false,
       isSelected: false
     };
@@ -20,13 +20,18 @@ module.exports = React.createClass({
       viewState: Constants.viewStates.NORMAL_VIEW,
       collapsed: false,
       column:  Constants.menus.menuBar.viewActions.SINGLE_COLUMN,
+      favicon: '',
       firstNode: false,
+      isActive: false,
       isPinned: false,
       isSmall: false,
       level: 0,
       parentNode: false,
       showClose: false,
-      showNewOnTabs: true
+      showNewOnTabs: true,
+      title: '',
+      thumbnail: ''
+
     };
   },
   shouldComponentUpdate: function (nextProps, nextState) {
@@ -49,6 +54,8 @@ module.exports = React.createClass({
       return true;
     if (this.props.collapsed != nextProps.collapsed)
       return true;
+    /*if (this.props.newlyCreated != nextProps.newlyCreated)
+      return true;*/
     if (this.props.firstNode != nextProps.firstNode)
       return true;
     if (this.props.parentNode != nextProps.parentNode)
@@ -108,7 +115,7 @@ module.exports = React.createClass({
     event.stopPropagation()
   }, 
   handleCollapse: function (event) {
-    event.stopPropagation();    
+    event.stopPropagation();
     this.props.onTabCollapsed(this.props.id);
   },
   render: function () {

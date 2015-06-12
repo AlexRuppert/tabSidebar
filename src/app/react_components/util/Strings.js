@@ -8,9 +8,11 @@ module.exports = {
     SETTINGS: chrome.i18n.getMessage('SETTINGS')
   },
   groupContextMenu: {
+    CLONE_AS_NORMAL: chrome.i18n.getMessage('CLONE_AS_NORMAL'),
     CLONE_GROUP: chrome.i18n.getMessage('CLONE_GROUP'),
     CLOSE_GROUP: chrome.i18n.getMessage('CLOSE_GROUP'),
     CLOSE_OTHER_GROUPS: chrome.i18n.getMessage('CLOSE_OTHER_GROUPS'),
+    CLOSE_TABS: chrome.i18n.getMessage('CLOSE_TABS'),
     EDIT_GROUP: chrome.i18n.getMessage('EDIT_GROUP'),
     NEW_GROUP: chrome.i18n.getMessage('NEW_GROUP')
   },
@@ -68,7 +70,9 @@ module.exports = {
     THUMBNAIL_VIEW: chrome.i18n.getMessage('THUMBNAIL_VIEW'),
     COMPACT_VIEW: chrome.i18n.getMessage('COMPACT_VIEW'),
     SINGLE_COLUMN: chrome.i18n.getMessage('SINGLE_COLUMN'),
+    SINGLE_COLUMN_GROUP: chrome.i18n.getMessage('SINGLE_COLUMN_GROUP'),
     DOUBLE_COLUMN: chrome.i18n.getMessage('DOUBLE_COLUMN'),
+    DOUBLE_COLUMN_GROUP: chrome.i18n.getMessage('DOUBLE_COLUMN_GROUP'),
     TREE_VIEW: chrome.i18n.getMessage('TREE_VIEW')
   }
 }

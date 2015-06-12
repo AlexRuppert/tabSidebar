@@ -81,6 +81,10 @@ input[type="color"] {
   margin-bottom: 0 !important;
 }
 
+.no-background {
+  background: none !important;
+}
+
 @contextMenuBorderColor: #bababa;
 @contextMenuShadowColor: #8d8d8d;
 @contextMenuBackgroundColor: #f0f0f0;
@@ -102,9 +106,11 @@ input[type="color"] {
   color: @contextMenuFontColor;
   cursor: default;
   box-sizing: border-box;
+  font-size: 12px;
 
   .fa {
     text-shadow: none !important;
+    font-size: 14px;
   }
 
   .rc-menu-item-active, .rc-menu-submenu-active {
@@ -115,10 +121,10 @@ input[type="color"] {
   .rc-menu-item {
     i {
       margin-right: 0;
-      width: 25px;
+      width: 20px;
       text-align: center;
-      margin-left: -7px;
-      margin-right: 7px;
+      margin-left: -4px;
+      margin-right: 4px;
     }
   }
 
@@ -443,7 +449,7 @@ input[type="color"] {
       margin: 0;
       padding: 5px 0;
       min-height: 38px;
-      max-height: 100px;
+      max-height: 120px;
       text-overflow: ellipsis;
       text-align: center;
       box-sizing: border-box;
@@ -457,6 +463,10 @@ input[type="color"] {
       text-shadow: 0 0 1px #000;
       border-bottom: 1px solid #fff;
 
+      & * {
+        pointer-events: none;
+      }
+
       .fa {
         color: #fff;
         text-shadow: none;
@@ -464,10 +474,7 @@ input[type="color"] {
         margin-bottom: 3px;
       }
 
-      &:not(:first-child) {
-      }
-
-      &:hover {
+      &.hover {
         background-image: url('../media/img/whitepixel.png');
         background-blend-mode: soft-light;
       }
@@ -526,7 +533,7 @@ input[type="color"] {
     border-bottom: 1px solid @borderColor;
     box-sizing: border-box;
     float: left;
-    box-shadow: rgba(255,255,255,0.4) 0 1px inset;
+    box-shadow: rgba(255,255,255,0.4) 0 1px inset, 1px 5px 5px -5px #000;
     padding: 5px 5px;
     position: relative;
     z-index: 3;
@@ -546,6 +553,8 @@ input[type="color"] {
       padding: 0 3px;
       margin-left: -2px;
       margin-right: 4px;
+      position: relative;
+      z-index: 1;
 
       &:hover {
         & > i {
@@ -596,10 +605,16 @@ input[type="color"] {
     }
 
     &.small {
-      height: 20px !important;
+      height: 18px !important;
       padding: 1px 0 0 1px;
 
+      .tree-collapse {
+        margin-right: 1px;
+        margin-top: -1px;
+      }
+
       .title {
+        line-height: 16px;
         margin-left: 18px !important;
       }
     }
@@ -630,28 +645,29 @@ input[type="color"] {
       height: 20px;
 
       .favicon {
-        margin: 1px;
+        margin: 2px 1px 1px 1px;
       }
 
       .title {
         text-overflow: clip;
       }
 
-      &:before {
+      .mainline:before {
         content: '';
         width: 100%;
         height: 100%;
         position: absolute;
         left: 0;
         top: 0;
+        z-index: 100;
         background: linear-gradient(to right,transparent 60%, lighten(@activeColor,100%) 100%);
       }
 
-      &:not(.active):before {
+      &:not(.active) .mainline:before {
         background: linear-gradient(to right,transparent 60%, @baseColor 100%);
       }
 
-      &:hover:before {
+      &:hover .mainline:before {
         background: linear-gradient(to right,transparent 60%, @activeColor 100%);
       }
     }
@@ -737,6 +753,9 @@ input[type="color"] {
     }
 
     &.compact-thumbnail {
+      .tree-collapse {
+        text-shadow: 1px 1px 0 #fff!important;
+      }
       .title {
         color: black;
         text-shadow: 0 0 1px #FFF,0 0 1px #FFF, 0 0 2px #FFF;

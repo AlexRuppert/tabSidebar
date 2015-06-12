@@ -13,7 +13,10 @@
              "48": "app/media/icons/tabSidebar_48.png",
              "128": "app/media/icons/tabSidebar_128.png" },
   "sidebar_action": {
-    "default_icon": "app/media/icons/tabSidebar_19.png", //required
+    "default_icon": {
+      "19": "app/media/icons/tabSidebar_19.png",
+		  "38": "app/media/icons/tabSidebar_48.png"
+    }, //required
     "default_title": "Tab Sidebar",    // optional; shown in tooltip
     "default_panel": "app/panel.html"    // required
   }

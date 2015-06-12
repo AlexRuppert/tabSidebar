@@ -38,6 +38,10 @@ module.exports = React.createClass({
       case Constants.menus.menuBar.viewActions.TREE_VIEW:
         this.props.handleColumnChange(action);
         break;
+      case Constants.menus.menuBar.viewActions.SINGLE_COLUMN_GROUP:
+      case Constants.menus.menuBar.viewActions.DOUBLE_COLUMN_GROUP:
+        this.props.handleGroupColumnChange(action);
+        break;
       default:
         break;
     }

@@ -4,7 +4,7 @@
 var Constants = require('../util/Constants.js');
 var TabLogic = require('../tabs/Tab.js');
 module.exports = React.createClass({
-
+  searchQuery: '',
   updateList: function() {
     var list = [];
     var seenUrls = {};
@@ -15,12 +15,21 @@ module.exports = React.createClass({
         if(!seenUrls.hasOwnProperty(url)) {
           seenUrls[url] = true;
           sessions[i].tab.favicon = TabLogic.getFavIcon(sessions[i].tab.url, 'opera://favicon/'+sessions[i].tab.url);
-          list.push(sessions[i].tab);
+          if(self.searchQuery.length <= 0 || sessions[i].tab.title.toLowerCase().indexOf(self.searchQuery) >= 0) {
+            list.push(sessions[i].tab);
+          }
         }
       }
       self.setState({recentTabList: list})
       self.forceUpdate();
     });
+  },
+  search: function (query) {
+    query = query.toLowerCase();
+    if (query != this.searchQuery) {
+      this.searchQuery = query;
+      this.updateList();
+    }
   },
   getInitialState: function() {
     return {

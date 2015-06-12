@@ -23,12 +23,13 @@ module.exports = React.createClass({
       showCloseButtons: true,
       showGroups: true,
       showNewOnTabs: true,
-      twoGroupColumns: false
+      twoGroupColumns: true
     };
   },
   componentWillMount: function () {
     var self = this;
     var state = Persistency.getState();
+    
     self.setState({
       viewState: state.tabSettings.viewState,
       column: state.tabSettings.column,
@@ -44,8 +45,13 @@ module.exports = React.createClass({
     this.refs[Constants.refs.TAB_LIST].collapseTabs();
   },
   handleColumnChange: function (column) {
-    Persistency.updateState({ column: column });
+    Persistency.updateState({ tabSettings: {column: column }});
     this.setState({ column: column });
+  },
+  handleGroupColumnChange: function (column) {
+    var twoGroupColumns = column == Constants.menus.menuBar.viewActions.DOUBLE_COLUMN_GROUP;
+    Persistency.updateState({ groupSettings: {twoGroupColumns: twoGroupColumns}});
+    this.setState({ twoGroupColumns: twoGroupColumns });
   },
   handleEditTabGroup: function (group, callback) {
     this.refs[Constants.refs.GROUP_CREATOR].showDialog(group, callback);
@@ -68,10 +74,15 @@ module.exports = React.createClass({
     }
   },
   handleSearch: function (query) {
-    this.refs[Constants.refs.TAB_LIST].searchTabs(query);
+    if(this.refs[Constants.refs.TAB_LIST].state.isVisible) {
+      this.refs[Constants.refs.TAB_LIST].searchTabs(query);
+    }
+    if(this.refs[Constants.refs.RECENT_LIST].state.isVisible) {
+      this.refs[Constants.refs.RECENT_LIST].search(query);
+    }
   },
   handleViewChange: function (view) {
-    Persistency.updateState({ viewState: view });
+    Persistency.updateState({tabSettings: { viewState: view }});
     this.setState({ viewState: view });
   },
   showRecentTabs: function (showing) {
@@ -84,6 +95,7 @@ module.exports = React.createClass({
       <div>
         <MenuBar
           handleColumnChange = { this.handleColumnChange }
+          handleGroupColumnChange = { this.handleGroupColumnChange }
           handleNewTabGroup = { this.handleNewTabGroup }
           handleViewChange = { this.handleViewChange }
           showGroups = { this.state.showGroups }

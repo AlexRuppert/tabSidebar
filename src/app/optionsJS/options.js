@@ -1,7 +1,6 @@
 ﻿"use strict";
 
-var Strings = require('../react_components/util/Strings.js');
-var Constants = require('../react_components/util/Constants.js');
+
 function getProperty(obj, prop) {
   var parts = prop.split('.'),
       last = parts.pop(),
@@ -52,11 +51,19 @@ function setProperty(obj, prop, value) {
   }
 }
 function translate() {
-  document.title = chrome.i18n.getMessage('TAB_SIDEBAR_SETTINGS');
+  document.title = chrome.i18n.getMessage('SETTINGS_TAB_SIDEBAR_TITLE');
   var els = document.querySelectorAll(".trans");
   for (var i = 0; i < els.length; i++) {
     els[i].innerText = chrome.i18n.getMessage(els[i].innerText.trim());
   }
+
+  var els = document.querySelectorAll("div");
+  for (var i = 0; i < els.length; i++) {
+    if (els[i].title.length > 0) {
+      els[i].title = chrome.i18n.getMessage(els[i].title.trim());
+    }
+  }
+
 }
 
 function setControls() {
@@ -197,8 +204,17 @@ function initControls() {
     Persistency.reset();
     init();
     reloadPanel();
-    //window.location.reload();
-    console.log(Persistency.getState());
+  });
+
+  document.getElementById('gray-icon').addEventListener('click', function () {
+    var state = Persistency.getState();
+    setProperty(state, 'iconSettings.gray', true);
+    update();
+  });
+  document.getElementById('colored-icon').addEventListener('click', function () {
+    var state = Persistency.getState();
+    setProperty(state, 'iconSettings.gray', false);
+    update();
   });
 }
 

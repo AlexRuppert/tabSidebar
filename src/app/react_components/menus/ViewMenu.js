@@ -47,5 +47,29 @@ module.exports = [
       title: Strings.viewMenu.TREE_VIEW,
       icon: 'fa-tree',
       action: Constants.menus.menuBar.viewActions.TREE_VIEW
+    },
+    {
+      type: Constants.menus.menuTypes.DIVIDER,
+      condition: function (props) {
+        return Persistency.getState().groupSettings.showGroups;
+      }
+    },
+    {
+      type: Constants.menus.menuTypes.ITEM,
+      title: Strings.viewMenu.SINGLE_COLUMN_GROUP,
+      icon: 'fa-ellipsis-v',
+      action: Constants.menus.menuBar.viewActions.SINGLE_COLUMN_GROUP,
+      condition: function (props) {
+        return Persistency.getState().groupSettings.showGroups;
+      }
+    },
+    {
+      type: Constants.menus.menuTypes.ITEM,
+      title: Strings.viewMenu.DOUBLE_COLUMN_GROUP,
+      icon: 'fa-th-large',
+      action: Constants.menus.menuBar.viewActions.DOUBLE_COLUMN_GROUP,
+      condition: function (props) {
+        return Persistency.getState().groupSettings.showGroups;
+      }
     }
 ];

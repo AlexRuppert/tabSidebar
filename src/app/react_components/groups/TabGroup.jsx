@@ -59,7 +59,11 @@ module.exports = React.createClass({
         onMouseDown = { this.handleClick }
         onContextMenu = { this.handleContextMenu }
         onDragStart = { this.props.onDragStart }
-        onDragEnd = { this.props.onDragEnd }>
+        onDragEnter = { this.props.onDragEnter }
+        onDragLeave = { this.props.onDragLeave }
+        onDragEnd = { this.props.onDragEnd }
+        onMouseEnter = { function(e) {e.target.classList.add("hover");} }
+        onMouseLeave = { function(e) {e.target.classList.remove("hover");} }>
         <i className = { filterIconClasses }/>
         { this.props.title }
       </div>

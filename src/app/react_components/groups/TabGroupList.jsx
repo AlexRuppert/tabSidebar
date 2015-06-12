@@ -42,38 +42,40 @@ module.exports = React.createClass({
     }
     
     var children = parent.children;
-    
+    for (var i = 0; i < children.length; i++) {
+      if (!isFixed) {
+        children[i].style.height = '';
+      }
+    }
+    var self = this;
+   
     for (var i = 0; i < children.length-1; i+=2) {
-      
       if (isFixed) {
-        if (selfHeight != fixed)
+        if (children[i].clientHeight != fixed)
           children[i].style.height = fixed + 'px';
-        if (neighborHeight != fixed)
+        if (children[i+1].clientHeight != fixed)
           children[i+1].style.height = fixed + 'px';
       }
       else {
-        children[i].style.height = '';
-        children[i+1].style.height = '';
-        
         if (this.props.twoColumns) {
           var selfHeight = children[i].clientHeight;
           var neighborHeight = children[i+1].clientHeight;
         
           if (selfHeight < neighborHeight) {
 
-            children[i].style.height = neighborHeight + 'px';
-            children[i+1].style.height = neighborHeight + 'px';
+            children[i].style.height = neighborHeight+2 + 'px';
+            children[i+1].style.height = neighborHeight+2 + 'px';
           }
           else if (neighborHeight < selfHeight) {
-            children[i].style.height = selfHeight + 'px';
-            children[i+1].style.height = selfHeight + 'px';
+            children[i].style.height = selfHeight +2+ 'px';
+            children[i+1].style.height = selfHeight +2+ 'px';
           }
         }
       }
-      if(children.length % 2 == 1) {
-        children[children.length-1].style.height = '';
-      }
+      
     }    
+   
+    
   },
   getInitialState: function () {
     this.groupPlaceholder.className = 'group-placeholder';
@@ -90,7 +92,10 @@ module.exports = React.createClass({
       return true;
     return false;
   },
-
+  componentDidMount: function () {
+    //update group heights
+    this.updateGroupHeights();
+  },
   componentDidUpdate: function (prevProps, prevState) {
     //update group heights
     this.updateGroupHeights();
@@ -106,6 +111,12 @@ module.exports = React.createClass({
   },
   groupDragStart: function (e) {
     GroupLogic.groupDragStart(this.props.parent, e);
+  },
+  groupDragEnter: function (e) {
+    GroupLogic.groupDragEnter(e);
+  },
+  groupDragLeave: function (e) {
+    GroupLogic.groupDragLeave(e);
   },
   groupDragOver: function (e) {
     GroupLogic.groupDragOver(this, this.props.parent, e);
@@ -124,6 +135,12 @@ module.exports = React.createClass({
         break;
       case Constants.menus.contextMenu.groupActions.CLONE_GROUP:
         GroupLogic.cloneGroup(this, id);
+        break;
+      case Constants.menus.contextMenu.groupActions.CLONE_AS_NORMAL:
+        GroupLogic.cloneAsNormalGroup(this, id);
+        break;
+      case Constants.menus.contextMenu.groupActions.CLOSE_TABS:
+        GroupLogic.closeTabs(this, id);
         break;
       case Constants.menus.contextMenu.groupActions.EDIT_GROUP:
         this.handleEditTabGroup(id);
@@ -145,13 +162,14 @@ module.exports = React.createClass({
     
     var groupListClasses = classNames({
       'tab-group-list': true,
+      'no-background':!Persistency.getState().groupSettings.showBarBackground,
       'two-columns': this.props.twoColumns,
       'hidden': !this.state.isVisible
     });
     var groupBarClasses = classNames({
       'tab-group-bar': true,
       'two-columns': this.props.twoColumns,
-      'hidden': !this.state.isVisible
+      'hidden': !this.state.isVisible || !Persistency.getState().groupSettings.showBarBackground
     });
 
     var groupsToShow = [];
@@ -182,6 +200,8 @@ module.exports = React.createClass({
             onContextMenu = { this.handleGroupContextMenuOpen }
             onDragEnd = { this.groupDragEnd }
             onDragStart = { this.groupDragStart }
+            onDragEnter = { this.groupDragEnter }
+            onDragLeave = { this.groupDragLeave }
             onGroupClicked = { this.handleGroupClicked }
             onGroupClosed = { this.handleGroupClosed }
           />

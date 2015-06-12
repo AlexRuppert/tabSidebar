@@ -13,7 +13,9 @@
   },
 
 
-
+  "CLONE_AS_NORMAL" : {
+    "message": "Create snapshot"
+  },
   "CLONE_GROUP" : {
     "message": "Clone group"
   },
@@ -22,6 +24,9 @@
   },
   "CLOSE_OTHER_GROUPS" : {
     "message": "Close other groups"
+  },
+  "CLOSE_TABS" : {
+    "message": "Close tabs in group"
   },
   "EDIT_GROUP" : {
     "message": "Edit group"
@@ -117,7 +122,7 @@
   },
 
 
-  
+
   "CLOSED_TABS" : {
     "message": "Recently closed tabs"
   },
@@ -175,16 +180,193 @@
   "SINGLE_COLUMN" : {
     "message": "Single tab column"
   },
+  "SINGLE_COLUMN_GROUP" : {
+    "message": "Single group column"
+  },
   "DOUBLE_COLUMN" : {
     "message": "Two tab columns"
+  },
+  "DOUBLE_COLUMN_GROUP" : {
+    "message": "Two group columns"
   },
   "TREE_VIEW" : {
     "message": "Tree view"
   },
 
 
-  "TAB_SIDEBAR_SETTINGS" :  {
+  "SETTINGS_TAB_SIDEBAR_TITLE" :  {
     "message":  "Tab Sidebar Settings"
+  },
+  "SETTINGS_TAB_APPEARANCE" :  {
+    "message":  "Tab appearance"
+  },
+  "SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON" :  {
+    "message":  "Show close button on tabs"
+  },
+  "SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON_TEXT" :  {
+    "message":  "Each tab will have a small button on it, that can be clicked to close the tab."
+  },
+  "SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR" :  {
+    "message":  "Show indicator for unvisited tabs"
+  },
+  "SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR_TEXT" :  {
+    "message":  "Tabs opened in the background, that were not visited, are marked with a small indicator."
+  },
+  "SETTINGS_TAB_TREES" :  {
+    "message":  "Tab trees"
+  },
+  "SETTINGS_TAB_TREES_USE_IN_FILTERS" :  {
+    "message":  "Use tree view also in filter groups"
+  },
+  "SETTINGS_TAB_TREES_USE_IN_FILTERS_TEXT" :  {
+    "message":  "When in tree view mode, the display of tabs as a tree can be explicitly prevented inside of filter groups. This can be useful since the tree structure not necessarily corresponds to the expected sorting order."
+  },
+  "SETTINGS_TAB_TREES_MAX_LEVEL" :  {
+    "message":  "Max tree level"
+  },
+  "SETTINGS_TAB_TREES_MAX_LEVEL_TEXT" :  {
+    "message":  "Defines the maximum depth of the tab tree. I.e. with a lower level children will not be pushed as far to the right in the tree."
+  },
+  "SETTINGS_TAB_TREE_CLOSING" :  {
+    "message":  "Tab tree closing behavior"
+  },
+  "SETTINGS_TAB_TREE_CLOSING_NEVER" :  {
+    "message":  "Do not close children, when parent is closed"
+  },
+  "SETTINGS_TAB_TREE_CLOSING_NEVER_TEXT" :  {
+    "message":  "Child tabs are never closed automatically, when their parent is closed."
+  },
+  "SETTINGS_TAB_TREE_CLOSING_COLLAPSED" :  {
+    "message":  "Close children only, if parent is collapsed"
+  },
+  "SETTINGS_TAB_TREE_CLOSING_COLLAPSED_TEXT" :  {
+    "message":  "Child tabs will only be closed of the parent was closed in a collapsed state."
+  },
+  "SETTINGS_TAB_TREE_CLOSING_ALWAYS" :  {
+    "message":  "Always close children, when parent is closed"
+  },
+  "SETTINGS_TAB_TREE_CLOSING_ALWAYS_TEXT" :  {
+    "message":  "Child tabs are always closed, when their parent is closed."
+  },
+  "SETTINGS_GROUP_APPEARANCE" :  {
+    "message":  "Group appearance"
+  },
+  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS" :  {
+    "message":  "Show group bar"
+  },
+  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_TEXT" :  {
+    "message":  "Shows the group bar. If you do not want to use the groups features, you can disable them and have more space for the tabs."
+  },
+  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND" :  {
+    "message":  "Show group bar background"
+  },
+  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND_TEXT" :  {
+    "message":  "Hides the dark group bar background."
+  },
+
+  "SETTINGS_GROUP_NEW_TABS" :  {
+    "message":  "Group behavior for new tabs"
+  },
+  "SETTINGS_GROUP_NEW_TABS_NEXT" :  {
+    "message":  "Create new tabs next to current tab"
+  },
+  "SETTINGS_GROUP_NEW_TABS_NEXT_TEXT" :  {
+    "message":  "New Tabs crated inside a group are automatically placed below the current tab, if present."
+  },
+  "SETTINGS_GROUP_NEW_BOTTOM_NEXT" :  {
+    "message":  "Create new tabs at bottom"
+  },
+  "SETTINGS_GROUP_NEW_BOTTOM_NEXT_TEXT" :  {
+    "message":  "New tabs created inside a group are automatically placed at the bottom."
+  },
+
+  "SETTINGS_SCROLL_BAR" :  {
+    "message":  "Scrollbar"
+  },
+  "SETTINGS_SCROLL_BAR_DEFAULT" :  {
+    "message":  "Use default scrollbar"
+  },
+  "SETTINGS_SCROLL_BAR_DEFAULT_TEXT" :  {
+    "message":  "This option will use the system default scrollbar in the sidebar."
+  },
+  "SETTINGS_SCROLL_BAR_SLIM" :  {
+    "message":  "Use slim scrollbar"
+  },
+  "SETTINGS_SCROLL_BAR_SLIM_TEXT" :  {
+    "message":  "The default scrollbar is replaced with a thinner version. It is better suited, if you scroll with a mouse wheel and only need a position indicator."
+  },
+  "SETTINGS_SCROLL_BAR_HIDDEN" :  {
+    "message":  "Hide scrollbar"
+  },
+  "SETTINGS_SCROLL_BAR_HIDDEN_TEXT" :  {
+    "message":  "The scrollbar in the side bar is hidden completely. There is more space for tabs, but you will need a mouse wheel for scrolling."
+  },
+  "SETTINGS_BACKGROUND" :  {
+    "message":  "Background"
+  },
+  "SETTINGS_BACKGROUND_USE" :  {
+    "message":  "Use background"
+  },
+  "SETTINGS_BACKGROUND_USE_TEXT" :  {
+    "message":  "If you find the sidebar too empty and boring, you can use custom backgrounds to make it more visually appealing."
+  },
+  "SETTINGS_BACKGROUND_IMAGE" :  {
+    "message":  "Background image"
+  },
+  "SETTINGS_BACKGROUND_IMAGE_TEXT" :  {
+    "message":  "You can specify the image to be used as a background. Either use a local file or specify a Url to the image."
+  },
+  "SETTINGS_BACKGROUND_FILE" :  {
+    "message":  "Background file"
+  },
+  "SETTINGS_BACKGROUND_URL" :  {
+    "message":  "Url:"
+  },
+  "SETTINGS_BACKGROUND_OFFSET" :  {
+    "message":  "X-offset"
+  },
+  "SETTINGS_BACKGROUND_OFFSET_TEXT" :  {
+    "message":  "Use this slider to specify what section of the image to show on the sidebar."
+  },
+  "SETTINGS_BACKGROUND_BLUR" :  {
+    "message":  "Image blur"
+  },
+  "SETTINGS_BACKGROUND_BLUR_TEXT" :  {
+    "message":  "The image can be blurred to reduce distracting details."
+  },
+  "SETTINGS_BACKGROUND_OPACITY" :  {
+    "message":  "Image opacity"
+  },
+  "SETTINGS_BACKGROUND_OPACITY_TEXT" :  {
+    "message":  "The image opacity specifies how visible the background image is."
+  },
+  "SETTINGS_BACKGROUND_GRAYSCALE" :  {
+    "message":  "Image grayscale filter"
+  },
+  "SETTINGS_BACKGROUND_GRAYSCALE_TEXT" :  {
+    "message":  "This setting reduces the saturation of an image."
+  },
+  "SETTINGS_BACKGROUND_TAB_OPACITY" :  {
+    "message":  "Tab opacity"
+  },
+  "SETTINGS_BACKGROUND_TAB_OPACITY_TEXT" :  {
+    "message":  "Tab opacity specifies, how much of the background is visible through the tabs."
+  },
+
+  "SETTINGS_ICON" :  {
+    "message":  "Extension Icon"
+  },
+  "SETTINGS_ICON_GRAY" :  {
+    "message":  "Use gray icon"
+  },
+  "SETTINGS_ICON_COLORED" :  {
+    "message":  "Use colored icon"
+  },
+  "SETTINGS_RESET" :  {
+    "message":  "Reset everything"
+  },
+  "SETTINGS_RESET_TO_DEFAULT" :  {
+    "message":  "Reset to default"
   }
 
 }

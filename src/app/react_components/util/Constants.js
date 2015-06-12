@@ -30,14 +30,20 @@ module.exports = {
   groups: {
     ALL_GROUP_COLOR: '#ff5900',
     ALL_GROUP_ID: 'allGroup',
-    TAB_URL_LENGTH: 100
+    TAB_URL_LENGTH: 100,
+    newTabs: {
+      BOTTOM: 'bottom',
+      NEXT: 'next'
+    }
   },
   menus: {
     contextMenu: {
       groupActions: {
+        CLONE_AS_NORMAL: 'cloneasnormal',
         CLONE_GROUP: 'clonegroup',
         CLOSE_GROUP: 'closegroup',
         CLOSE_OTHER_GROUPS: 'closeothergroups',
+        CLOSE_TABS: 'closetabsingroup',
         EDIT_GROUP: 'editgroup',
         NEW_GROUP: 'newgroup'
       },
@@ -59,8 +65,10 @@ module.exports = {
         VIEW: 'view'
       },
       viewActions: {
-        DOUBLE_COLUMN: 'multicolumntabs',
-        SINGLE_COLUMN: 'singlecolumntabs',
+        DOUBLE_COLUMN: 'multi',
+        DOUBLE_COLUMN_GROUP: 'multigroup',
+        SINGLE_COLUMN: 'single',
+        SINGLE_COLUMN_GROUP: 'singlegroup',
         TREE_VIEW: 'treeView'
       }
     },
@@ -106,6 +114,13 @@ module.exports = {
     CRITICAL_CACHE_SIZE: 2000,
     DESIRED_WIDTH: 300,
     MIN_UPDATE_DELAY: 2000
+  },
+  treeView: {
+    closeChildren: {
+      ALWAYS: 'always',
+      COLLAPSED: 'collapsed',
+      NEVER: 'never'
+    }
   },
   viewStates: {
     COMPACT_VIEW: 'compactview',
