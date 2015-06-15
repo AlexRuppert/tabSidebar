@@ -3,8 +3,9 @@
 <head>
   <title>Tab Sidebar Settings</title>
   <link rel="shortcut icon" href="./media/icons/tabSidebar_16.png">
+  <!-- build:css -->
   <link rel="stylesheet" href="css/options.css" />
-  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- endbuild -->
 </head>
 <body>
   <div id="main">
@@ -27,6 +28,12 @@
             <label>
               <input data-property="tabSettings.showNewOnTabs" type="checkbox">
               <span class="trans">SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR</span>
+            </label>
+          </div>
+          <div class="checkbox" title="SETTINGS_TAB_APPEARANCE_ANIMATE_TEXT">
+            <label>
+              <input data-property="tabSettings.animated" type="checkbox">
+              <span class="trans">SETTINGS_TAB_APPEARANCE_ANIMATE</span>
             </label>
           </div>
         </section>
@@ -150,7 +157,8 @@
               <span class="trans">SETTINGS_BACKGROUND_FILE</span><br />
               <input data-property="background.image" type="file"><br /><br />
               <span class="trans">SETTINGS_BACKGROUND_URL</span><br />
-              <input data-property="background.image" type="text">
+              <input data-property="background.image" type="text"><br />
+              <button id="reset-background-image" class="trans">SETTINGS_BACKGROUND_RESET_IMAGE</button>
             </label>
           </div>
           <div class="complex-input" title="SETTINGS_BACKGROUND_OFFSET_TEXT">
@@ -196,7 +204,9 @@
       </div>
     </div>
   </div>
+  <!-- build:js -->
   <script src="logic/Persistency.js"></script>
   <script src="js/options.built.js"></script>
+  <!-- endbuild -->
 </body>
 </html>

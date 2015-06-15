@@ -11,7 +11,9 @@
   "SETTINGS" : {
     "message": "Settings"
   },
-
+  "PANIC" : {
+    "message": "Panic button: Press, if something seems broken, to reload the extension."
+  },
 
   "CLONE_AS_NORMAL" : {
     "message": "Create snapshot"
@@ -209,9 +211,14 @@
   "SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR" :  {
     "message":  "Show indicator for unvisited tabs"
   },
-  "SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR_TEXT" :  {
-    "message":  "Tabs opened in the background, that were not visited, are marked with a small indicator."
+  "SETTINGS_TAB_APPEARANCE_ANIMATE" :  {
+    "message":  "Animate tabs"
   },
+  "SETTINGS_TAB_APPEARANCE_ANIMATE_TEXT" :  {
+    "message":  "If you do not like the tab animations, you can turn them off with this setting."
+  },
+  
+
   "SETTINGS_TAB_TREES" :  {
     "message":  "Tab trees"
   },
@@ -271,7 +278,7 @@
     "message":  "Create new tabs next to current tab"
   },
   "SETTINGS_GROUP_NEW_TABS_NEXT_TEXT" :  {
-    "message":  "New Tabs crated inside a group are automatically placed below the current tab, if present."
+    "message":  "New Tabs created inside a group are automatically placed below the current tab, if present."
   },
   "SETTINGS_GROUP_NEW_BOTTOM_NEXT" :  {
     "message":  "Create new tabs at bottom"
@@ -320,7 +327,10 @@
     "message":  "Background file"
   },
   "SETTINGS_BACKGROUND_URL" :  {
-    "message":  "Url:"
+    "message":  "Url"
+  },
+  "SETTINGS_BACKGROUND_RESET_IMAGE" :   {
+    "message":  "Remove background"
   },
   "SETTINGS_BACKGROUND_OFFSET" :  {
     "message":  "X-offset"

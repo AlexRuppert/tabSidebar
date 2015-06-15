@@ -3,6 +3,7 @@
 module.exports = {
   bottomBar: {
     COLLAPSE_TABS: chrome.i18n.getMessage('COLLAPSE_TABS'),
+    PANIC: chrome.i18n.getMessage('PANIC'),
     EXPAND_TABS: chrome.i18n.getMessage('EXPAND_TABS'),
     GO_TO_TOP: chrome.i18n.getMessage('GO_TO_TOP'),
     SETTINGS: chrome.i18n.getMessage('SETTINGS')

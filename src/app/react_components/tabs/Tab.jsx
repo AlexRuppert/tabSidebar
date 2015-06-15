@@ -2,7 +2,6 @@
 'use strict';
 
 var Constants = require('../util/Constants.js');
-
 module.exports = React.createClass({
   getInitialState: function () {
     return {
@@ -130,7 +129,8 @@ module.exports = React.createClass({
       'tree-node': this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW && this.props.level > 0 ,
       'small': this.props.viewState == Constants.viewStates.SMALL_VIEW,
       'not-visited': this.state.notVisited
-        && this.props.newlyCreated && this.props.showNewOnTabs
+        && this.props.newlyCreated && this.props.showNewOnTabs,
+      'animated': this.props.animated
     });
     var faviconClasses = classNames({
       'favicon': true,

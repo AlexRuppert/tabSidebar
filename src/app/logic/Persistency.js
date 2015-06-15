@@ -24,6 +24,7 @@ window.Persistency = {
       gray: false
     },
     tabSettings: {
+      animated: true,
       column: 'single',
       showCloseButtons: true,
       showNewOnTabs: true,

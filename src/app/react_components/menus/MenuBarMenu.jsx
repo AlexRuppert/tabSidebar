@@ -4,7 +4,6 @@ var Constants = require('../util/Constants.js');
 var Menu = require('rc-menu');
 var MenuStructure = require('./MenuStructure.jsx');
 
-
 module.exports = React.createClass({
   mixins: [MenuStructure],
   closeMenu: function () {

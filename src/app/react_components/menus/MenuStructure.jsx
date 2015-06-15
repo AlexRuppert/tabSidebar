@@ -5,7 +5,6 @@ var Constants = require('../util/Constants.js');
 var Menu = require('rc-menu');
 var MenuItem = Menu.Item;
 var SubMenu = Menu.SubMenu;
-
 module.exports = {
   getMenuStructure: function (items) {
     return items.map(function(item, i) {

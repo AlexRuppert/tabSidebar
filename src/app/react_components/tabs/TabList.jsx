@@ -11,7 +11,6 @@ var TabContextMenu = require('../menus/TabContextMenu.js');
 var TabGroupList = require('../groups/TabGroupList.jsx');
 var TabLogic = require('./Tab.js');
 var ThumbnailCache = require('./ThumbnailCache.js');
-
 module.exports = React.createClass({
  
   lastTabDragY: 0,
@@ -258,6 +257,8 @@ module.exports = React.createClass({
 
   
     var activeTabId = TabManager.getActiveTabId();
+    
+    var column = this.suppressTreeView?Constants.menus.menuBar.viewActions.SINGLE_COLUMN:this.props.column;
     var tabNodes = this.tabsToShow.map(function (tab, i) {
       if (!tab.pinned && tab.visible) {
         return (
@@ -273,11 +274,13 @@ module.exports = React.createClass({
             onDragStart = { this.tabDragStart }
             onTabClicked = { this.handleTabClicked }
             onTabClosed = { this.handleTabClosed }
-            column = { this.suppressTreeView?Constants.menus.menuBar.viewActions.SINGLE_COLUMN:this.props.column }
+            column = { column }
             favicon = { tab.favicon }
             isLoading = { tab.status == 'loading' }
             isActive = { false}
+            
 
+            
             level = { tab.level }
             firstNode = { tab.firstNode }
             parentNode = { tab.parentNode }
@@ -326,7 +329,7 @@ module.exports = React.createClass({
         );
       }
     }, this);
-
+    console.log(Persistency.getState().tabSettings.animated);
     var pinNodesClasses = classNames({
       'tab-pin-list': true,
       'hidden': !this.thereArePinnedNodes
@@ -335,6 +338,7 @@ module.exports = React.createClass({
       'tab-container': true,
       'slim-bar': Persistency.getState().scrollBar == Constants.scrollBar.SLIM,
       'hidden-bar': Persistency.getState().scrollBar == Constants.scrollBar.HIDDEN,
+      'animated': Persistency.getState().tabSettings.animated,
       'hidden': !this.state.isVisible
     });
     

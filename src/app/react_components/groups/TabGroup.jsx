@@ -2,7 +2,6 @@
 'use strict';
 
 var Colors = require('../util/Colors.js');
-
 module.exports = React.createClass({
   getInitialState: function () {
     return {

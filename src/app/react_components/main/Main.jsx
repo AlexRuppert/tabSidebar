@@ -10,7 +10,6 @@ var MenuBar = require('../menus/MenuBar.jsx');
 var RecentList = require('../recent/RecentList.jsx');
 var SearchBar = require('../filtering/SearchBar.jsx');
 var TabList = require('../tabs/TabList.jsx');
-
 module.exports = React.createClass({
   getInitialState: function () {
    
@@ -106,7 +105,7 @@ module.exports = React.createClass({
           ref = { Constants.refs.GROUP_CREATOR }
           handleCreate = { this.handleNewTabGroupCreated }/>
         <RecentList
-          ref = { Constants.refs.RECENT_LIST }/>
+          ref = { Constants.refs.RECENT_LIST }/> 
         <TabList
           ref = { Constants.refs.TAB_LIST }
           handleEditTabGroup = { this.handleEditTabGroup }

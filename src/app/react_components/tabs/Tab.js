@@ -742,7 +742,8 @@ module.exports = {
       }
       tabList.tabDragged = null;
       //for tree tabs
-      if (tabList.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+      if (tabList.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW
+        && this.tabsToShow[to]) {
         to = this.tabSortHelper[this.tabsToShow[to].id];
       }
       chrome.tabs.move(tabs[draggedIndex + pinnedCount].id, { index: to + pinnedCount });

@@ -3,6 +3,7 @@
 var Colors = require('../util/Colors.js');
 var Constants = require('../util/Constants.js');
 var Strings = require('../util/Strings.js');
+
 module.exports = React.createClass({
   isEditMode: false,
   afterEditCallback: null,

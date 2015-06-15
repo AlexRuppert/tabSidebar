@@ -5,7 +5,6 @@ var Constants = require('../util/Constants.js');
 var MenuBarMenu = require('./MenuBarMenu.jsx');
 var Strings = require('../util/Strings.js');
 var ViewMenu = require('./ViewMenu.js');
-
 module.exports = React.createClass({
   getInitialState: function () {
     return {

@@ -6,7 +6,6 @@ var Menu = require('rc-menu');
 var MenuStructure = require('./MenuStructure.jsx');
 var MenuItem = Menu.Item;
 var SubMenu = Menu.SubMenu;
-
 module.exports = React.createClass({
   mixins: [MenuStructure],
   closeMenu: function () {

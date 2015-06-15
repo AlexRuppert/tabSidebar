@@ -2,7 +2,6 @@
 'use strict';
 var Constants = require('../util/Constants.js');
 var Strings = require('../util/Strings.js');
-
 module.exports = React.createClass({
   search: function(){
     var query = React.findDOMNode(this.refs.searchBox).value.trim();

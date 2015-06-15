@@ -9,8 +9,6 @@ var GroupLogic = require('../groups/Group.js');
 var Strings = require('../util/Strings.js');
 var TabGroup = require('../groups/TabGroup.jsx');
 
-
-
 module.exports = React.createClass({
   groupPlaceholder: document.createElement('div'),
   lastHeightsUpdate: 0,

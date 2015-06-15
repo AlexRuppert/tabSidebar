@@ -3,7 +3,6 @@
 
 var Constants = require('../util/Constants.js');
 var Strings = require('../util/Strings.js');
-
 module.exports = React.createClass({
   handleCollapseTabs: function () {
     this.props.handleCollapseTabs();
@@ -13,6 +12,16 @@ module.exports = React.createClass({
   },  
   handleOpenSettings: function () {
     chrome.tabs.create({ url: Constants.paths.OPTIONS });
+  },
+  handlePanic: function () {
+    var background = chrome.extension.getBackgroundPage();
+    
+    for (var property in Constants.globalProperties) {
+      if (background.hasOwnProperty(Constants.globalProperties[property])) {
+        delete background[Constants.globalProperties[property]];
+      }
+    }
+    window.location.reload();
   },
   handleScrollToTop: function () {
     this.props.handleScrollToTop();
@@ -24,6 +33,12 @@ module.exports = React.createClass({
     });
     return (
       <div className = { "bottom-bar" }>
+        <button
+          title = { Strings.bottomBar.PANIC }
+          onClick = { this.handlePanic }>
+          <i
+            className = "fa fa-exclamation-circle"/>
+        </button>
         <button
           title = { Strings.bottomBar.SETTINGS }
           onClick = { this.handleOpenSettings }>

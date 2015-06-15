@@ -11,7 +11,9 @@
   "SETTINGS" : {
     "message": "Einstellungen"
   },
-
+  "PANIC" : {
+    "message": "Panik Knopf. Wenn etwas kaputt erscheint einfach drücken und damit die Extension neu laden."
+  },
 
   "CLONE_AS_NORMAL" : {
     "message": "Gruppeninhalt kopieren"
@@ -199,7 +201,7 @@
     "message":  "Tab Sidebar Einstellungen"
   },
   "SETTINGS_TAB_APPEARANCE" : {
-    "message":  "Tab Erscheinung"
+    "message":  "Tab Darstellung"
   },
   "SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON" : {
     "message":  "Zeige Buttons zum Schließen auf allen Tabs."
@@ -212,6 +214,12 @@
   },
   "SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR_TEXT" :  {
     "message":  "Im Hintergrund geöffnete Tabs werden mit einer kleinen Markierung versehen, solange sie nicht besucht worden sind."
+  },
+  "SETTINGS_TAB_APPEARANCE_ANIMATE" :  {
+    "message":  "Animiere Tabs"
+  },
+  "SETTINGS_TAB_APPEARANCE_ANIMATE_TEXT" :  {
+    "message":  "Wenn Ihnen die Tab Animationen nicht gefallen, können sie mit dieser Option deaktiviert werden."
   },
   "SETTINGS_TAB_TREES" :  {
     "message":  "Baumansicht"
@@ -232,141 +240,144 @@
     "message":  "Baumansicht Schließverhalten"
   },
   "SETTINGS_TAB_TREE_CLOSING_NEVER" :  {
-    "message":  "Schließe nie Kinder-Tabs, wenn der Eltern-Tab geschlossen wurde."
+    "message":  "Schließe nie Kinder-Tabs, wenn der Eltern-Tab geschlossen wurde"
   },
   "SETTINGS_TAB_TREE_CLOSING_NEVER_TEXT" :  {
     "message":  "Kinder-Tabs werden beibehalten und nicht zusammen mit dem Eltern-Tab geschlossen."
   },
   "SETTINGS_TAB_TREE_CLOSING_COLLAPSED" :  {
-    "message":  "Close children only, if parent is collapsed"
+    "message":  "Schließe Kinder-Tabs nur, wenn der Eltern-Tab eingeklappt ist"
   },
   "SETTINGS_TAB_TREE_CLOSING_COLLAPSED_TEXT" :  {
-    "message":  "Child tabs will only be closed of the parent was closed in a collapsed state."
+    "message":  "Kinder-Tabs werden nur geschlossen, wenn der Eltern-Tab wührend des Schließens eingeklappt ist."
   },
   "SETTINGS_TAB_TREE_CLOSING_ALWAYS" :  {
-    "message":  "Always close children, when parent is closed"
+    "message":  "Schließe Kinder-Tabs immer zusammen mit dem Eltern-Tab"
   },
   "SETTINGS_TAB_TREE_CLOSING_ALWAYS_TEXT" :  {
-    "message":  "Child tabs are always closed, when their parent is closed."
+    "message":  "Kinder-Tabs werden immer unabhängig vom Zustand des Eltern-Tabs mit geschlossen."
   },
   "SETTINGS_GROUP_APPEARANCE" :  {
-    "message":  "Group appearance"
+    "message":  "Gruppen Darstellung"
   },
   "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS" :  {
-    "message":  "Show group bar"
+    "message":  "Zeige Gruppen"
   },
   "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_TEXT" :  {
-    "message":  "Shows the group bar. If you do not want to use the groups features, you can disable them and have more space for the tabs."
+    "message":  "Wenn Sie keine Gruppen benutzen möchten, können Sie diese hier ausschalten."
   },
   "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND" :  {
-    "message":  "Show group bar background"
+    "message":  "Zeige Gruppenleistenhintergrund"
   },
   "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND_TEXT" :  {
-    "message":  "Hides the dark group bar background."
+    "message":  "Der dunkle Hintergrund der Gruppenleiste kann auf Wunsch ausgeblendet werden."
   },
 
-   "SETTINGS_GROUP_NEW_TABS" :  {
-    "message":  "Group behavior for new tabs"
+  "SETTINGS_GROUP_NEW_TABS" :  {
+    "message":  "Gruppenverhalten bei neuen Tabs"
   },
   "SETTINGS_GROUP_NEW_TABS_NEXT" :  {
-    "message":  "Create new tabs next to current tab"
+    "message":  "Neue Tabs direkt unter dem aktuellen Tab platzieren"
   },
   "SETTINGS_GROUP_NEW_TABS_NEXT_TEXT" :  {
-    "message":  "New Tabs crated inside a group are automatically placed below the current tab, if present."
+    "message":  "Neue Tabs innerhalb einer Gruppe werden automatisch unter dem aktuellen Tab platziert."
   },
   "SETTINGS_GROUP_NEW_BOTTOM_NEXT" :  {
-    "message":  "Create new tabs at bottom"
+    "message":  "Neue Tabs immer ganz unten platzieren"
   },
   "SETTINGS_GROUP_NEW_BOTTOM_NEXT_TEXT" :  {
-    "message":  "New tabs created inside a group are automatically placed at the bottom."
+    "message":  "Neue Tabs innerhalb einer Gruppe werden automatisch unter allen anderen Tabs platziert."
   },
 
   "SETTINGS_SCROLL_BAR" :  {
-    "message":  "Scrollbar"
+    "message":  "Scroll-Leiste"
   },
   "SETTINGS_SCROLL_BAR_DEFAULT" :  {
-    "message":  "Use default scrollbar"
+    "message":  "Standard Design verwenden"
   },
   "SETTINGS_SCROLL_BAR_DEFAULT_TEXT" :  {
-    "message":  "This option will use the system default scrollbar in the sidebar."
+    "message":  "Zeigt die Standardleiste an."
   },
   "SETTINGS_SCROLL_BAR_SLIM" :  {
-    "message":  "Use slim scrollbar"
+    "message":  "Dünnes Design verwenden"
   },
   "SETTINGS_SCROLL_BAR_SLIM_TEXT" :  {
-    "message":  "The default scrollbar is replaced with a thinner version. It is better suited, if you scroll with a mouse wheel and only need a position indicator."
-  },
+    "message":  "Es wird eine sehr dünne Scroll-Leiste verwendet, welche zwar weniger Platz wegnimmt, dafür aber schwerer anklickbar ist."  
+   },
   "SETTINGS_SCROLL_BAR_HIDDEN" :  {
-    "message":  "Hide scrollbar"
+    "message":  "Scroll-Leiste verstecken"
   },
   "SETTINGS_SCROLL_BAR_HIDDEN_TEXT" :  {
-    "message":  "The scrollbar in the side bar is hidden completely. There is more space for tabs, but you will need a mouse wheel for scrolling."
+    "message":  "Es wird keine Scroll-Leiste angezeigt, sodass nur noch über das Mausrad gescrollt werden kann."
   },
   "SETTINGS_BACKGROUND" :  {
-    "message":  "Background"
+    "message":  "Hintergrund"
   },
   "SETTINGS_BACKGROUND_USE" :  {
-    "message":  "Use background"
+    "message":  "Zeige eigenen Hintergrund an"
   },
   "SETTINGS_BACKGROUND_USE_TEXT" :  {
-    "message":  "If you find the sidebar too empty and boring, you can use custom backgrounds to make it more visually appealing."
+    "message":  "Wenn Ihnen der Standard-Hintergrund zu langweilig ist, können Sie ein eigenes Hintergrundbild anzeigen lassen."
   },
   "SETTINGS_BACKGROUND_IMAGE" :  {
-    "message":  "Background image"
+    "message":  "Hintergrundbild"
   },
   "SETTINGS_BACKGROUND_IMAGE_TEXT" :  {
-    "message":  "You can specify the image to be used as a background. Either use a local file or specify a Url to the image."
+    "message":  "Hier können Sie das Bild festlegen, welches im Hintergrund angezeigt wird. Dabei können Sie sowohl eine lokale Datei wählen, als auch zu einem Bild im Internet verlinken."
   },
   "SETTINGS_BACKGROUND_FILE" :  {
-    "message":  "Background file"
+    "message":  "Bilddatei"
   },
   "SETTINGS_BACKGROUND_URL" :  {
-    "message":  "Url:"
+    "message":  "Url zum Bild"
+  },
+  "SETTINGS_BACKGROUND_RESET_IMAGE" :   {
+    "message":  "Kein Bild"
   },
   "SETTINGS_BACKGROUND_OFFSET" :  {
-    "message":  "X-offset"
+    "message":  "X-Versatz"
   },
   "SETTINGS_BACKGROUND_OFFSET_TEXT" :  {
-    "message":  "Use this slider to specify what section of the image to show on the sidebar."
+    "message":  "Mit diesem Schieberegler können Sie das Hintergrundbild horizontal verschieben und so den dargestellten Bereich auswählen."
   },
   "SETTINGS_BACKGROUND_BLUR" :  {
-    "message":  "Image blur"
+    "message":  "Bild weichzeichnen"
   },
   "SETTINGS_BACKGROUND_BLUR_TEXT" :  {
-    "message":  "The image can be blurred to reduce distracting details."
+    "message":  "Sie können das Bild weichzeichnen lassen, um ablenkende Details zu entfernen."
   },
   "SETTINGS_BACKGROUND_OPACITY" :  {
-    "message":  "Image opacity"
+    "message":  "Bildsichbarkeit"
   },
   "SETTINGS_BACKGROUND_OPACITY_TEXT" :  {
-    "message":  "The image opacity specifies how visible the background image is."
+    "message":  "Sie können einstellen, wie gut das Bild sichtbar ist."
   },
   "SETTINGS_BACKGROUND_GRAYSCALE" :  {
-    "message":  "Image grayscale filter"
+    "message":  "Graustufenbild"
   },
   "SETTINGS_BACKGROUND_GRAYSCALE_TEXT" :  {
-    "message":  "This setting reduces the saturation of an image."
+    "message":  "Mit deser Einstellung können Sie die Farbsättigung reduzieren."
   },
   "SETTINGS_BACKGROUND_TAB_OPACITY" :  {
-    "message":  "Tab opacity"
+    "message":  "Tab Sichtbarkeit"
   },
   "SETTINGS_BACKGROUND_TAB_OPACITY_TEXT" :  {
-    "message":  "Tab opacity specifies, how much of the background is visible through the tabs."
+    "message":  "Mit dieser Einstellung regeln Sie, wie wenig vom Hintergrundbild durch die Tabs durchscheint."
   },
   "SETTINGS_ICON" :  {
-    "message":  "Extension Icon"
+    "message":  "Verwendetes Icon"
   },
   "SETTINGS_ICON_GRAY" :  {
-    "message":  "Use gray icon"
+    "message":  "Graues Icon"
   },
   "SETTINGS_ICON_COLORED" :  {
-    "message":  "Use colored icon"
+    "message":  "Farbiges Icon"
   },
   "SETTINGS_RESET" :  {
-    "message":  "Reset everything"
+    "message":  "Alles zurücksetzen"
   },
   "SETTINGS_RESET_TO_DEFAULT" :  {
-    "message":  "Reset to default"
+    "message":  "Alles auf Standardwerte zurücksetzen"
   }
 
 }

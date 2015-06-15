@@ -23,6 +23,7 @@ body, html {
   font-family: 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
   font-size: 13px;
   position: relative;
+  background: @activeColor;
 }
 
 ul {
@@ -245,7 +246,44 @@ input[type="color"] {
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
 }
 
+@-webkit-keyframes fadeinleft {
+  from {
+    opacity: 0;
+    margin-left: -500px;
+  }
+
+  to {
+    opacity: 1;
+    margin-left: 0;
+  }
+}
+
+@-webkit-keyframes fadeinopacity {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeintabs {
+  from {
+    margin-top: -28px;
+    z-index: 2;
+  }
+
+  to {
+    margin-top: 0;
+    z-index: 3;
+  }
+}
+
 #main {
+  -webkit-animation: fadeinleft .3s;
+  -webkit-animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+
   .recent-list {
     width: 100%;
     overflow-x: hidden;
@@ -374,8 +412,8 @@ input[type="color"] {
         border-bottom: none !important;
         border-color: @activeColor;
 
-        &:first-child {
-          border-left: none !important;
+        &:first-child:hover {
+          border-left-color: @activeColor !important;
         }
       }
     }
@@ -411,6 +449,8 @@ input[type="color"] {
   }
 
   .tab-group-bar {
+    -webkit-animation: fadeinleft .15s;
+    -webkit-animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
     position: fixed;
     background: @darkBackgroundColor;
     height: 100%;
@@ -431,7 +471,7 @@ input[type="color"] {
 
   .tab-group-list {
     width: @tabGroupListWidth;
-    background-color: @darkBackgroundColor;
+    /*background-color: @darkBackgroundColor;*/
     height: 100%;
 
     &.two-columns {
@@ -528,12 +568,17 @@ input[type="color"] {
     }
   }
 
+  .animated .tab {
+    -webkit-animation: fadeintabs .15s;
+    -webkit-animation-timing-function: ease-in-out;
+  }
+
   .tab {
     background-color: @baseColor;
     border-bottom: 1px solid @borderColor;
     box-sizing: border-box;
     float: left;
-    box-shadow: rgba(255,255,255,0.4) 0 1px inset, 1px 5px 5px -5px #000;
+    /*box-shadow: rgba(255,255,255,0.4) 0 1px inset, 1px 5px 5px -5px #000;*/
     padding: 5px 5px;
     position: relative;
     z-index: 3;
@@ -754,8 +799,9 @@ input[type="color"] {
 
     &.compact-thumbnail {
       .tree-collapse {
-        text-shadow: 1px 1px 0 #fff!important;
+        text-shadow: 1px 1px 0 #fff !important;
       }
+
       .title {
         color: black;
         text-shadow: 0 0 1px #FFF,0 0 1px #FFF, 0 0 2px #FFF;

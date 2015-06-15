@@ -1,6 +1,5 @@
 ﻿"use strict";
 
-
 function getProperty(obj, prop) {
   var parts = prop.split('.'),
       last = parts.pop(),
@@ -63,7 +62,6 @@ function translate() {
       els[i].title = chrome.i18n.getMessage(els[i].title.trim());
     }
   }
-
 }
 
 function setControls() {
@@ -162,7 +160,7 @@ function setFile(node, property) {
 
 function setRadio(node, property) {
   var state = Persistency.getState();
-  
+
   var checkedValue = getProperty(state, property);
   if (node.value == checkedValue) {
     node.checked = 'true';
@@ -174,7 +172,6 @@ function setRadio(node, property) {
     }
   });
 }
-
 
 function setRange(node, property) {
   var state = Persistency.getState();
@@ -197,15 +194,19 @@ function setRange(node, property) {
 }
 
 function initControls() {
- 
   setControls();
-  
+
   document.getElementById('reset-settings').addEventListener('click', function () {
     Persistency.reset();
     init();
     reloadPanel();
   });
-
+  document.getElementById('reset-background-image').addEventListener('click', function () {
+    var state = Persistency.getState();
+    setProperty(state, 'background.image', '');
+    initControls();
+    update();
+  });
   document.getElementById('gray-icon').addEventListener('click', function () {
     var state = Persistency.getState();
     setProperty(state, 'iconSettings.gray', true);
