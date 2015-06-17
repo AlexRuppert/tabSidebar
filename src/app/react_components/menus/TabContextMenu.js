@@ -44,9 +44,33 @@ module.exports = [
   },
   {
     type: Constants.menus.menuTypes.ITEM,
+    title: Strings.tabContextMenu.REMOVE_TAB_FROM_GROUP,
+    icon: 'fa-mail-reply',
+    action: Constants.menus.contextMenu.tabActions.REMOVE_TAB_FROM_GROUP,
+    condition: function (props) {
+      return !props.isPinned && GroupManager.getActiveGroupId() != Constants.groups.ALL_GROUP_ID;
+    }
+  },
+  {
+    type: Constants.menus.menuTypes.DIVIDER,
+    condition: function (props) {
+      return !props.isPinned && GroupManager.getActiveGroupId() != Constants.groups.ALL_GROUP_ID;
+    }
+  },
+  {
+    type: Constants.menus.menuTypes.ITEM,
     title: Strings.tabContextMenu.CLOSE_TAB,
     icon: 'fa-close',
     action: Constants.menus.contextMenu.tabActions.CLOSE_TAB,
+    condition: function (props) {
+      return !props.isPinned;
+    }
+  },
+  {
+    type: Constants.menus.menuTypes.ITEM,
+    title: Strings.tabContextMenu.CLOSE_TABS_BELOW,
+    icon: 'fa-arrow-down',
+    action: Constants.menus.contextMenu.tabActions.CLOSE_TABS_BELOW,
     condition: function (props) {
       return !props.isPinned;
     }

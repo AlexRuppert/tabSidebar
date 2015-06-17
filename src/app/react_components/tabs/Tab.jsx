@@ -102,7 +102,7 @@ module.exports = React.createClass({
 
   handleContextMenu: function (event) {
     //TODO: enable for release
-    return;
+    
     event.nativeEvent.preventDefault();
     this.props.onContextMenu(this.props, event);
   },

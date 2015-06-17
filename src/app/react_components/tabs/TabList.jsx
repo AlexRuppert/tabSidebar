@@ -191,6 +191,7 @@ module.exports = React.createClass({
     this.refs[Constants.refs.TAB_CONTEXT_MENU].handleContextMenu(props, event);
   },
   handleTabContextMenuSelect: function (id, action) {
+    
     switch (action) {
       case Constants.menus.contextMenu.tabActions.NEW_TAB:
         chrome.tabs.create({});
@@ -211,6 +212,13 @@ module.exports = React.createClass({
         chrome.tabs.remove(id);
         break;
       case Constants.menus.contextMenu.tabActions.CLOSE_OTHER_TABS:
+        TabLogic.closeOtherTabs(this, id)
+        break;
+      case Constants.menus.contextMenu.tabActions.REMOVE_TAB_FROM_GROUP:
+        TabLogic.removeTabsFromGroup(this, id);
+        break;
+      case Constants.menus.contextMenu.tabActions.CLOSE_TABS_BELOW:
+        TabLogic.closeTabsBelow(id);
         break;
     }
   },
@@ -329,7 +337,7 @@ module.exports = React.createClass({
         );
       }
     }, this);
-    console.log(Persistency.getState().tabSettings.animated);
+    
     var pinNodesClasses = classNames({
       'tab-pin-list': true,
       'hidden': !this.thereArePinnedNodes

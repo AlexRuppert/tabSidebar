@@ -149,6 +149,9 @@
   "CLOSE_TAB" : {
     "message": "Tab schließen"
   },
+  "CLOSE_TABS_BELOW" : {
+    "message": "Nachfolgende Tabs schließen"
+  },  
   "CLOSE_OTHER_TABS" : {
     "message": "Andere Tabs schließen"
   },
@@ -160,6 +163,9 @@
   },
   "RELOAD_TAB" : {
     "message": "Tab neu laden"
+  },
+  "REMOVE_TAB_FROM_GROUP" : {
+    "message": "Tab aus Gruppe entfernen"
   },
   "UNPIN_TAB" : {
     "message": "Tab lösen"

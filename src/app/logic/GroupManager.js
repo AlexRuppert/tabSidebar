@@ -69,5 +69,8 @@ window.GroupManager = {
     if (this.groupsChangedListeners.hasOwnProperty(key)) {
       delete this.groupsChangedListeners[key];
     }
+  },
+  updateGroups: function () {
+    this.onGroupsChanged();
   }
 }

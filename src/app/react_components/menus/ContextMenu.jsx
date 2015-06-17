@@ -36,8 +36,9 @@ module.exports = React.createClass({
   handleContextMenu: function (props, event) {
     var newX = event.nativeEvent.clientX;
     var newY = event.nativeEvent.clientY;
-    var contextMenuWidth = this.props.items.length * Constants.menus.contextMenu.ITEM_HEIGHT;
-    var contextMenuHeight = Constants.menus.contextMenu.MENU_WIDTH;
+    var contextMenuWidth = Constants.menus.contextMenu.MENU_WIDTH;
+    var contextMenuHeight =  this.props.items.length * Constants.menus.contextMenu.ITEM_HEIGHT;
+   
     var maxWidth = document.body.clientWidth;
     var maxHeight = document.body.clientHeight;
 

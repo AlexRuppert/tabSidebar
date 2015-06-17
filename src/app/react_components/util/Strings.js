@@ -59,10 +59,12 @@ module.exports = {
   tabContextMenu: {
     CLONE_TAB: chrome.i18n.getMessage('CLONE_TAB'),
     CLOSE_TAB: chrome.i18n.getMessage('CLOSE_TAB'),
+    CLOSE_TABS_BELOW: chrome.i18n.getMessage('CLOSE_TABS_BELOW'),
     CLOSE_OTHER_TABS: chrome.i18n.getMessage('CLOSE_OTHER_TABS'),
     NEW_TAB: chrome.i18n.getMessage('NEW_TAB'),
     PIN_TAB: chrome.i18n.getMessage('PIN_TAB'),
     RELOAD_TAB: chrome.i18n.getMessage('RELOAD_TAB'),
+    REMOVE_TAB_FROM_GROUP: chrome.i18n.getMessage('REMOVE_TAB_FROM_GROUP'),
     UNPIN_TAB: chrome.i18n.getMessage('UNPIN_TAB')
   },
   viewMenu: {

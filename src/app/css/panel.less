@@ -126,6 +126,11 @@ input[type="color"] {
       text-align: center;
       margin-left: -4px;
       margin-right: 4px;
+      
+      &.active{
+        color: #e65c00!important;
+        background-color: transparent!important;
+      }
     }
   }
 
@@ -542,7 +547,8 @@ input[type="color"] {
     flex-wrap: wrap;
     flex-flow: row wrap;
     align-content: flex-start;
-    border-bottom: 2px solid @darkBackgroundColor;
+    margin-bottom: 3px;
+    box-shadow: 0 2px 4px -2px #000;
   }
 
   .tab-list-container {

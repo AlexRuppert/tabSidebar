@@ -50,10 +50,12 @@ module.exports = {
       tabActions: {
         CLONE_TAB: 'clonetab',
         CLOSE_TAB: 'closetab',
+        CLOSE_TABS_BELOW: 'closetabsbelow',
         CLOSE_OTHER_TABS: 'closeothertabs',
         NEW_TAB: 'newtab',
         PIN_TAB: 'pintab',
         RELOAD_TAB: 'reloadtab',
+        REMOVE_TAB_FROM_GROUP: 'removetabfromgroup',
         UNPIN_TAB: 'unpintab'
       },
       ITEM_HEIGHT: 25,

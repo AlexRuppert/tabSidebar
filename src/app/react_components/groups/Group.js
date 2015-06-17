@@ -75,7 +75,7 @@ module.exports = {
     }
     else {
       var group = this.getGroup(id);
-      if (!group.filter) {
+      if (group && !group.filter) {
         
         for (var i = 0; i < group.tabs.length; i++) {
           tabsToClose.push(+group.tabs[i]);

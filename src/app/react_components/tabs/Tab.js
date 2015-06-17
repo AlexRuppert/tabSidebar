@@ -38,7 +38,7 @@ module.exports = {
         tab.parentNode = cutoff == 0;
 
         var nextVisible = !tab.collapsed && visible;
-        var nextLevel = level + (tab.pinned?0:1);
+        var nextLevel = level + (tab.pinned ? 0 : 1);
         var nextCutOff = cutoff;
         if (nextLevel >= this.maxLevel) {
           nextCutOff++;
@@ -78,6 +78,69 @@ module.exports = {
         }
       }
       tabList.selectedTabs = [];
+    }
+  },
+  closeOtherTabs: function (tabList, id) {
+    var tabsToRemove = tabList.selectedTabs;
+    if (tabsToRemove.indexOf(id) < 0) {
+      tabsToRemove.push(id);
+    }
+
+    var tabsToClose = [];
+    var index = this.getTabIndex(id);
+    var tabs = TabManager.getTabs();
+
+    if (index < 0 || index >= tabs.length) {
+      return;
+    }
+
+    var groupId = GroupManager.getActiveGroupId();
+    var tabsShown = this.getTabsToShow(groupId);
+
+    for (var i = 0; i < tabsShown.length; i++) {
+      tabsToClose.push(+tabsShown[i].id);
+    }
+
+    tabsToClose = tabsToClose.filter(function (obj) {
+      var found = false;
+      for (var i = 0; i < tabsToRemove.length; i++) {
+        if (obj == tabsToRemove[i]) {
+          found = true;
+          break;
+        }
+      }
+      return !found;
+    });
+
+    this.clearSelectedTabs(tabList);
+    if (tabsToClose.length > 0) {
+      chrome.tabs.remove(tabsToClose);
+    }
+  },
+  closeTabsBelow: function (id) {
+    var tabsToClose = [];
+    var index = this.getTabIndex(id);
+    var tabs = TabManager.getTabs();
+
+    if (index < 0 || index >= tabs.length) {
+      return;
+    }
+
+    var groupId = GroupManager.getActiveGroupId();
+    var tabsShown = this.getTabsToShow(groupId);
+
+    var indexFound = false;
+    for (var i = 0; i < tabsShown.length; i++) {
+      if (indexFound) {
+        tabsToClose.push(+tabsShown[i].id);
+      }
+      else if (!indexFound && tabsShown[i].id == id) {
+        indexFound = true;
+      }
+    }
+
+    if (tabsToClose.length > 0) {
+      chrome.tabs.remove(tabsToClose);
     }
   },
   createTabTree: function (tabArray) {
@@ -160,7 +223,7 @@ module.exports = {
   getTabs: function (tabList, callback) {
     var self = this;
 
-    chrome.tabs.query({ currentWindow: true }, function (tabs) {
+    chrome.tabs.query({}, function (tabs) {
       var originalTabs = TabManager.getTabs();
       var forceUpdateTabs = [];
       for (var i = 0; i < tabs.length; i++) {
@@ -169,10 +232,10 @@ module.exports = {
           var oldTitle = originalTabs[index].title;
           var oldUrl = originalTabs[index].url;
           tabs[i] = self.preserveTabProperties(originalTabs[index], tabs[i]);
-          
+
           var changed = false;
           if (tabs[i].url != oldUrl) {
-            tabs[i].favicon = this.getFavIcon(tabs[i].url, tabs[i].favIconUrl);
+            tabs[i].favicon = self.getFavIcon(tabs[i].url, tabs[i].favIconUrl);
             changed = true;
           }
           if (tabs[i].title != oldTitle) {
@@ -187,7 +250,7 @@ module.exports = {
         }
       }
       self.setTabsAndUpdate(tabList, tabs, false);
-     
+
       callback(forceUpdateTabs);
     });
   },
@@ -304,7 +367,6 @@ module.exports = {
   },
   handleTabClicked: function (tabList, id, event) {
     event = event.nativeEvent;
-
     if (event.which == 1) {
       //select multiple tabs
       if (event.ctrlKey) {
@@ -421,6 +483,35 @@ module.exports = {
 
     return target;
   },
+  removeTabsFromGroup: function (tabList, id) {
+    var tabsToRemove = tabList.selectedTabs;
+    if (tabsToRemove.indexOf(id) < 0) {
+      tabsToRemove.push(id);
+    }
+    var groupId = GroupManager.getActiveGroupId();
+    if (groupId == Constants.groups.ALL_GROUP_ID) {
+      return;
+    }
+    else {
+      var group = GroupLogic.getGroup(groupId);
+      if (group && !group.filter) {
+        group.tabs = group.tabs.filter(function (obj) {
+          var found = false;
+          for (var i = 0; i < tabsToRemove.length; i++) {
+            if (obj == tabsToRemove[i]) {
+              found = true;
+              break;
+            }
+          }
+          return !found;
+        });
+      }
+      this.clearSelectedTabs(tabList);
+      GroupManager.updateGroups();
+      GroupLogic.saveGroups();
+      tabList.rerenderIfNeeded();
+    }
+  },
   searchTabs: function (tabList, query) {
     query = query.toLowerCase();
     if (query != this.searchQuery) {
@@ -507,7 +598,7 @@ module.exports = {
               }
 
               if (index >= 0) {
-                groups[groupIndex].tabs.splice(index+1, 0, tab.id);
+                groups[groupIndex].tabs.splice(index + 1, 0, tab.id);
               }
               else {
                 groups[groupIndex].tabs.push(tab.id);
@@ -646,7 +737,9 @@ module.exports = {
   },
   tabDragEnd: function (tabList, e) {
     var tabs = [];
-
+    if (tabList.groupOver) {
+      tabList.groupOver.style.boxShadow = '';
+    }
     if (tabList.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
       tabs = this.tabsToShow;
     }
@@ -689,7 +782,6 @@ module.exports = {
           }
         }
         tabList.rerenderIfNeeded();
-       
       }
       GroupLogic.setGroupsAndSave(groups);
 
@@ -719,7 +811,7 @@ module.exports = {
         if (groups[groupIndex].filter) {
           return;
         }
-        //console.log(groupIndex+' '+tabIndex+' '+to);
+        
         if (from == to) return;
         if (from < to) to--;
 
@@ -727,6 +819,7 @@ module.exports = {
           var temp = groups[groupIndex].tabs[to];
           groups[groupIndex].tabs.splice(to, 0, groups[groupIndex].tabs.splice(from, 1)[0]);
           GroupLogic.setGroupsAndSave(groups);
+          tabList.rerenderIfNeeded();
         }
         return;
       }
@@ -748,9 +841,7 @@ module.exports = {
       }
       chrome.tabs.move(tabs[draggedIndex + pinnedCount].id, { index: to + pinnedCount });
     }
-    if (tabList.groupOver) {
-      tabList.groupOver.style.boxShadow = '';
-    }
+    
   },
   updateTabIds: function (tabs) {
     var ids = [];

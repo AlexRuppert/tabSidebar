@@ -6,7 +6,10 @@ var Menu = require('rc-menu');
 var MenuItem = Menu.Item;
 var SubMenu = Menu.SubMenu;
 module.exports = {
-  getMenuStructure: function (items) {
+  getMenuStructure: function (items, activeFunction) {
+    if (typeof activeFunction === 'undefined' || activeFunction === null){
+      activeFunction = function() { return false };
+    }
     return items.map(function(item, i) {
       if(!item.hasOwnProperty('condition') || item.condition(this.state.targetProps)){
         switch(item.type){
@@ -17,7 +20,7 @@ module.exports = {
                 title = { item.title }>
                 
                 <i
-                  className = { 'fa ' + item.icon }/>
+                className = { 'fa ' + item.icon + (activeFunction(item)?' active':'')}/>
                 { item.title }
               </MenuItem>
             );
