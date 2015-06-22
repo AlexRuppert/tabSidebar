@@ -21,6 +21,8 @@ module.exports = React.createClass({
   suppressTreeView: false,
   tabPlaceholder: document.createElement('li'),
   lastTabsToShow: [],
+  tabsToShow: [],
+  tabOpacity: 100,
   activeGroupChanged: function(id) {
     this.rerenderIfNeeded(id);
   },
@@ -50,12 +52,15 @@ module.exports = React.createClass({
     TabLogic.getTabsToShow(groupId, function (tabsToShow) {
       
       var noTree = false;
+      var same = true;
       //trees
       var activeGroup = GroupLogic.getActiveGroup();
    
       if (!(activeGroup && activeGroup.filter && !Persistency.getState().treeSettings.showTreesInFilters)) {
         if(typeof column !== 'undefined') {
           if (column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+            
+            same = false;
             tabsToShow  = TabLogic.createTabTree(tabsToShow);
           }
         }
@@ -71,7 +76,7 @@ module.exports = React.createClass({
 
       
 
-      var same = true;
+      
       var mismatchIndex = 0;
       if (self.lastTabsToShow.length != tabsToShow.length){
         same = false;
@@ -98,6 +103,7 @@ module.exports = React.createClass({
           self.lastTabsToShow.push({ id: tabsToShow[i].id, pinned: tabsToShow[i].pinned, visible: tabsToShow[i].visible });
         }
         if(!onlyFetchTabs) {
+          
           self.forceUpdate();
         }
       }
@@ -113,6 +119,53 @@ module.exports = React.createClass({
   sortTabs: function (sort) {
     TabLogic.sortTabs(this, sort);
   },
+
+  setClasses: function(){
+    this.pinNodesClasses = classNames({
+      'tab-pin-list': true,
+      'hidden': !this.thereArePinnedNodes
+    });
+  },
+  setPlaceHolderClass: function (props) {
+    this.tabPlaceholderClasses = classNames({
+      'tab-placeholder': true,
+      'multi-column': props.column == Constants.menus.menuBar.viewActions.DOUBLE_COLUMN,
+      'thumbnail': props.viewState == Constants.viewStates.THUMBNAIL_VIEW,
+      'small': props.viewState == Constants.viewStates.SMALL_VIEW
+    });
+    this.tabPlaceholder.className = this.tabPlaceholderClasses;
+  },
+  setOneTimeClasses: function () {
+    this.tabContainerClasses = classNames({
+      'tab-container': true,
+      'slim-bar': Persistency.getState().scrollBar == Constants.scrollBar.SLIM,
+      'hidden-bar': Persistency.getState().scrollBar == Constants.scrollBar.HIDDEN,
+      'animated': Persistency.getState().tabSettings.animated,
+      'hidden': !this.state.isVisible
+    });
+    var backgroundInfo = Persistency.getState().background;
+    this.tabOpacity = 100;
+    if(backgroundInfo.show) {
+      this.tabOpacity = backgroundInfo.tabOpacity;
+      var opacity =  backgroundInfo.opacity/100;
+      var imageValue ='url(' + (backgroundInfo.image) + ')';
+      var positionValue = backgroundInfo.offset + '%';
+      var filterValue = 'blur(' + backgroundInfo.blur +
+        'px) grayscale(' + backgroundInfo.grayscale + '%)';
+
+      this.backgroundStyle.backgroundImage = imageValue;
+      this.backgroundStyle.opacity = opacity;
+      this.backgroundStyle.backgroundPositionX = positionValue;
+      if(backgroundInfo.useFilter) {
+        this.backgroundStyle.WebkitFilter = filterValue;
+      }
+    }
+    else {
+      this.backgroundStyle.backgroundImage = '';
+      this.backgroundStyle.backgroundPositionX = '';
+      this.backgroundStyle.WebkitFilter = '';
+    }
+  },
   getInitialState: function () {
     return {
       
@@ -124,6 +177,8 @@ module.exports = React.createClass({
   shouldComponentUpdate: function (nextProps, nextState) {
    
     if (this.state.isVisible != nextState.isVisible){
+      this.setOneTimeClasses();
+      
       this.rerenderIfNeeded(null, true);
       return true;
     }
@@ -133,25 +188,28 @@ module.exports = React.createClass({
     }
     if (this.props.column != nextProps.column) {
      
-      this.rerenderIfNeeded(null, true, nextProps.column);
+      this.rerenderIfNeeded(null, false, nextProps.column);
+      
       return true;
     }
-     
-    if (this.props.showCloseButtons != nextProps.showCloseButtons)
+    if (this.props.twoGroupColumns != nextProps.twoGroupColumns)
+      return true;
+
+    //unly updated after restart
+    /*if (this.props.showCloseButtons != nextProps.showCloseButtons)
       return true;
     if (this.props.showGroups != nextProps.showGroups)
       return true;
-    if (this.props.twoGroupColumns != nextProps.twoGroupColumns)
-      return true;
     if (this.props.showNewOnTabs != nextProps.showNewOnTabs)
-      return true;
-    
+      return true;*/
 
     return false;
   },
-  componentDidMount: function () {
+  componentWillMount: function () {
     
     var self = this;
+    this.setOneTimeClasses();
+    this.setPlaceHolderClass(this.props);
     ThumbnailCache.init();
     TabLogic.init();
     /*chrome.windows.onFocusChanged.addListener(function (windowId) {
@@ -180,6 +238,9 @@ module.exports = React.createClass({
       }
     });
 
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setPlaceHolderClass(nextProps);
   },
   componentDidUpdate: function (prevProps, prevState) {
     if (this.thereArePinnedNodes) {
@@ -250,143 +311,100 @@ module.exports = React.createClass({
   },
   render: function () {
     
-    if(!this.ready){
+    if(!this.ready) {
       return (
         <div>
         </div>
-        );
-      }
-    
-    
-    var tabPlaceholderClasses = classNames({
-      'tab-placeholder': true,
-      'multi-column': this.props.column == Constants.menus.menuBar.viewActions.DOUBLE_COLUMN,
-      'thumbnail': this.props.viewState == Constants.viewStates.THUMBNAIL_VIEW,
-      'small': this.props.viewState == Constants.viewStates.SMALL_VIEW
-    });
-
-    var backgroundInfo = Persistency.getState().background;
-    
-    var tabOpacity = 100;
-    if(backgroundInfo.show) {
-      tabOpacity = backgroundInfo.tabOpacity;
-      var opacity =  backgroundInfo.opacity/100;     
-      var imageValue ='url(' + (backgroundInfo.image) + ')';
-      var positionValue = backgroundInfo.offset + '%';
-      var filterValue = 'blur(' + backgroundInfo.blur +
-        'px) grayscale(' + backgroundInfo.grayscale + '%)';
-
-
-
-      this.backgroundStyle.backgroundImage = imageValue;
-      this.backgroundStyle.opacity = opacity;
-      this.backgroundStyle.backgroundPositionX = positionValue;
-      if(backgroundInfo.useFilter) {
-        this.backgroundStyle.WebkitFilter = filterValue;
-      }
-    }
-    else {
-      this.backgroundStyle.backgroundImage = '';
-      this.backgroundStyle.backgroundPositionX = '';
-      this.backgroundStyle.WebkitFilter = '';
+      );
     }
     
-
-    this.tabPlaceholder.className = tabPlaceholderClasses;
-
-   
-
   
     var activeTabId = TabManager.getActiveTabId();
     
     var column = this.suppressTreeView?Constants.menus.menuBar.viewActions.SINGLE_COLUMN:this.props.column;
-    var tabNodes = this.tabsToShow.map(function (tab, i) {
-      if (!tab.pinned && tab.visible) {
-        return (
-          <Tab
-            ref = { tab.id }
-            id = { tab.id }
-            index = { i }
-            key = { tab.id }
-            title = { tab.title || tab.url }
 
-            onContextMenu = { this.handleTabContextMenuOpen }
-            onDragEnd = { this.tabDragEnd }
-            onDragStart = { this.tabDragStart }
-            onTabClicked = { this.handleTabClicked }
-            onTabClosed = { this.handleTabClosed }
-            column = { column }
-            favicon = { tab.favicon }
-            isLoading = { tab.status == 'loading' }
-            isActive = { false}
-            
-
-            
-            level = { tab.level }
-            firstNode = { tab.firstNode }
-            parentNode = { tab.parentNode }
-            collapsed = { tab.collapsed }
-            onTabCollapsed = { this.handleTabCollapsed }
-
-            newlyCreated = { tab.newlyCreated }
-            opacity = { tabOpacity }
-            showClose = { this.props.showCloseButtons }
-            showNewOnTabs = { this.props.showNewOnTabs }
-            thumbnail = { tab.thumbnail }
-            viewState = { this.props.viewState }
-
-          />
-
-        );
-      }
-    }, this);
+    var tabNodes = [];
+    var pinNodes = [];
     this.thereArePinnedNodes = false;
-    
-    var pinNodes = TabManager.getTabs().map(function (tab, i) {
-      if (tab.pinned) {
-        this.thereArePinnedNodes = true;
+    for (var i = 0; i < this.tabsToShow.length; i++) {
+      var tab = this.tabsToShow[i];
+      if(tab.visible){
+        if (!tab.pinned) {
+          tabNodes.push(
+            (
+            <Tab
+              ref = { tab.id }
+              id = { tab.id }
+              index = { i }
+              key = { tab.id }
+              title = { tab.title || tab.url }
 
-        return (
-          <Tab
-            ref = { tab.id }
-            id = { tab.id }
-            index = { i }
-            key = { tab.id }
-            title = { tab.title }
+              onContextMenu = { this.handleTabContextMenuOpen }
+              onDragEnd = { this.tabDragEnd }
+              onDragStart = { this.tabDragStart }
+              onTabClicked = { this.handleTabClicked }
+              onTabClosed = { this.handleTabClosed }
+              column = { column }
+              favicon = { tab.favicon }
+              isLoading = { tab.status == 'loading' }
+              isActive = { false}
+            
 
-            isActive = { tab.id == activeTabId }
-            onContextMenu = { this.handleTabContextMenuOpen }
-            onDragEnd = { this.tabDragEnd }
-            onDragStart = { this.tabDragStart }
-            onTabClicked = { this.handleTabClicked }
-            onTabClosed = { this.handleTabClosed }
-            favicon = { tab.favicon }
-            isLoading = { tab.status == 'loading' }
-            isPinned = { true }
-            opacity = { tabOpacity }
-            showClose = { false }
-            showNewOnTabs = { this.props.showNewOnTabs }
-          />
-        );
+            
+              level = { tab.level }
+              firstNode = { tab.firstNode }
+              parentNode = { tab.parentNode }
+              collapsed = { tab.collapsed }
+              onTabCollapsed = { this.handleTabCollapsed }
+
+              newlyCreated = { tab.newlyCreated }
+              opacity = { this.tabOpacity }
+              showClose = { this.props.showCloseButtons }
+              showNewOnTabs = { this.props.showNewOnTabs }
+              thumbnail = { tab.thumbnail }
+              viewState = { this.props.viewState }
+
+            />
+
+            )
+          );
+        }
+        else {
+          this.thereArePinnedNodes = true;
+          pinNodes.push(
+            (
+            <Tab
+              ref = { tab.id }
+              id = { tab.id }
+              index = { i }
+              key = { tab.id }
+              title = { tab.title }
+
+              isActive = { tab.id == activeTabId }
+              onContextMenu = { this.handleTabContextMenuOpen }
+              onDragEnd = { this.tabDragEnd }
+              onDragStart = { this.tabDragStart }
+              onTabClicked = { this.handleTabClicked }
+              onTabClosed = { this.handleTabClosed }
+              favicon = { tab.favicon }
+              isLoading = { tab.status == 'loading' }
+              isPinned = { true }
+              opacity = { this.tabOpacity }
+              showClose = { false }
+              showNewOnTabs = { this.props.showNewOnTabs }
+            />
+            )
+          );
+        }
       }
-    }, this);
+    }
+   
     
-    var pinNodesClasses = classNames({
-      'tab-pin-list': true,
-      'hidden': !this.thereArePinnedNodes
-    });
-    var tabContainerClasses = classNames({
-      'tab-container': true,
-      'slim-bar': Persistency.getState().scrollBar == Constants.scrollBar.SLIM,
-      'hidden-bar': Persistency.getState().scrollBar == Constants.scrollBar.HIDDEN,
-      'animated': Persistency.getState().tabSettings.animated,
-      'hidden': !this.state.isVisible
-    });
-    
+    this.setClasses();
    
     return (
       <div
-        className = { tabContainerClasses }>
+        className = { this.tabContainerClasses }>
         <div
           className = "tab-list-container">
           <div 
@@ -408,7 +426,7 @@ module.exports = React.createClass({
             className = "tab-list">
             <ul
               ref= { Constants.refs.PIN_LIST }
-              className = { pinNodesClasses }>
+              className = { this.pinNodesClasses }>
               { pinNodes }
             </ul>
             <ul

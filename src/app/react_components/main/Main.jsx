@@ -124,8 +124,7 @@ module.exports = React.createClass({
           column = { this.state.column }
           handleCollapseTabs = { this.handleCollapseTabs }
           handleExpandTabs = { this.handleExpandTabs }
-          handleScrollToTop = { this.handleScrollToTop }
-          />
+          handleScrollToTop = { this.handleScrollToTop } />
       </div>
     );
   }

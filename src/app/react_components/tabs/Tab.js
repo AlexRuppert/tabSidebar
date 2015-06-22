@@ -194,7 +194,7 @@ module.exports = {
   getFavIcon: function (url, favicon) {
     var result = chrome.runtime.getURL('app/media/fav/default.png');
     if (!url.startsWith('opera://')) {
-      result = favicon || chrome.runtime.getURL('app/media/fav/default.png');
+      result = 'opera://favicon/' + url || favicon || chrome.runtime.getURL('app/media/fav/default.png');
     }
     else {
       if (url === 'opera://settings/') result = chrome.runtime.getURL('app/media/fav/settings.png');
@@ -634,19 +634,19 @@ module.exports = {
     });
     chrome.tabs.onMoved.addListener(function (tabId, moveInfo) {
       //tabs.splice(moveInfo.toIndex, 0, tabs.splice(moveInfo.fromIndex, 1)[0]);
-       chrome.tabs.query({}, function (tabs) {
-         var originalTabs = TabManager.getTabs();
-         for (var i = 0; i < tabs.length; i++) {
-           var index = self.getTabIndex(tabs[i].id);
-           if (index >= 0) {
-             tabs[i] = self.preserveTabProperties(originalTabs[index], tabs[i]);
-           }
-           else {
-             self.initNewTab(tabs[i]);
-           }
-         }
-         self.setTabsAndUpdate(tabList, tabs, true);
-       });
+      chrome.tabs.query({}, function (tabs) {
+        var originalTabs = TabManager.getTabs();
+        for (var i = 0; i < tabs.length; i++) {
+          var index = self.getTabIndex(tabs[i].id);
+          if (index >= 0) {
+            tabs[i] = self.preserveTabProperties(originalTabs[index], tabs[i]);
+          }
+          else {
+            self.initNewTab(tabs[i]);
+          }
+        }
+        self.setTabsAndUpdate(tabList, tabs, true);
+      });
     });
 
     chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
@@ -960,19 +960,15 @@ module.exports = {
 
       //count pinned tabs
 
-     
-
       var oldTo = to;
       //supports multiple windows
       chrome.tabs.query({}, function (tabs) {
-       
         var pinnedCount = {};
         var foreignTabs = 0;
         var shownPinned = 0;
         var pinnedTabs = [];
         var unpinnedTabs = [];
         for (var i = 0; i < tabs.length; i++) {
-
           if (tabs[i].pinned) {
             shownPinned += 1;
             pinnedTabs.push(tabs[i]);
@@ -989,8 +985,6 @@ module.exports = {
             }
             unpinnedTabs.push(tabs[i]);
           }
-          
-
         }
         tabs = pinnedTabs.concat(unpinnedTabs);
 
@@ -999,13 +993,12 @@ module.exports = {
         for (var i = 0; i < tabs.length; i++) {
           //console.log(tabs[i].title);
         }
-        
+
         var tabObj = tabs[draggedIndex + shownPinned];
         var winId = tabObj.windowId;
         to += pinnedCount[winId];
-        
-        for (var i = 0; i <= to + (shownPinned - pinnedCount[winId]) ; i++) {
 
+        for (var i = 0; i <= to + (shownPinned - pinnedCount[winId]) ; i++) {
           if (tabs[i].windowId != winId) {
             foreignTabs++;
           }
@@ -1014,10 +1007,9 @@ module.exports = {
         if (to < 0)
           to = 0;
         //console.log(winId + " " + foreignTabs + " " + oldTo + " "+ to);
-       
+
         chrome.tabs.move(tabObj.id, { windowId: winId, index: to });
       });
-      
     }
   },
   updateTabIds: function (tabs) {

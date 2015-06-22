@@ -254,12 +254,12 @@ input[type="color"] {
 @-webkit-keyframes fadeinleft {
   from {
     opacity: 0;
-    margin-left: -500px;
+    /*margin-left: -500px;*/
   }
 
   to {
     opacity: 1;
-    margin-left: 0;
+    /*margin-left: 0;*/
   }
 }
 
@@ -286,9 +286,10 @@ input[type="color"] {
 }
 
 #main {
-  -webkit-animation: fadeinleft .3s;
-  -webkit-animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
-
+  /*-webkit-animation: fadeinleft 0.93s;
+  -webkit-animation-timing-function: linear;*/
+   
+  height: 100%;
   .recent-list {
     width: 100%;
     overflow-x: hidden;
@@ -454,8 +455,8 @@ input[type="color"] {
   }
 
   .tab-group-bar {
-    -webkit-animation: fadeinleft .15s;
-    -webkit-animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+    /*-webkit-animation: fadeinleft .15s;
+    -webkit-animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);*/
     position: fixed;
     background: @darkBackgroundColor;
     height: 100%;
@@ -677,7 +678,7 @@ input[type="color"] {
         height: 0;
         border-top: 0 solid transparent;
         border-bottom: 6px solid transparent;
-        border-left: 6px solid @darkBackgroundColor;
+        border-left: 6px solid #e87900;
         position: absolute;
         top: 0;
         left: 0;

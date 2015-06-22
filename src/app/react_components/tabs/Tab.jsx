@@ -140,24 +140,48 @@ module.exports = React.createClass({
       'fa fa-circle-o-notch fa-spin': true,
       'hidden': !this.state.isLoading
     });
-    var thumbnails = classNames({
+    var thumbnailClasses = classNames({
       'thumbnail': true,
       'empty': this.state.thumbnail.length <= 1,
       'hidden': !(this.props.viewState == Constants.viewStates.COMPACT_VIEW
         || this.props.viewState == Constants.viewStates.THUMBNAIL_VIEW)
     });
+    var thumbnailImage = (this.props.viewState == Constants.viewStates.COMPACT_VIEW
+        || this.props.viewState == Constants.viewStates.THUMBNAIL_VIEW)?
+        {backgroundImage: 'url(' + (this.state.thumbnail) + ')'}: {backgroundImage: ''};
+
+    var thumbnails = {};
+    if ((this.props.viewState == Constants.viewStates.COMPACT_VIEW
+        || this.props.viewState == Constants.viewStates.THUMBNAIL_VIEW)) {
+      thumbnails = ( 
+        <div
+          className = { thumbnailClasses }
+          style = { thumbnailImage }>
+        </div>
+      );
+    }
+   
     var titleClasses = classNames({
       'title': true,
       'extended': !(this.props.showClose && !this.props.isPinned)
     });
-    var thumbnailImage = {
-      backgroundImage: 'url(' + (this.state.thumbnail) + ')'
-    };
-    var tabCloseClasses = classNames({
+    
+
+    /*var tabCloseClasses = classNames({
       'tabClose fa fa-times': true,
       'hidden': !(this.props.showClose && !this.props.isPinned)
-    });
+    });*/
 
+    var tabClose = {};
+    if (this.props.showClose && !this.props.isPinned) {
+      tabClose = (
+        <i
+          className = { 'tabClose fa fa-times' }
+          onClick = { this.handleTabCloseClick }
+          onMouseDown = { this.handleTabCloseMouseDown }
+          isVisible = { this.props.showClose && !this.props.isPinned }/>
+      );
+    }
     var tabStyle = {};
     if (this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
       var indent = 18;
@@ -168,7 +192,8 @@ module.exports = React.createClass({
         marginLeft: indent * this.props.level + 'px',
         width: 'calc(100% - ' + indent * this.props.level + 'px)'
       }
-    };
+    }
+
     if(!this.state.isActive && this.props.opacity < 100) {
       tabStyle['backgroundColor'] = 'rgba(219, 219, 219, ' + this.props.opacity/100 + ')';
     }
@@ -178,16 +203,28 @@ module.exports = React.createClass({
       'first-node': this.props.firstNode && this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW
     });
 
-    var treeCollapseClasses = classNames({
+    /*var treeCollapseClasses = classNames({
       'tree-collapse': true,
       'hidden': !this.props.parentNode || this.props.column != Constants.menus.menuBar.viewActions.TREE_VIEW
-    });
+    });*/
 
     var treeCollapseIconClasses = classNames({
       'fa': true,
       'fa-plus-square-o': this.props.collapsed,
       'fa-minus-square-o': !this.props.collapsed
     });
+
+    var treeCollapse = {};
+    if (this.props.parentNode && this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+      treeCollapse = ( 
+        <div
+          className = { "tree-collapse" } 
+          onMouseDown = { this.handleCollapse }>
+          <i
+            className = { treeCollapseIconClasses }/> 
+        </div> );
+    }
+      
     return (
       <li
         className = { classes }
@@ -199,15 +236,9 @@ module.exports = React.createClass({
         onDragEnd = { this.props.onDragEnd }
         onContextMenu = { this.handleContextMenu }
         onMouseDown = { this.handleClick }>
-        <div
-          className = { treeCollapseClasses } 
-          onMouseDown = { this.handleCollapse }>
-          <i
-            className = { treeCollapseIconClasses }/>
-        </div>
+        { treeCollapse }
         <div
             className = { mainlineClasses }>
-         
           <img
             className = { faviconClasses }
             src = { this.state.favicon }/>
@@ -217,16 +248,9 @@ module.exports = React.createClass({
             className = { titleClasses }>
             { this.state.title }
           </div>
-          <i
-            className = { tabCloseClasses }
-            onClick = { this.handleTabCloseClick }
-            onMouseDown = { this.handleTabCloseMouseDown }
-            isVisible = { this.props.showClose && !this.props.isPinned }/>
+            { tabClose }
         </div>
-        <div
-          className = { thumbnails }
-          style = { thumbnailImage }>
-        </div>
+        { thumbnails }
       </li>
     );
   }
