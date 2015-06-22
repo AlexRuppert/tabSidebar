@@ -194,8 +194,8 @@ module.exports = React.createClass({
           </label>
           <select
             ref = { Constants.refs.SORT_DIRECTION }>
-            <option value = { Constants.groupCreator.ASCENDING }>{ Strings.groupCreator.ASCENDING }</option>
-            <option value = { Constants.groupCreator.DESCENDING } selected>{ Strings.groupCreator.DESCENDING }</option>
+            <option value = { Constants.groupCreator.ASCENDING } selected>{ Strings.groupCreator.ASCENDING }</option>
+            <option value = { Constants.groupCreator.DESCENDING }>{ Strings.groupCreator.DESCENDING }</option>
           </select>
         </div>
         <span

@@ -28,7 +28,7 @@ module.exports = React.createClass({
   componentWillMount: function () {
     var self = this;
     var state = Persistency.getState();
-    
+   
     self.setState({
       viewState: state.tabSettings.viewState,
       column: state.tabSettings.column,
@@ -80,6 +80,9 @@ module.exports = React.createClass({
       this.refs[Constants.refs.RECENT_LIST].search(query);
     }
   },
+  handleSort: function (sort) {
+    this.refs[Constants.refs.TAB_LIST].sortTabs(sort);
+  },
   handleViewChange: function (view) {
     Persistency.updateState({tabSettings: { viewState: view }});
     this.setState({ viewState: view });
@@ -97,6 +100,7 @@ module.exports = React.createClass({
           handleGroupColumnChange = { this.handleGroupColumnChange }
           handleNewTabGroup = { this.handleNewTabGroup }
           handleViewChange = { this.handleViewChange }
+          handleSort = { this.handleSort }
           showGroups = { this.state.showGroups }
           showRecentTabs = { this.showRecentTabs }/>
         <SearchBar 

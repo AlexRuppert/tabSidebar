@@ -40,7 +40,7 @@ module.exports = {
   },
 
   sortBy: function (field, type, asc) {
-    var dir = asc ? 1 : -1;
+    var dir = asc ? -1 : 1;
 
     if (type == 'string') {
       return function (a, b) {

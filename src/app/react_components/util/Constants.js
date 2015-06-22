@@ -23,7 +23,6 @@ module.exports = {
     THUMBNAIL_CACHE: 'thumbnailCache',
     THUMBNAIL_CACHE_SIZE: 'thumbnailCacheSize',
 
-
     TAB_MANAGER: 'tabManager',
     GROUP_MANAGER: 'groupManager'
   },
@@ -64,6 +63,7 @@ module.exports = {
     menuBar: {
       openStates: {
         NONE: 'none',
+        SORT: 'sort',
         VIEW: 'view'
       },
       viewActions: {
@@ -80,7 +80,7 @@ module.exports = {
       SUBMENU: 'submenu'
     }
   },
-  
+
   offsets: {
     TAB_LIST_TOP: 63
   },
@@ -110,6 +110,16 @@ module.exports = {
     DEFAULT: 'default',
     HIDDEN: 'hidden',
     SLIM: 'slim'
+  },
+  sortModes: {
+    OPENED_ASC: 'openedasc',
+    OPENED_DESC: 'openeddesc',
+    TITLE_ASC: 'titleasc',
+    TITLE_DESC: 'titledesc',
+    URL_ASC: 'urlasc',
+    URL_DESC: 'urldesc',
+    VISITED_ASC: 'visitedasc',
+    VISITED_DESC: 'visiteddesc'
   },
   thumbnails: {
     CLEANUP_INTERVAL: 60 * 1000 * 5,

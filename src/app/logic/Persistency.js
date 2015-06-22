@@ -6,6 +6,7 @@ window.Persistency = {
   defaultState: {
     background: {
       show: true,
+      useFilter: false,
       image: 'http://i.imgur.com/8rSgyBO.jpg',
       offset: 65,
       blur: 4,
@@ -24,7 +25,7 @@ window.Persistency = {
       gray: false
     },
     tabSettings: {
-      animated: true,
+      animated: false,
       column: 'single',
       showCloseButtons: true,
       showNewOnTabs: true,
@@ -39,6 +40,7 @@ window.Persistency = {
     },
   },
   loaded: false,
+
   storage: chrome.storage.local,
 
   init: function () {
@@ -73,7 +75,7 @@ window.Persistency = {
         self.saveState();
       }
       self.loaded = true;
-     
+
       callback();
     });
   },
@@ -136,6 +138,7 @@ window.Persistency = {
         obj[property] = this.currentState[property]
       }
     }
+    chrome.extension.getBackgroundPage()['persistency'].currentState = this.currentState;
     this.storage.set(obj);
   }
 }

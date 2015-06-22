@@ -16,12 +16,13 @@ module.exports = React.createClass({
   lastTabDragY: 0,
   pinOffset: 0,
   ready: false,
+  backgroundStyle: {},
   selectedTabs: [],
   suppressTreeView: false,
   tabPlaceholder: document.createElement('li'),
   lastTabsToShow: [],
-  activeGroupChanged: function(id){
-    this.rerenderIfNeeded();
+  activeGroupChanged: function(id) {
+    this.rerenderIfNeeded(id);
   },
   collapseTabs: function () {
     TabLogic.collapseTabs(this);
@@ -36,71 +37,81 @@ module.exports = React.createClass({
   getGroupList: function() {
     return this.refs[Constants.refs.TAB_GROUP_LIST];
   },
-  getTabsOfGroup: function (groupId){
-    return TabLogic.getTabsToShow(groupId);
+  getTabsOfGroup: function (groupId, callback){
+    TabLogic.getTabsToShow(groupId, callback);
   },
-  rerenderIfNeeded: function(onlyFetchTabs, column){
+  rerenderIfNeeded: function(groupId, onlyFetchTabs, column){
+    
+    if(typeof groupId === 'undefined' || groupId == null) {
+      groupId = GroupManager.getActiveGroupId();
+    }
     this.suppressTreeView = false;
-    this.tabsToShow = TabLogic.getTabsToShow(GroupManager.getActiveGroupId());
-    
-   /* for (var i = 0; i <  this.tabsToShow.length; i++) {
-      console.log( this.tabsToShow[i].title);
-    }*/
-    
-    var noTree = false;
-    //trees
-    var activeGroup = GroupLogic.getActiveGroup();
+    var self = this;
+    TabLogic.getTabsToShow(groupId, function (tabsToShow) {
+      
+      var noTree = false;
+      //trees
+      var activeGroup = GroupLogic.getActiveGroup();
    
-    if (!(activeGroup && activeGroup.filter && !Persistency.getState().treeSettings.showTreesInFilters)) {
-      if(typeof column !== 'undefined') {
-        if (column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
-          this.tabsToShow  = TabLogic.createTabTree(this.tabsToShow);
+      if (!(activeGroup && activeGroup.filter && !Persistency.getState().treeSettings.showTreesInFilters)) {
+        if(typeof column !== 'undefined') {
+          if (column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+            tabsToShow  = TabLogic.createTabTree(tabsToShow);
+          }
+        }
+        else {
+          if (self.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+            tabsToShow  = TabLogic.createTabTree(tabsToShow);
+          }
         }
       }
       else {
-        if (this.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
-          this.tabsToShow  = TabLogic.createTabTree(this.tabsToShow);
-        }
+        self.suppressTreeView = true;
       }
-    }
-    else {
-      this.suppressTreeView = true;
-    }
-    var same = true;
-    var mismatchIndex = 0;
-    if (this.lastTabsToShow.length != this.tabsToShow.length){
-      same = false;
-    }
-    else {
-      if (this.lastTabsToShow.length == 0) {
+
+      
+
+      var same = true;
+      var mismatchIndex = 0;
+      if (self.lastTabsToShow.length != tabsToShow.length){
         same = false;
       }
-      for (var i = 0; i < this.lastTabsToShow.length; i++) {
-        if(this.tabsToShow[i].id != this.lastTabsToShow[i].id
-          || this.tabsToShow[i].visible != this.lastTabsToShow[i].visible
-          || this.tabsToShow[i].pinned != this.lastTabsToShow[i].pinned) {
+      else {
+        if (self.lastTabsToShow.length == 0) {
           same = false;
-          mismatchIndex = i;
-          break;
+        }
+        for (var i = 0; i < self.lastTabsToShow.length; i++) {
+          if(tabsToShow[i].id != self.lastTabsToShow[i].id
+            || tabsToShow[i].visible != self.lastTabsToShow[i].visible
+            || tabsToShow[i].pinned != self.lastTabsToShow[i].pinned) {
+            same = false;
+            mismatchIndex = i;
+            break;
+          }
         }
       }
-    }
     
-    
-    if (!same){
-      this.lastTabsToShow = this.lastTabsToShow.slice(0, mismatchIndex);
-      for (var i = mismatchIndex; i < this.tabsToShow.length; i++) {
-        this.lastTabsToShow.push({ id: this.tabsToShow[i].id, pinned: this.tabsToShow[i].pinned, visible: this.tabsToShow[i].visible });
+      self.tabsToShow = tabsToShow;
+      if (!same){
+        self.lastTabsToShow = self.lastTabsToShow.slice(0, mismatchIndex);
+        for (var i = mismatchIndex; i < tabsToShow.length; i++) {
+          self.lastTabsToShow.push({ id: tabsToShow[i].id, pinned: tabsToShow[i].pinned, visible: tabsToShow[i].visible });
+        }
+        if(!onlyFetchTabs) {
+          self.forceUpdate();
+        }
       }
-      if(!onlyFetchTabs) {
-        this.forceUpdate();
-      }
-    }
+
+    });
+   
   },
   searchTabs: function (query) {
     if (typeof query === 'string') {
       TabLogic.searchTabs(this, query);
     }
+  },
+  sortTabs: function (sort) {
+    TabLogic.sortTabs(this, sort);
   },
   getInitialState: function () {
     return {
@@ -113,16 +124,16 @@ module.exports = React.createClass({
   shouldComponentUpdate: function (nextProps, nextState) {
    
     if (this.state.isVisible != nextState.isVisible){
-      this.rerenderIfNeeded(true);
+      this.rerenderIfNeeded(null, true);
       return true;
     }
     if (this.props.viewState != nextProps.viewState){
-      this.rerenderIfNeeded(true);
+      this.rerenderIfNeeded(null, true);
       return true;
     }
     if (this.props.column != nextProps.column) {
      
-      this.rerenderIfNeeded(true, nextProps.column);
+      this.rerenderIfNeeded(null, true, nextProps.column);
       return true;
     }
      
@@ -139,10 +150,18 @@ module.exports = React.createClass({
     return false;
   },
   componentDidMount: function () {
+    
     var self = this;
     ThumbnailCache.init();
     TabLogic.init();
-    GroupManager.addActiveGroupIdChangedListener(Constants.refs.TAB_LIST, this.activeGroupChanged);
+    /*chrome.windows.onFocusChanged.addListener(function (windowId) {
+      
+      if(windowId >= 0){
+        
+        self.rerenderIfNeeded();
+      }
+    });*/
+    
     TabLogic.getTabs(this, function(forceUpdateTabs){
       TabLogic.setToCurrentTab(self);
      // ThumbnailCache.scheduleCleanup(self);
@@ -150,7 +169,7 @@ module.exports = React.createClass({
       
       TabLogic.setUpEventListeners(self);
       self.ready = true;
-      self.rerenderIfNeeded();
+      self.rerenderIfNeeded(null);
       for (var i = 0; i < forceUpdateTabs.length; i++) {
         if(self.refs[forceUpdateTabs[i].id]){
           self.refs[forceUpdateTabs[i].id].setState({
@@ -247,18 +266,32 @@ module.exports = React.createClass({
     });
 
     var backgroundInfo = Persistency.getState().background;
-    var backgroundStyle = {};
+    
     var tabOpacity = 100;
-    if(backgroundInfo.show){
+    if(backgroundInfo.show) {
       tabOpacity = backgroundInfo.tabOpacity;
-      backgroundStyle = {
-        backgroundImage: 'url(' + (backgroundInfo.image) + ')',
-        backgroundPositionX: backgroundInfo.offset + '%',
-        WebkitFilter: 'blur(' + backgroundInfo.blur + 
-          'px) opacity(' + backgroundInfo.opacity + 
-          '%) grayscale(' + backgroundInfo.grayscale + '%)'
-      };
+      var opacity =  backgroundInfo.opacity/100;     
+      var imageValue ='url(' + (backgroundInfo.image) + ')';
+      var positionValue = backgroundInfo.offset + '%';
+      var filterValue = 'blur(' + backgroundInfo.blur +
+        'px) grayscale(' + backgroundInfo.grayscale + '%)';
+
+
+
+      this.backgroundStyle.backgroundImage = imageValue;
+      this.backgroundStyle.opacity = opacity;
+      this.backgroundStyle.backgroundPositionX = positionValue;
+      if(backgroundInfo.useFilter) {
+        this.backgroundStyle.WebkitFilter = filterValue;
+      }
     }
+    else {
+      this.backgroundStyle.backgroundImage = '';
+      this.backgroundStyle.backgroundPositionX = '';
+      this.backgroundStyle.WebkitFilter = '';
+    }
+    
+
     this.tabPlaceholder.className = tabPlaceholderClasses;
 
    
@@ -358,7 +391,7 @@ module.exports = React.createClass({
           className = "tab-list-container">
           <div 
             className = { 'tab-list-background' } 
-            style = { backgroundStyle }/>
+            style = { this.backgroundStyle }/>
           <ContextMenu
             ref = { Constants.refs.TAB_CONTEXT_MENU }
             items = { TabContextMenu }

@@ -6,7 +6,7 @@
     "message": "Tabs ausklappen"
   },
   "GO_TO_TOP" : {
-    "message": "Nach oben"
+    "message": "Hoch"
   },
   "SETTINGS" : {
     "message": "Einstellungen"
@@ -134,6 +134,9 @@
   "NEW_TAB_GROUP" : {
     "message": "Neue Gruppe"
   },
+  "MENU_BAR_SORT" : {
+    "message": "Sortieren"
+  },
   "TABS" : {
     "message": "Zeige Tabs"
   },
@@ -201,7 +204,30 @@
     "message": "Baumansicht"
   },
 
-
+  "OPENED_ASC" : {
+    "message": "Zuletzt erstellt aufsteigend"
+  },
+  "OPENED_DESC" : {
+    "message": "Zuletzt erstellt absteigend"
+  },
+  "TITLE_ASC" : {
+    "message": "Titel aufsteigend"
+  },
+  "TITLE_DESC" : {
+    "message": "Titel absteigend"
+  },
+  "URL_ASC" : {
+    "message": "Url aufsteigend"
+  },
+  "URL_DESC" : {
+    "message": "Url absteigend"
+  },
+  "VISITED_ASC" : {
+    "message": "Zuletzt angeklickt aufsteigend"
+  },
+  "VISITED_DESC" : {
+    "message": "Zuletzt angeklickt absteigend"
+  },
 
   "SETTINGS_TAB_SIDEBAR_TITLE" : {
     "message":  "Tab Sidebar Einstellungen"
@@ -341,31 +367,37 @@
     "message":  "Kein Bild"
   },
   "SETTINGS_BACKGROUND_OFFSET" :  {
-    "message":  "X-Versatz"
+    "message":  "X-Versatz:"
   },
   "SETTINGS_BACKGROUND_OFFSET_TEXT" :  {
     "message":  "Mit diesem Schieberegler können Sie das Hintergrundbild horizontal verschieben und so den dargestellten Bereich auswählen."
   },
+  "SETTINGS_BACKGROUND_USE_FILTER" :  {
+    "message":  "Nachfoldende Filter verwenden"
+  },
+  "SETTINGS_BACKGROUND_USE_FILTER_TEXT" :  {
+    "message":  "Der Verzicht auf Filter kann den Speicherverbrauch senken."
+  },
   "SETTINGS_BACKGROUND_BLUR" :  {
-    "message":  "Bild weichzeichnen"
+    "message":  "Bild weichzeichnen:"
   },
   "SETTINGS_BACKGROUND_BLUR_TEXT" :  {
     "message":  "Sie können das Bild weichzeichnen lassen, um ablenkende Details zu entfernen."
   },
   "SETTINGS_BACKGROUND_OPACITY" :  {
-    "message":  "Bildsichbarkeit"
+    "message":  "Bildsichbarkeit:"
   },
   "SETTINGS_BACKGROUND_OPACITY_TEXT" :  {
     "message":  "Sie können einstellen, wie gut das Bild sichtbar ist."
   },
   "SETTINGS_BACKGROUND_GRAYSCALE" :  {
-    "message":  "Graustufenbild"
+    "message":  "Graustufenbild:"
   },
   "SETTINGS_BACKGROUND_GRAYSCALE_TEXT" :  {
     "message":  "Mit deser Einstellung können Sie die Farbsättigung reduzieren."
   },
   "SETTINGS_BACKGROUND_TAB_OPACITY" :  {
-    "message":  "Tab Sichtbarkeit"
+    "message":  "Tab Sichtbarkeit:"
   },
   "SETTINGS_BACKGROUND_TAB_OPACITY_TEXT" :  {
     "message":  "Mit dieser Einstellung regeln Sie, wie wenig vom Hintergrundbild durch die Tabs durchscheint."

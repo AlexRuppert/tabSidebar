@@ -77,7 +77,7 @@ module.exports = React.createClass({
   },
   getInitialState: function () {
     this.groupPlaceholder.className = 'group-placeholder';
-    GroupManager.addGroupsChangedListener(Constants.refs.TAB_GROUP_LIST, this.groupsChanged);
+    //GroupManager.addGroupsChangedListener(Constants.refs.TAB_GROUP_LIST, this.groupsChanged);
     return {
       isVisible: this.props.isVisible || false
     };
@@ -91,6 +91,17 @@ module.exports = React.createClass({
     return false;
   },
   componentDidMount: function () {
+    var self = this;
+
+    chrome.windows.onFocusChanged.addListener(function (windowId) {
+      if(windowId >= 0){
+        self.groupsChanged();
+      }
+    });
+
+    setTimeout(function(){
+      self.groupsChanged();
+    },200);
     //update group heights
     this.updateGroupHeights();
   },

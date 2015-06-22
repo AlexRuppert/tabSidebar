@@ -15,16 +15,22 @@ module.exports = {
     else if (group) {
       var title = group.title;
       var newId = this.getNewGroupId();
-      var tabsShown = groupList.props.parent.getTabsOfGroup(id);
       var cloneTabs = [];
-      for (var i = 0; i < tabsShown.length; i++) {
-        cloneTabs.push(tabsShown[i].id);
-      }
-      var groupClone = { title: title, id: newId, tabs: cloneTabs, color: Colors.getColorByHash(Colors.backgroundColors, newId) };
-      var index = this.getGroupIndex(id);
-      var groups = GroupManager.getGroups();
-      groups.splice(index + 1, 0, groupClone);
-      this.setGroupsAndSave(groups);
+      var self = this;
+      groupList.props.parent.getTabsOfGroup(id, function (tabsShown) {
+        for (var i = 0; i < tabsShown.length; i++) {
+          cloneTabs.push(tabsShown[i].id);
+        }
+        var groupClone = { title: title, id: newId, tabs: cloneTabs, color: Colors.getColorByHash(Colors.backgroundColors, newId) };
+        var index = self.getGroupIndex(id);
+        var groups = GroupManager.getGroups();
+        groups.splice(index + 1, 0, groupClone);
+        self.setGroupsAndSave(groups);
+        groupList.groupsChanged();
+
+      });
+      
+      
     }
   },
   cloneGroup: function (groupList, id) {
@@ -64,6 +70,7 @@ module.exports = {
     groups.splice(index + 1, 0, groupClone);
 
     this.setGroupsAndSave(groups);
+    groupList.groupsChanged();
   },
   closeTabs: function (groupList, id) {
     var tabsToClose = [];
@@ -82,10 +89,14 @@ module.exports = {
         }
       }
       else {
-        var tabsShown = groupList.props.parent.getTabsOfGroup(id);
-        for (var i = 0; i < tabsShown.length; i++) {
-          tabsToClose.push(+tabsShown[i].id);
-        }
+        groupList.props.parent.getTabsOfGroup(id, function (tabsShown) {
+          for (var i = 0; i < tabsShown.length; i++) {
+            tabsToClose.push(+tabsShown[i].id);
+          }
+          if (tabsToClose.length > 0) {
+            chrome.tabs.remove(tabsToClose);
+          }
+        });
       }
     }
     
@@ -114,6 +125,7 @@ module.exports = {
     }
     groups.splice(0, 0, newGroup);
     this.setGroupsAndSave(groups);
+    groupList.groupsChanged();
   },
   getActiveGroup: function () {
     var groups = GroupManager.getGroups();
@@ -223,7 +235,8 @@ module.exports = {
     
   },
   groupDragEnter: function (e) {
-    if (e.target.className.indexOf('tab-group') >= 0) {      
+    
+    if (e.dataTransfer.types.length == 0 && e.target.className.indexOf('tab-group') >= 0) {
       e.target.style.boxShadow = '0 0 8px #fff inset, 0 0 5px #fff inset , 0 0 3px #fff inset';
     }
   },
@@ -232,11 +245,12 @@ module.exports = {
     if (e.target.className.indexOf('tab-group') >= 0) {
       e.target.style.boxShadow = '';
     }
-
-    
   },
   groupDragOver: function (groupList, tabList, e) {
     e.preventDefault();
+    if (e.dataTransfer.types.length > 0) {
+      return;
+    }
     groupList.updateGroupHeights(50);
     //only 2 levels to keep it simple: check if we are over another tab
     if (!e.target.classList.contains('tab-group') && !e.target.classList.contains('group-placeholder')) {
@@ -253,7 +267,9 @@ module.exports = {
       return;
     }
     
-    tabList.groupDragged.style.display = 'none';
+    if(tabList.groupDragged)
+      tabList.groupDragged.style.display = 'none';
+
     tabList.groupOver = e.target;
     // Inside the dragOver method
 
@@ -279,10 +295,6 @@ module.exports = {
     else {
       parent.insertBefore(groupList.groupPlaceholder, e.target.nextSibling);
     }
-
-    
-
-   
   },
   groupDragEnd: function (groupList, tabList, e) {
     tabList.groupDragged.style.display = 'block';
@@ -309,6 +321,7 @@ module.exports = {
     tabList.groupDragged = null;
     this.setGroupsAndSave(groups);
     groupList.updateGroupHeights();
+    groupList.groupsChanged();
   },
   handleEditTabGroup: function (groupList, id) {
     if (id == Constants.groups.ALL_GROUP_ID)
@@ -326,11 +339,12 @@ module.exports = {
           groups[index].sortBy = filter.sortBy;
           groups[index].sortDirection = filter.sortDirection;
           if (GroupManager.getActiveGroupId() == id) {
-            groupList.props.parent.rerenderIfNeeded();
+            groupList.props.parent.rerenderIfNeeded(id);
           }
         }
 
         self.setGroupsAndSave(groups);
+        groupList.groupsChanged();
       });
     }
   },
@@ -358,6 +372,7 @@ module.exports = {
     //GroupManager.setActiveGroupId(newActiveGroup);
     this.setGroupsActive(groupList, newActiveGroup);
     this.setGroupsAndSave(newGroups);
+    groupList.groupsChanged();
   },
   init: function () {
   },
@@ -423,6 +438,7 @@ module.exports = {
     }
 
     GroupManager.setGroups(groups);
+   
     if (changed || !sameSession) {
       this.saveGroups();
     }
@@ -464,6 +480,7 @@ module.exports = {
         group.tabs = usedTabs;
       }
       GroupManager.setActiveGroupId(id);
+      groupList.props.parent.activeGroupChanged(id);
     }
   },
   setGroupsAndSave: function (groups) {

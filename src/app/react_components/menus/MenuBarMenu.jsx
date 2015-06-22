@@ -12,21 +12,12 @@ module.exports = React.createClass({
     }
     this.props.handleSelect(Constants.menus.menuBar.openStates.NONE);
   },
-  viewMenuActiveFilter: function (item) {
-    var state = Persistency.getState();
-    var viewState = state.tabSettings.viewState;
-    var column = state.tabSettings.column;
-    var twoGroupColumns = state.groupSettings.twoGroupColumns;
-
-    if (item.action == viewState
-      ||item.action == column ){
-      return true;
+  getDefaultProps: function () {
+    return {
+      activeFilter: function(item){
+        return false;
+      }
     }
-    else if (twoGroupColumns && item.action == Constants.menus.menuBar.viewActions.DOUBLE_COLUMN_GROUP
-      || !twoGroupColumns && item.action == Constants.menus.menuBar.viewActions.SINGLE_COLUMN_GROUP) {
-      return true;
-    }
-    return false;
   },
   getInitialState: function () {
     return {
@@ -75,7 +66,7 @@ module.exports = React.createClass({
             style = { {left: this.props.notchOffset + '%'} }/>
           <Menu
             onSelect = { this.handleSelect }>
-            { this.getMenuStructure(this.props.items, this.viewMenuActiveFilter) }
+            { this.getMenuStructure(this.props.items, this.props.activeFilter) }
           </Menu>
         </div>
       </div>

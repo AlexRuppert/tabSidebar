@@ -37,7 +37,7 @@ module.exports = React.createClass({
           title = { Strings.bottomBar.PANIC }
           onClick = { this.handlePanic }>
           <i
-            className = "fa fa-exclamation-circle"/>
+            className = "fa fa-bug"/>
         </button>
         <button
           title = { Strings.bottomBar.SETTINGS }

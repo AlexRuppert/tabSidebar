@@ -11,12 +11,14 @@ module.exports = React.createClass({
     var self = this;
     chrome.sessions.getRecentlyClosed(function(sessions) {
       for (var i = 0; i < sessions.length; i++) {
-        var url = sessions[i].tab.url;
-        if(!seenUrls.hasOwnProperty(url)) {
-          seenUrls[url] = true;
-          sessions[i].tab.favicon = TabLogic.getFavIcon(sessions[i].tab.url, 'opera://favicon/'+sessions[i].tab.url);
-          if(self.searchQuery.length <= 0 || sessions[i].tab.title.toLowerCase().indexOf(self.searchQuery) >= 0) {
-            list.push(sessions[i].tab);
+        if(sessions[i].tab && sessions[i].tab.url){
+          var url = sessions[i].tab.url;
+          if(!seenUrls.hasOwnProperty(url)) {
+            seenUrls[url] = true;
+            sessions[i].tab.favicon = TabLogic.getFavIcon(sessions[i].tab.url, 'opera://favicon/'+sessions[i].tab.url);
+            if(self.searchQuery.length <= 0 || sessions[i].tab.title.toLowerCase().indexOf(self.searchQuery) >= 0) {
+              list.push(sessions[i].tab);
+            }
           }
         }
       }

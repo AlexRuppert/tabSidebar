@@ -6,7 +6,7 @@
     "message": "Expand tabs"
   },
   "GO_TO_TOP" : {
-    "message": "Go to top"
+    "message": "Up"
   },
   "SETTINGS" : {
     "message": "Settings"
@@ -134,6 +134,9 @@
   "NEW_TAB_GROUP" : {
     "message": "New tab group"
   },
+  "MENU_BAR_SORT" : {
+    "message": "Sort"
+  },
   "TABS" : {
     "message": "Show opened tabs"
   },
@@ -199,6 +202,31 @@
   },
   "TREE_VIEW" : {
     "message": "Tree view"
+  },
+
+  "OPENED_ASC" : {
+    "message": "Last created ascending"
+  },
+  "OPENED_DESC" : {
+    "message": "Last created descending"
+  },
+  "TITLE_ASC" : {
+    "message": "Title ascending"
+  },
+  "TITLE_DESC" : {
+    "message": "Title descending"
+  },
+  "URL_ASC" : {
+    "message": "Url ascending"
+  },
+  "URL_DESC" : {
+    "message": "Url descending"
+  },
+  "VISITED_ASC" : {
+    "message": "Last clicked ascending"
+  },
+  "VISITED_DESC" : {
+    "message": "Last clicked descending"
   },
 
 
@@ -339,25 +367,31 @@
     "message":  "Remove background"
   },
   "SETTINGS_BACKGROUND_OFFSET" :  {
-    "message":  "X-offset"
+    "message":  "X-offset:"
   },
   "SETTINGS_BACKGROUND_OFFSET_TEXT" :  {
     "message":  "Use this slider to specify what section of the image to show on the sidebar."
   },
+  "SETTINGS_BACKGROUND_USE_FILTER" :  {
+    "message":  "Use following image filters"
+  },
+  "SETTINGS_BACKGROUND_USE_FILTER_TEXT" :  {
+    "message":  "Not using image filters can save memory."
+  },
   "SETTINGS_BACKGROUND_BLUR" :  {
-    "message":  "Image blur"
+    "message":  "Image blur:"
   },
   "SETTINGS_BACKGROUND_BLUR_TEXT" :  {
     "message":  "The image can be blurred to reduce distracting details."
   },
   "SETTINGS_BACKGROUND_OPACITY" :  {
-    "message":  "Image opacity"
+    "message":  "Image opacity:"
   },
   "SETTINGS_BACKGROUND_OPACITY_TEXT" :  {
     "message":  "The image opacity specifies how visible the background image is."
   },
   "SETTINGS_BACKGROUND_GRAYSCALE" :  {
-    "message":  "Image grayscale filter"
+    "message":  "Image grayscale filter:"
   },
   "SETTINGS_BACKGROUND_GRAYSCALE_TEXT" :  {
     "message":  "This setting reduces the saturation of an image."

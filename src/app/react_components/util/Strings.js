@@ -53,8 +53,19 @@ module.exports = {
     CLOSED_TABS: chrome.i18n.getMessage('CLOSED_TABS'),
     NEW_TAB: chrome.i18n.getMessage('NEW_TAB'),
     NEW_TAB_GROUP: chrome.i18n.getMessage('NEW_TAB_GROUP'),
+    SORT: chrome.i18n.getMessage('MENU_BAR_SORT'),
     TABS: chrome.i18n.getMessage('TABS'),
     VIEW_MENU: chrome.i18n.getMessage('VIEW_MENU')
+  },
+  sortMenu: {
+    OPENED_ASC: chrome.i18n.getMessage('OPENED_ASC'),
+    OPENED_DESC: chrome.i18n.getMessage('OPENED_DESC'),
+    TITLE_ASC: chrome.i18n.getMessage('TITLE_ASC'),
+    TITLE_DESC: chrome.i18n.getMessage('TITLE_DESC'),
+    URL_ASC: chrome.i18n.getMessage('URL_ASC'),
+    URL_DESC: chrome.i18n.getMessage('URL_DESC'),
+    VISITED_ASC: chrome.i18n.getMessage('VISITED_ASC'),
+    VISITED_DESC: chrome.i18n.getMessage('VISITED_DESC'),
   },
   tabContextMenu: {
     CLONE_TAB: chrome.i18n.getMessage('CLONE_TAB'),

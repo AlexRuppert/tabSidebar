@@ -5,6 +5,8 @@ var Constants = require('../util/Constants.js');
 var MenuBarMenu = require('./MenuBarMenu.jsx');
 var Strings = require('../util/Strings.js');
 var ViewMenu = require('./ViewMenu.js');
+var SortMenu = require('./SortMenu.js');
+
 module.exports = React.createClass({
   getInitialState: function () {
     return {
@@ -41,6 +43,17 @@ module.exports = React.createClass({
       case Constants.menus.menuBar.viewActions.DOUBLE_COLUMN_GROUP:
         this.props.handleGroupColumnChange(action);
         break;
+
+      case Constants.sortModes.TITLE_ASC:
+      case Constants.sortModes.URL_ASC:
+      case Constants.sortModes.VISITED_ASC:
+      case Constants.sortModes.OPENED_ASC:
+      case Constants.sortModes.TITLE_DESC:
+      case Constants.sortModes.URL_DESC:
+      case Constants.sortModes.VISITED_DESC:
+      case Constants.sortModes.OPENED_DESC:
+        this.props.handleSort(action);
+        break;
       default:
         break;
     }
@@ -60,6 +73,22 @@ module.exports = React.createClass({
       this.props.showRecentTabs(true);
       this.setState({ showingRecentTabs: true });
     }
+  },
+  viewMenuActiveFilter: function (item) {
+    var state = Persistency.getState();
+    var viewState = state.tabSettings.viewState;
+    var column = state.tabSettings.column;
+    var twoGroupColumns = state.groupSettings.twoGroupColumns;
+
+    if (item.action == viewState
+      ||item.action == column ){
+      return true;
+    }
+    else if (twoGroupColumns && item.action == Constants.menus.menuBar.viewActions.DOUBLE_COLUMN_GROUP
+      || !twoGroupColumns && item.action == Constants.menus.menuBar.viewActions.SINGLE_COLUMN_GROUP) {
+      return true;
+    }
+    return false;
   },
   render: function () {
     var self = this;
@@ -90,6 +119,12 @@ module.exports = React.createClass({
              className = "fa fa-plus-square"/>
          </button>
          <button
+           title = { Strings.menuBar.SORT }
+           onClick = { function(){self.handleMenuOpen(Constants.menus.menuBar.openStates.SORT)} }>
+           <i
+           className = "fa fa-sort-alpha-asc"/>
+         </button>
+         <button
            title = { Strings.menuBar.VIEW_MENU }
            onClick = { function(){self.handleMenuOpen(Constants.menus.menuBar.openStates.VIEW)} }>
            <i
@@ -98,8 +133,14 @@ module.exports = React.createClass({
          <MenuBarMenu
            items = { ViewMenu }
            handleSelect = { this.handleMenuSelect }
-           notchOffset = { this.props.showGroups?60:45 }
+           notchOffset = { this.props.showGroups?65:58 }
+           activeFilter = {this.viewMenuActiveFilter}
            isVisible = { this.state.openedMenu == Constants.menus.menuBar.openStates.VIEW }/>
+         <MenuBarMenu
+           items = { SortMenu }
+           handleSelect = { this.handleMenuSelect }
+           notchOffset = { this.props.showGroups?46:35 }
+           isVisible = { this.state.openedMenu == Constants.menus.menuBar.openStates.SORT }/>
          <button
            className = { showRecentButtonClasses }
            title = { this.state.showingRecentTabs?Strings.menuBar.TABS:Strings.menuBar.CLOSED_TABS }
