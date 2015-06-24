@@ -106,6 +106,11 @@ module.exports = React.createClass({
     event.nativeEvent.preventDefault();
     this.props.onContextMenu(this.props, event);
   },
+  handleMouseEnter: function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.props.onMouseEnter(this.props.id);
+  },
   handleTabCloseClick: function (event) {
     event.stopPropagation()
     this.props.onTabClosed(this.props.id);
@@ -235,7 +240,8 @@ module.exports = React.createClass({
         onDragStart = { this.props.onDragStart }
         onDragEnd = { this.props.onDragEnd }
         onContextMenu = { this.handleContextMenu }
-        onMouseDown = { this.handleClick }>
+        onMouseDown = { this.handleClick }
+        onMouseEnter = { this.handleMouseEnter }>
         { treeCollapse }
         <div
             className = { mainlineClasses }>

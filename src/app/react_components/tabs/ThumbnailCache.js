@@ -86,11 +86,11 @@ module.exports = {
   scheduleCleanup: function (tabList) {
     var self = this;
 
-    if (!this.schedule) {
+    if (!window.thumbnailCacheSchedule) {
       setTimeout(function () {
         self.cleanUpCache();
       }, 1000 * 5);
-      this.schedule = setInterval(function () {
+      window.thumbnailCacheSchedule = setInterval(function () {
         self.cleanUpCache();
       }, Constants.thumbnails.CLEANUP_INTERVAL);
     }

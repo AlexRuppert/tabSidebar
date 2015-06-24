@@ -12,11 +12,13 @@ var TabGroup = require('../groups/TabGroup.jsx');
 module.exports = React.createClass({
   groupPlaceholder: document.createElement('div'),
   lastHeightsUpdate: 0,
+  hasUngrouped: false,
   createNewGroup: function (name, color, filter) {
     GroupLogic.createNewGroup(this, name, color, filter);
   },  
   groupsChanged: function () {
     this.forceUpdate();
+    this.props.parent.props.handleStatisticsUpdate();
   },
 
   updateGroupHeights: function (fixed) {
@@ -158,12 +160,12 @@ module.exports = React.createClass({
         this.handleGroupClosed(id);
         break;
       case Constants.menus.contextMenu.groupActions.CLOSE_OTHER_GROUPS:
-        if (id != Constants.groups.ALL_GROUP_ID) {
+        var groups = [];
+        if (!GroupLogic.isSpecialGroup(id)) {
           var group = GroupManager.getGroups()[index];
-          var groups = [];
           groups.push(group);
-          GroupLogic.setStateAndUpdate(this, groups, true);
         }
+        GroupLogic.setStateAndUpdate(this, groups, true);
         break;
     }
   },
@@ -190,8 +192,22 @@ module.exports = React.createClass({
         title: Strings.groups.ALL_GROUP,
         color: Constants.groups.ALL_GROUP_COLOR
       });
-      if(GroupManager.getGroups().length > 0) {
-        groupsToShow = groupsToShow.concat(GroupManager.getGroups());
+      var groups = GroupManager.getGroups();
+      this.hasUngrouped = false;
+      for (var i = 0; i < groups.length; i++) {
+        if(!groups[i].filter){
+          this.hasUngrouped = true;
+          groupsToShow.push({
+            id: Constants.groups.UNGROUPED_ID,
+            title: Strings.groups.UNGROUPED,
+            color: Constants.groups.UNGROUPED_COLOR
+          });
+          break;
+        }
+      }
+      
+      if(groups.length > 0) {
+        groupsToShow = groupsToShow.concat(groups);
       }
       var activeGroupId = GroupManager.getActiveGroupId();
       

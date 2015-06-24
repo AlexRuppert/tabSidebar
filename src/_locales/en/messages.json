@@ -14,6 +14,9 @@
   "PANIC" : {
     "message": "Panic button: Press, if something seems broken, to reload the extension."
   },
+  "MAGIC" : {
+    "message": "Remove duplicate tabs."
+  },
 
   "CLONE_AS_NORMAL" : {
     "message": "Create snapshot"
@@ -114,7 +117,12 @@
   "ALL_GROUP_CLONE" : {
     "message": "all - clone"
   },
-
+  "UNGROUPED" : {
+    "message": "no group"
+  },
+  "UNGROUPED_CLONE" : {
+    "message": "no group - clone"
+  },
 
   "CLEAR_BUTTON_TITLE" : {
     "message": "Clear search"
@@ -202,6 +210,12 @@
   },
   "TREE_VIEW" : {
     "message": "Tree view"
+  },
+  "SHOW_PREVIEW" : {
+    "message": "Show preview area"
+  },
+  "HIDE_PREVIEW" : {
+    "message": "Hide preview area"
   },
 
   "OPENED_ASC" : {

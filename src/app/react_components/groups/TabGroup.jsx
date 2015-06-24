@@ -2,7 +2,11 @@
 'use strict';
 
 var Colors = require('../util/Colors.js');
+
+
 module.exports = React.createClass({
+  textColor: '#fff',
+  textShadowColor: '#000',
   getInitialState: function () {
     return {
       isActive:  this.props.isActive || false
@@ -17,8 +21,10 @@ module.exports = React.createClass({
   shouldComponentUpdate: function (nextProps, nextState) {
     if (this.state.isActive != nextState.isActive)
       return true;
-    if (this.props.color != nextProps.color)
+    if (this.props.color != nextProps.color) {
+      
       return true;
+    }
     if (this.props.title != nextProps.title)
       return true;
     return false;
@@ -47,10 +53,17 @@ module.exports = React.createClass({
       'hidden': !this.props.isFilter
     });
     var color = this.props.color ? this.props.color : Colors.getColorByHash(Colors.backgroundColors, this.props.title)
+    this.textColor = tinycolor.mostReadable(color, ["#000", "#fff"]).toHexString();
+    
+    this.textShadowColor = (this.textColor == '#000000') ? '#fff': '#000';
     return (
       <div
         className = { classes }
-        style = { {backgroundColor: this.props.color} }
+        style = { { 
+          backgroundColor: this.props.color,
+          color: this.textColor, 
+          textShadow:  '0 0 1px '+ this.textShadowColor} }
+
         data-id = { this.props.index }
         id = { this.props.id }
         title = { this.props.title }

@@ -24,6 +24,9 @@ window.Persistency = {
     iconSettings: {
       gray: false
     },
+    previewArea: {
+      show: false
+    },
     tabSettings: {
       animated: false,
       column: 'single',

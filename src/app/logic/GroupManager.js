@@ -42,7 +42,7 @@ window.GroupManager = {
   },
   setActiveGroupId: function (id) {
     this.activeGroupId = id;
-    //chrome.extension.getBackgroundPage()[this.groupManagerName].activeGroupId = id;
+    chrome.extension.getBackgroundPage()[this.groupManagerName].activeGroupId = id;
     this.onActiveGroupIdChanged();
   },
   getGroups: function () {

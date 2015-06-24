@@ -54,6 +54,12 @@ module.exports = React.createClass({
       case Constants.sortModes.OPENED_DESC:
         this.props.handleSort(action);
         break;
+      case Constants.menus.menuBar.viewActions.SHOW_PREVIEW:
+        this.props.handlePreviewDisplay(true);
+        break;
+      case Constants.menus.menuBar.viewActions.HIDE_PREVIEW:
+        this.props.handlePreviewDisplay(false);
+        break;
       default:
         break;
     }
@@ -79,13 +85,18 @@ module.exports = React.createClass({
     var viewState = state.tabSettings.viewState;
     var column = state.tabSettings.column;
     var twoGroupColumns = state.groupSettings.twoGroupColumns;
+    var showPreview = state.previewArea.show;
 
     if (item.action == viewState
       ||item.action == column ){
       return true;
     }
     else if (twoGroupColumns && item.action == Constants.menus.menuBar.viewActions.DOUBLE_COLUMN_GROUP
-      || !twoGroupColumns && item.action == Constants.menus.menuBar.viewActions.SINGLE_COLUMN_GROUP) {
+      || (!twoGroupColumns && item.action == Constants.menus.menuBar.viewActions.SINGLE_COLUMN_GROUP)) {
+      return true;
+    }
+    else if (showPreview && item.action == Constants.menus.menuBar.viewActions.SHOW_PREVIEW
+      || (!showPreview && item.action == Constants.menus.menuBar.viewActions.HIDE_PREVIEW)){
       return true;
     }
     return false;

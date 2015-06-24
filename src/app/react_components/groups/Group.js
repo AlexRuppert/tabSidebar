@@ -8,7 +8,7 @@ var Strings = require('../util/Strings.js')
 module.exports = {
   cloneAsNormalGroup: function (groupList, id) {
     var group = this.getGroup(id);
-    if (id == Constants.groups.ALL_GROUP_ID
+    if (this.isSpecialGroup(id)
       || (group && !group.filter)) {
       this.cloneGroup(groupList, id);
     }
@@ -27,10 +27,7 @@ module.exports = {
         groups.splice(index + 1, 0, groupClone);
         self.setGroupsAndSave(groups);
         groupList.groupsChanged();
-
       });
-      
-      
     }
   },
   cloneGroup: function (groupList, id) {
@@ -40,10 +37,24 @@ module.exports = {
     var groups = GroupManager.getGroups();
     var cloneTabs = [];
     var index = -1;
+    var self = this;
     if (id == Constants.groups.ALL_GROUP_ID) {
       for (var i = 0; i < tabs.length; i++) {
         cloneTabs.push(tabs[i].id);
       }
+    }
+    else if (id == Constants.groups.UNGROUPED_ID) {
+      title = Strings.groups.UNGROUPED_CLONE;
+      groupList.props.parent.getTabsOfGroup(id, function (tabsShown) {
+        for (var i = 0; i < tabsShown.length; i++) {
+          cloneTabs.push(tabsShown[i].id);
+        }
+        var groupClone = { title: title, id: newId, tabs: cloneTabs, color: Colors.getColorByHash(Colors.backgroundColors, newId) };
+        groups.splice(index + 1, 0, groupClone);
+        self.setGroupsAndSave(groups);
+        groupList.groupsChanged();
+      });
+      return;
     }
     else {
       index = this.getGroupIndex(id);
@@ -66,9 +77,7 @@ module.exports = {
       }
     }
     var groupClone = { title: title, id: newId, tabs: cloneTabs, color: Colors.getColorByHash(Colors.backgroundColors, newId) };
-   
     groups.splice(index + 1, 0, groupClone);
-
     this.setGroupsAndSave(groups);
     groupList.groupsChanged();
   },
@@ -80,10 +89,20 @@ module.exports = {
         tabsToClose.push(+tabs[i].id);
       }
     }
+    else if (id == Constants.groups.UNGROUPED_ID) {
+      groupList.props.parent.getTabsOfGroup(id, function (tabsShown) {
+        for (var i = 0; i < tabsShown.length; i++) {
+          tabsToClose.push(+tabs[i].id);
+        }
+        if (tabsToClose.length > 0) {
+          chrome.tabs.remove(tabsToClose);
+        }
+      });
+      return;
+    }
     else {
       var group = this.getGroup(id);
       if (group && !group.filter) {
-        
         for (var i = 0; i < group.tabs.length; i++) {
           tabsToClose.push(+group.tabs[i]);
         }
@@ -99,14 +118,14 @@ module.exports = {
         });
       }
     }
-    
+
     if (tabsToClose.length > 0) {
       chrome.tabs.remove(tabsToClose);
     }
   },
   createNewGroup: function (groupList, name, color, filter) {
     var groups = GroupManager.getGroups();
-    
+
     var newGroup = {};
     if (typeof filter === 'undefined') {
       newGroup = { title: name, id: this.getNewGroupId(), tabs: [], color: color };
@@ -232,16 +251,13 @@ module.exports = {
     tabList.groupDragged = e.currentTarget;
     e.dataTransfer.effectAllowed = 'move';
     tabList.groupOver = e.currentTarget;
-    
   },
   groupDragEnter: function (e) {
-    
     if (e.dataTransfer.types.length == 0 && e.target.className.indexOf('tab-group') >= 0) {
       e.target.style.boxShadow = '0 0 8px #fff inset, 0 0 5px #fff inset , 0 0 3px #fff inset';
     }
   },
   groupDragLeave: function (e) {
-   
     if (e.target.className.indexOf('tab-group') >= 0) {
       e.target.style.boxShadow = '';
     }
@@ -263,11 +279,11 @@ module.exports = {
 
     if (!tabList.groupDragged && tabList.tabDragged) {
       tabList.groupOver = e.target;
-    
+
       return;
     }
-    
-    if(tabList.groupDragged)
+
+    if (tabList.groupDragged)
       tabList.groupDragged.style.display = 'none';
 
     tabList.groupOver = e.target;
@@ -310,10 +326,14 @@ module.exports = {
     var groups = GroupManager.getGroups();
     var draggedIndex = Array.prototype.indexOf.call(tabList.groupDragged.parentNode.children, tabList.groupDragged);
 
-    var from = draggedIndex - 1;
+    var from = draggedIndex - 1 - groupList.hasUngrouped ? 1 : 0;
     //var from = this.getGroupIndex(this.groupDragged.dataset.id)-1;
-    var to = index - 1;//Number(this.tabOver.dataset.id);
-    if (from == to) return;
+    var to = index - 1 - groupList.hasUngrouped ? 1 : 0;//Number(this.tabOver.dataset.id);
+    if (from == to) {
+      groupList.updateGroupHeights();
+      return;
+    }
+
     if (from < to) to--;
     //  if(this.tabNodePlacement == "after") to++;
 
@@ -324,7 +344,7 @@ module.exports = {
     groupList.groupsChanged();
   },
   handleEditTabGroup: function (groupList, id) {
-    if (id == Constants.groups.ALL_GROUP_ID)
+    if (this.isSpecialGroup(id))
       return;
     var groups = GroupManager.getGroups();
     var index = this.getGroupIndex(id);
@@ -359,7 +379,7 @@ module.exports = {
     }
   },
   handleGroupClosed: function (groupList, id) {
-    if (id == Constants.groups.ALL_GROUP_ID)
+    if (this.isSpecialGroup(id))
       return;
     var groups = GroupManager.getGroups();
     var newGroups = groups.filter(function (obj) {
@@ -373,6 +393,7 @@ module.exports = {
     this.setGroupsActive(groupList, newActiveGroup);
     this.setGroupsAndSave(newGroups);
     groupList.groupsChanged();
+    
   },
   init: function () {
   },
@@ -380,11 +401,14 @@ module.exports = {
     var activeGroup = GroupManager.getActiveGroupId();
     return activeGroup == Constants.groups.ALL_GROUP_ID;
   },
+  isSpecialGroup: function (id) {
+    return id == Constants.groups.ALL_GROUP_ID || id == Constants.groups.UNGROUPED_ID;
+  },
   loadGroups: function () {
     this.init();
     var tabs = TabManager.getTabs();
     var groups = Persistency.getState().groups;
-
+    
     var sameSession = true;
     if (!chrome.extension.getBackgroundPage().hasOwnProperty(Constants.globalProperties.SAME_SESSION)) {
       chrome.extension.getBackgroundPage()[Constants.globalProperties.SAME_SESSION] = true;
@@ -400,6 +424,10 @@ module.exports = {
       ids.push({ id: id, url: url });
     }
 
+    groups = groups.filter(function (obj) {
+      return obj != null;
+    });
+
     if (!sameSession) {
       var oldIds = Persistency.getState().tabIds;
 
@@ -407,14 +435,15 @@ module.exports = {
 
       for (var i = 0; i < groups.length; i++) {
         //clear any mistakently saved tabs in group
-        if (groups[i].filter && groups[i].tabs.length > 0) {
-          groups[i].tabs = [];
-        }
-        for (var j = 0; j < groups[i].tabs.length; j++) {
-          if (mapping.hasOwnProperty(groups[i].tabs[j])) {
-            groups[i].tabs[j] = mapping[groups[i].tabs[j]];
+        
+          if (groups[i].filter && groups[i].tabs.length > 0) {
+            groups[i].tabs = [];
           }
-        }
+          for (var j = 0; j < groups[i].tabs.length; j++) {
+            if (mapping.hasOwnProperty(groups[i].tabs[j])) {
+              groups[i].tabs[j] = mapping[groups[i].tabs[j]];
+            }
+          }
       }
     }
 
@@ -438,7 +467,7 @@ module.exports = {
     }
 
     GroupManager.setGroups(groups);
-   
+
     if (changed || !sameSession) {
       this.saveGroups();
     }
@@ -460,6 +489,9 @@ module.exports = {
       if (id != Constants.groups.ALL_GROUP_ID) {
         groupList.refs[Constants.groups.ALL_GROUP_ID].setState({ isActive: false });
       }
+      if (id != Constants.groups.UNGROUPED_ID) {
+        groupList.refs[Constants.groups.UNGROUPED_ID].setState({ isActive: false });
+      }
       if (groupList.refs[id]) {
         groupList.refs[id].setState({ isActive: true });
       }
@@ -480,6 +512,7 @@ module.exports = {
         group.tabs = usedTabs;
       }
       GroupManager.setActiveGroupId(id);
+      
       groupList.props.parent.activeGroupChanged(id);
     }
   },

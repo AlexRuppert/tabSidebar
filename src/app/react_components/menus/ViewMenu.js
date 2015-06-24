@@ -50,6 +50,21 @@ module.exports = [
   },
   {
     type: Constants.menus.menuTypes.DIVIDER,
+  },
+  {
+    type: Constants.menus.menuTypes.ITEM,
+    title: Strings.viewMenu.SHOW_PREVIEW,
+    icon: 'fa-square',
+    action: Constants.menus.menuBar.viewActions.SHOW_PREVIEW
+  },
+  {
+    type: Constants.menus.menuTypes.ITEM,
+    title: Strings.viewMenu.HIDE_PREVIEW,
+    icon: 'fa-square-o',
+    action: Constants.menus.menuBar.viewActions.HIDE_PREVIEW
+  },
+  {
+    type: Constants.menus.menuTypes.DIVIDER,
     condition: function (props) {
       return Persistency.getState().groupSettings.showGroups;
     }

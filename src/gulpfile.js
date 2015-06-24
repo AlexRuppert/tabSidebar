@@ -76,7 +76,13 @@ gulp.task('release', function () {
 
   es.concat([
 
-    gulp.src(['./app/logic/**/*.js', './app/bower_components/classnames/index.js', './app/bower_components/react/react-with-addons.min.js'])
+    gulp.src(['./app/logic/GroupManager.js',
+      './app/logic/observer.js',
+      './app/logic/Persistency.js',
+      './app/logic/TabManager.js',
+      './app/bower_components/tinycolor/tinycolor.js',
+      './app/bower_components/classnames/index.js',
+      './app/bower_components/react/react-with-addons.min.js'])
     .pipe(streamify(uglify())),
 
     browserify({
@@ -106,6 +112,9 @@ gulp.task('release', function () {
   .pipe(gulp.dest(path.RELEASE + path.OPTIONS_DEST));
 
   gulp.src('./app/logic/background.js')
+  .pipe(uglify())
+  .pipe(gulp.dest(path.RELEASE + "/app/logic"));
+  gulp.src('./app/logic/observer.js')
   .pipe(uglify())
   .pipe(gulp.dest(path.RELEASE + "/app/logic"));
  

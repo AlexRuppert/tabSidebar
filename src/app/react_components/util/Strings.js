@@ -3,9 +3,10 @@
 module.exports = {
   bottomBar: {
     COLLAPSE_TABS: chrome.i18n.getMessage('COLLAPSE_TABS'),
-    PANIC: chrome.i18n.getMessage('PANIC'),
     EXPAND_TABS: chrome.i18n.getMessage('EXPAND_TABS'),
     GO_TO_TOP: chrome.i18n.getMessage('GO_TO_TOP'),
+    MAGIC: chrome.i18n.getMessage('MAGIC'),
+    PANIC: chrome.i18n.getMessage('PANIC'),
     SETTINGS: chrome.i18n.getMessage('SETTINGS')
   },
   groupContextMenu: {
@@ -43,7 +44,9 @@ module.exports = {
   },
   groups: {
     ALL_GROUP: chrome.i18n.getMessage('ALL_GROUP'),
-    ALL_GROUP_CLONE: chrome.i18n.getMessage('ALL_GROUP_CLONE')
+    ALL_GROUP_CLONE: chrome.i18n.getMessage('ALL_GROUP_CLONE'),
+    UNGROUPED: chrome.i18n.getMessage('UNGROUPED'),
+    UNGROUPED_CLONE: chrome.i18n.getMessage('UNGROUPED_CLONE')
   },
   searchBar: {
     CLEAR_BUTTON_TITLE: chrome.i18n.getMessage('CLEAR_BUTTON_TITLE'),
@@ -87,6 +90,8 @@ module.exports = {
     SINGLE_COLUMN_GROUP: chrome.i18n.getMessage('SINGLE_COLUMN_GROUP'),
     DOUBLE_COLUMN: chrome.i18n.getMessage('DOUBLE_COLUMN'),
     DOUBLE_COLUMN_GROUP: chrome.i18n.getMessage('DOUBLE_COLUMN_GROUP'),
-    TREE_VIEW: chrome.i18n.getMessage('TREE_VIEW')
+    TREE_VIEW: chrome.i18n.getMessage('TREE_VIEW'),
+    SHOW_PREVIEW: chrome.i18n.getMessage('SHOW_PREVIEW'),
+    HIDE_PREVIEW: chrome.i18n.getMessage('HIDE_PREVIEW')
   }
 }

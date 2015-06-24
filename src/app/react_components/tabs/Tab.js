@@ -254,127 +254,142 @@ module.exports = {
       callback(forceUpdateTabs);
     });
   },
+
   getTabsToShow: function (groupId, callback) {
     var currentWindowIds = [];
     var self = this;
-    chrome.tabs.query({ currentWindow: true }, function (tabs) {
-      for (var i = 0; i < tabs.length; i++) {
-        currentWindowIds.push(tabs[i].id);
-      }
 
-      var tabs = TabManager.getTabs();
+    var tabs = TabManager.getTabs();
 
-      var query = self.searchQuery;
+    var query = self.searchQuery;
 
-      var tabsToShow = [];
+    var tabsToShow = [];
 
-      var group = GroupLogic.getGroup(groupId);
+    var group = GroupLogic.getGroup(groupId);
 
-      if (!group) {
+    if (!group) {
+      if (groupId == Constants.groups.ALL_GROUP_ID) {
         tabsToShow = tabs.slice(0);
       }
-      else {
-        if (!group.filter) {
-          var usedTabIds = [];
-          for (var i = 0; i < group.tabs.length; i++) {
-            var tabIndex = self.getTabIndex(group.tabs[i]);
-            if (tabIndex >= 0 && tabIndex < tabs.length) {
-              usedTabIds.push(group.tabs[i]);
-              tabsToShow.push(tabs[tabIndex]);
+      else if (groupId == Constants.groups.UNGROUPED_ID) {
+        var tabsInGroups = {};
+        var groups = GroupManager.getGroups();
+        for (var i = 0; i < groups.length; i++) {
+          if (!groups[i].filter) {
+            for (var j = 0; j < groups[i].tabs.length; j++) {
+              tabsInGroups[groups[i].tabs[j]] = true;
             }
-          }
-          //delete non-present tabs to save memory
-          if (group.tabs.length != usedTabIds.length) {
-            group.tabs = usedTabIds;
-
-            GroupLogic.saveGroups();
           }
         }
-        else { //filter groups
-          tabsToShow = tabs.slice(0);
-          if (group.filterValue.length > 0) {
-            var filterFunc = {};
-            var filterValueLower = group.filterValue.toLowerCase();
 
-            var numVal = 0;
-            var now = Date.now();
-            if (Helpers.isInt(filterValueLower.trim())) {
-              numVal = +filterValueLower.trim() * 60 * 1000;//min -> ms
-            }
-
-            var filterValueRegex = new RegExp(Helpers.escapeRegExp(filterValueLower));
-            switch (group.filterBy) {
-              case Constants.groupCreator.TITLE_CONTAINS:
-                filterFunc = function (obj) {
-                  return filterValueRegex.test(obj.title.toLowerCase());
-                }
-                break;
-              case Constants.groupCreator.URL_CONTAINS:
-                filterFunc = function (obj) {
-                  return filterValueRegex.test(obj.url.toLowerCase());
-                }
-                break;
-              case Constants.groupCreator.LAST_VISITED_GREATER:
-                filterFunc = function (obj) {
-                  return now - obj.visitedTime >= numVal;
-                }
-                break;
-              case Constants.groupCreator.LAST_VISITED_LOWER:
-                filterFunc = function (obj) {
-                  return now - obj.visitedTime <= numVal;
-                }
-                break;
-              case Constants.groupCreator.OPENED_GREATER:
-                filterFunc = function (obj) {
-                  return now - obj.openedTime >= numVal;
-                }
-                break;
-              case Constants.groupCreator.OPENED_LOWER:
-                filterFunc = function (obj) {
-                  return now - obj.openedTime <= numVal;
-                }
-                break;
-              default:
-                filterFunc = function (obj) {
-                  return true;
-                }
-            }
-            tabsToShow = tabsToShow.filter(filterFunc);
+        for (var i = 0; i < tabs.length; i++) {
+          if (!tabsInGroups[tabs[i].id]) {
+            tabsToShow.push(tabs[i]);
           }
-          var sortFunc = null;
-          var ascending = group.sortDirection == Constants.groupCreator.ASCENDING;
-          switch (group.sortBy) {
-            case Constants.groupCreator.TITLE:
-              sortFunc = Helpers.sortBy('title', 'string', ascending);
+        }
+      }
+    }
+    else {
+      if (!group.filter) {
+        var usedTabIds = [];
+        for (var i = 0; i < group.tabs.length; i++) {
+          var tabIndex = self.getTabIndex(group.tabs[i]);
+          if (tabIndex >= 0 && tabIndex < tabs.length) {
+            usedTabIds.push(group.tabs[i]);
+            tabsToShow.push(tabs[tabIndex]);
+          }
+        }
+        //delete non-present tabs to save memory
+        if (group.tabs.length != usedTabIds.length) {
+          group.tabs = usedTabIds;
+
+          GroupLogic.saveGroups();
+        }
+      }
+      else { //filter groups
+        tabsToShow = tabs.slice(0);
+        if (group.filterValue.length > 0) {
+          var filterFunc = {};
+          var filterValueLower = group.filterValue.toLowerCase();
+
+          var numVal = 0;
+          var now = Date.now();
+          if (Helpers.isInt(filterValueLower.trim())) {
+            numVal = +filterValueLower.trim() * 60 * 1000;//min -> ms
+          }
+
+          var filterValueRegex = new RegExp(Helpers.escapeRegExp(filterValueLower));
+          switch (group.filterBy) {
+            case Constants.groupCreator.TITLE_CONTAINS:
+              filterFunc = function (obj) {
+                return filterValueRegex.test(obj.title.toLowerCase());
+              }
               break;
-            case Constants.groupCreator.URL:
-              sortFunc = Helpers.sortBy('url', 'string', ascending);
+            case Constants.groupCreator.URL_CONTAINS:
+              filterFunc = function (obj) {
+                return filterValueRegex.test(obj.url.toLowerCase());
+              }
               break;
-            case Constants.groupCreator.LAST_VISITED:
-              sortFunc = Helpers.sortBy('visitedTime', '', !ascending);
+            case Constants.groupCreator.LAST_VISITED_GREATER:
+              filterFunc = function (obj) {
+                return now - obj.visitedTime >= numVal;
+              }
               break;
-            case Constants.groupCreator.OPENED:
-              sortFunc = Helpers.sortBy('openedTime', '', !ascending);
+            case Constants.groupCreator.LAST_VISITED_LOWER:
+              filterFunc = function (obj) {
+                return now - obj.visitedTime <= numVal;
+              }
+              break;
+            case Constants.groupCreator.OPENED_GREATER:
+              filterFunc = function (obj) {
+                return now - obj.openedTime >= numVal;
+              }
+              break;
+            case Constants.groupCreator.OPENED_LOWER:
+              filterFunc = function (obj) {
+                return now - obj.openedTime <= numVal;
+              }
               break;
             default:
+              filterFunc = function (obj) {
+                return true;
+              }
           }
-          if (sortFunc) {
-            tabsToShow.sort(sortFunc);
-          }
+          tabsToShow = tabsToShow.filter(filterFunc);
+        }
+        var sortFunc = null;
+        var ascending = group.sortDirection == Constants.groupCreator.ASCENDING;
+        switch (group.sortBy) {
+          case Constants.groupCreator.TITLE:
+            sortFunc = Helpers.sortBy('title', 'string', ascending);
+            break;
+          case Constants.groupCreator.URL:
+            sortFunc = Helpers.sortBy('url', 'string', ascending);
+            break;
+          case Constants.groupCreator.LAST_VISITED:
+            sortFunc = Helpers.sortBy('visitedTime', '', !ascending);
+            break;
+          case Constants.groupCreator.OPENED:
+            sortFunc = Helpers.sortBy('openedTime', '', !ascending);
+            break;
+          default:
+        }
+        if (sortFunc) {
+          tabsToShow.sort(sortFunc);
         }
       }
+    }
 
-      for (var i = 0; i < tabsToShow.length; i++) {
-        tabsToShow[i].visible = true;//currentWindowIds.indexOf(tabsToShow[i].id) >= 0;
-      }
-      if (self.searchQuery.length > 0) {
-        tabsToShow = tabsToShow.filter(function (obj) {
-          return obj.title.toLowerCase().indexOf(query) >= 0;
-        });
-      }
-      self.tabsToShow = tabsToShow;
-      callback(tabsToShow);
-    });
+    for (var i = 0; i < tabsToShow.length; i++) {
+      tabsToShow[i].visible = true;//currentWindowIds.indexOf(tabsToShow[i].id) >= 0;
+    }
+    if (self.searchQuery.length > 0) {
+      tabsToShow = tabsToShow.filter(function (obj) {
+        return obj.title.toLowerCase().indexOf(query) >= 0;
+      });
+    }
+    self.tabsToShow = tabsToShow;
+    callback(tabsToShow);
   },
   handleTabClicked: function (tabList, id, event) {
     event = event.nativeEvent;
@@ -500,7 +515,7 @@ module.exports = {
       tabsToRemove.push(id);
     }
     var groupId = GroupManager.getActiveGroupId();
-    if (groupId == Constants.groups.ALL_GROUP_ID) {
+    if (GroupLogic.isSpecialGroup(groupId)) {
       return;
     }
     else {
@@ -549,12 +564,13 @@ module.exports = {
   },
   setUpEventListeners: function (tabList) {
     var self = this;
-    var tabs = TabManager.getTabs();
+
     setInterval(function () {
       self.checkTimedGroupFilters(tabList);
     }, 2000);
 
     chrome.tabs.onActivated.addListener(function (activeInfo) {
+      var tabs = TabManager.getTabs();
       if (activeInfo.tabId) {
         for (var i = 0; i < tabs.length; i++) {
           var tabRef = tabs[i].id;
@@ -581,6 +597,7 @@ module.exports = {
       }
     });
     chrome.tabs.onCreated.addListener(function (tab) {
+      var tabs = TabManager.getTabs();
       if (!tab.url.startsWith('chrome-devtools://')) {
         self.initNewTab(tab);
         tab.newlyCreated = true;
@@ -616,47 +633,33 @@ module.exports = {
               }
             }
             GroupLogic.setGroupsAndSave(groups);
-            tabList.rerenderIfNeeded();
-          }
-          else {
-            tabList.rerenderIfNeeded();
           }
         }
+
+        tabList.rerenderIfNeeded();
+        tabList.props.handleStatisticsUpdate();
       }
     });
 
     chrome.tabs.onDetached.addListener(function (tabId, detachInfo) {
+      self.updateTabs(tabList);
       tabList.rerenderIfNeeded();
     });
 
     chrome.tabs.onAttached.addListener(function (tabId, detachInfo) {
+      self.updateTabs(tabList);
       tabList.rerenderIfNeeded();
     });
     chrome.tabs.onMoved.addListener(function (tabId, moveInfo) {
       //tabs.splice(moveInfo.toIndex, 0, tabs.splice(moveInfo.fromIndex, 1)[0]);
-      chrome.tabs.query({}, function (tabs) {
-        var originalTabs = TabManager.getTabs();
-        for (var i = 0; i < tabs.length; i++) {
-          var index = self.getTabIndex(tabs[i].id);
-          if (index >= 0) {
-            tabs[i] = self.preserveTabProperties(originalTabs[index], tabs[i]);
-          }
-          else {
-            self.initNewTab(tabs[i]);
-          }
-        }
-        self.setTabsAndUpdate(tabList, tabs, true);
-      });
+      self.updateTabs(tabList);
     });
 
     chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
-      var index = self.getTabIndex(tabId);
-      if (index > -1) {
-        tabs.splice(index, 1);
-      }
-      self.setTabsAndUpdate(tabList, tabs, true);
+      self.updateTabs(tabList);
     });
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+      var tabs = TabManager.getTabs();
       if (tab.url.startsWith('chrome-devtools://'))
         return;
 
@@ -711,9 +714,11 @@ module.exports = {
           }
         }
       }
+      tabList.props.handleStatisticsUpdate();
       //tabList.setState({ tabs: tabs });
     });
     chrome.windows.onRemoved.addListener(function (windowId) {
+      var tabs = TabManager.getTabs();
       self.updateTabIds(tabs);
     });
   },
@@ -756,7 +761,8 @@ module.exports = {
     if (sortFunc) {
       tabsToShow.sort(sortFunc);
     }
-    if (GroupLogic.isAllGroupActive()) {
+
+    if (GroupLogic.isSpecialGroup(GroupManager.getActiveGroupId())) {
       var windowCounter = {};
       if (!desc) {
         chrome.windows.getAll({ populate: true }, function (windows) {
@@ -898,16 +904,17 @@ module.exports = {
         }
       }
 
-      if (!GroupLogic.isAllGroupActive() && current >= 0 &&
-        (groupId == Constants.groups.ALL_GROUP_ID || (target >= 0 && current != target && !groups[target].filter))) {
+      if (!GroupLogic.isSpecialGroup(GroupManager.getActiveGroupId()) && current >= 0 &&
+        (GroupLogic.isSpecialGroup(groupId) || (target >= 0 && current != target && !groups[target].filter))) {
         for (var i = 0; i < tabsToMove.length; i++) {
           var tabIndexInGroup = GroupLogic.getTabIndexInGroup(groups[current], tabsToMove[i]);
           if (tabIndexInGroup >= 0) {
             groups[current].tabs.splice(+tabIndexInGroup, 1);
           }
         }
-        tabList.rerenderIfNeeded();
+        
       }
+      tabList.rerenderIfNeeded();
       GroupLogic.setGroupsAndSave(groups);
 
       tabList.tabDragged.style.display = 'block';
@@ -930,7 +937,7 @@ module.exports = {
       var from = draggedIndex;
       var to = index;//Number(this.tabOver.dataset.id);
 
-      if (!GroupLogic.isAllGroupActive()) {//if tab is dragged around inside a group
+      if (!GroupLogic.isSpecialGroup(GroupManager.getActiveGroupId())) {//if tab is dragged around inside a group
         var groupIndex = GroupLogic.getGroupIndex(GroupManager.getActiveGroupId());
         var tabIndex = groups[groupIndex].tabs[from];
         if (groups[groupIndex].filter) {
@@ -1020,5 +1027,22 @@ module.exports = {
       ids.push({ id: tabs[i].id, url: tabs[i].url });
     }
     Persistency.updateState({ tabIds: ids });
+  },
+  updateTabs: function (tabList) {
+    var self = this;
+    chrome.tabs.query({}, function (tabs) {
+      var originalTabs = TabManager.getTabs();
+      for (var i = 0; i < tabs.length; i++) {
+        var index = self.getTabIndex(tabs[i].id);
+        if (index >= 0) {
+          tabs[i] = self.preserveTabProperties(originalTabs[index], tabs[i]);
+        }
+        else {
+          self.initNewTab(tabs[i]);
+        }
+      }
+      self.setTabsAndUpdate(tabList, tabs, true);
+      tabList.props.handleStatisticsUpdate();
+    });
   }
 }

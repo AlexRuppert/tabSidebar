@@ -1,23 +1,33 @@
 {
   "manifest_version": 2,
-
   "name": "Tab Sidebar",
   "description": "A sidebar extension for tab management.",
   "version": "1.0",
   "options_page": "app/options.html",
-  "background": {"scripts": ["app/logic/background.js"],  "persistent": true},
-  "default_locale":  "en",
-  "permissions": ["tabs","storage","sessions","opera://favicon/", "chrome://favicon/", "<all_urls>"],
-  "icons": { "16": "app/media/icons/tabSidebar_16.png",
-             "19": "app/media/icons/tabSidebar_19.png",
-             "48": "app/media/icons/tabSidebar_48.png",
-             "128": "app/media/icons/tabSidebar_128.png" },
+  "background": { "scripts": [ "app/logic/background.js" ], "persistent": true },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [ "app/logic/observer.js" ],
+      "run_at": "document_idle"
+    }
+  ],
+  "default_locale": "en",
+  "permissions": [ "tabs", "storage", "sessions", "opera://favicon/", "chrome://favicon/", "<all_urls>" ],
+  "icons": {
+    "16": "app/media/icons/tabSidebar_16.png",
+    "19": "app/media/icons/tabSidebar_19.png",
+    "48": "app/media/icons/tabSidebar_48.png",
+    "128": "app/media/icons/tabSidebar_128.png"
+  },
   "sidebar_action": {
     "default_icon": {
       "19": "app/media/icons/tabSidebar_19.png",
-		  "38": "app/media/icons/tabSidebar_48.png"
+      "38": "app/media/icons/tabSidebar_48.png"
     }, //required
-    "default_title": "Tab Sidebar",    // optional; shown in tooltip
-    "default_panel": "app/panel.html"    // required
+    "default_title": "Tab Sidebar", // optional; shown in tooltip
+    "default_panel": "app/panel.html" // required
   }
 }

@@ -30,6 +30,8 @@ module.exports = {
     ALL_GROUP_COLOR: '#ff5900',
     ALL_GROUP_ID: 'allGroup',
     TAB_URL_LENGTH: 100,
+    UNGROUPED_COLOR: '#333',
+    UNGROUPED_ID: 'unGroup',
     newTabs: {
       BOTTOM: 'bottom',
       NEXT: 'next'
@@ -69,6 +71,8 @@ module.exports = {
       viewActions: {
         DOUBLE_COLUMN: 'multi',
         DOUBLE_COLUMN_GROUP: 'multigroup',
+        HIDE_PREVIEW: 'hidepreview',
+        SHOW_PREVIEW: 'showpreview',
         SINGLE_COLUMN: 'single',
         SINGLE_COLUMN_GROUP: 'singlegroup',
         TREE_VIEW: 'treeView'
@@ -96,6 +100,7 @@ module.exports = {
     GROUP_CONTEXT_MENU: 'GroupContextMenu',
     GROUP_NAME_INPUT: 'groupNameInput',
     PIN_LIST: 'pin_list',
+    PREVIEW: 'preview',
     RECENT_LIST: 'recentList',
     SEARCH_BOX: 'searchBox',
     SORT_BY: 'sortBySelect',

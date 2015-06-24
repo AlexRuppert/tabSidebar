@@ -14,6 +14,9 @@
   "PANIC" : {
     "message": "Panik Knopf. Wenn etwas kaputt erscheint einfach drücken und damit die Extension neu laden."
   },
+  "MAGIC" : {
+    "message": "Doppelte Tabs entfernen."
+  },
 
   "CLONE_AS_NORMAL" : {
     "message": "Gruppeninhalt kopieren"
@@ -114,7 +117,12 @@
   "ALL_GROUP_CLONE" : {
     "message": "alle - Kopie"
   },
-
+   "UNGROUPED" : {
+    "message": "gruppelos"
+  },
+  "UNGROUPED_CLONE" : {
+    "message": "gruppelos - Kopie"
+  },
 
   "CLEAR_BUTTON_TITLE" : {
     "message": "Suche zurücksetzen"
@@ -202,6 +210,12 @@
   },
   "TREE_VIEW" : {
     "message": "Baumansicht"
+  },
+   "SHOW_PREVIEW" : {
+    "message": "Vorschaubereich einblenden"
+  },
+  "HIDE_PREVIEW" : {
+    "message": "Vorschaubereich ausblenden"
   },
 
   "OPENED_ASC" : {

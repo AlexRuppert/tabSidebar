@@ -70,6 +70,7 @@ module.exports = React.createClass({
     this.forceUpdate();
   },
   render: function () {
+   
     var self = this;
     var recentListClasses = classNames({
       'recent-list': true,

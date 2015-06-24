@@ -13,6 +13,24 @@ module.exports = React.createClass({
   handleOpenSettings: function () {
     chrome.tabs.create({ url: Constants.paths.OPTIONS });
   },
+  handleMagic: function() {
+    chrome.tabs.query({}, function (tabs) {
+      var alreadySeenUrls = {}
+      for (var i = 0; i < tabs.length; i++) {
+        if (!alreadySeenUrls[tabs[i].url]) {
+          alreadySeenUrls[tabs[i].url] = true;
+        }
+        else {
+          try {
+            chrome.tabs.remove(tabs[i].id);
+          }
+          catch (e) {
+            
+          }
+        }
+      }
+    });
+  },
   handlePanic: function () {
     var background = chrome.extension.getBackgroundPage();
     
@@ -44,6 +62,12 @@ module.exports = React.createClass({
           onClick = { this.handleOpenSettings }>
           <i
             className = "fa fa-cog"/>
+        </button>
+        <button
+            title = { Strings.bottomBar.MAGIC }
+            onClick = { this.handleMagic }>
+            <i
+            className = "fa fa-magic"/>
         </button>
         <div className = { collapseContainerClasses }>
           <button

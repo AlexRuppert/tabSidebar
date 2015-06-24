@@ -103,7 +103,7 @@ module.exports = React.createClass({
           self.lastTabsToShow.push({ id: tabsToShow[i].id, pinned: tabsToShow[i].pinned, visible: tabsToShow[i].visible });
         }
         if(!onlyFetchTabs) {
-          
+          TabLogic.setToCurrentTab(self);
           self.forceUpdate();
         }
       }
@@ -135,13 +135,14 @@ module.exports = React.createClass({
     });
     this.tabPlaceholder.className = this.tabPlaceholderClasses;
   },
-  setOneTimeClasses: function () {
+  setOneTimeClasses: function (state, props) {
     this.tabContainerClasses = classNames({
       'tab-container': true,
       'slim-bar': Persistency.getState().scrollBar == Constants.scrollBar.SLIM,
       'hidden-bar': Persistency.getState().scrollBar == Constants.scrollBar.HIDDEN,
       'animated': Persistency.getState().tabSettings.animated,
-      'hidden': !this.state.isVisible
+      'preview-shown': props.previewShown,
+      'hidden': !state.isVisible
     });
     var backgroundInfo = Persistency.getState().background;
     this.tabOpacity = 100;
@@ -177,7 +178,7 @@ module.exports = React.createClass({
   shouldComponentUpdate: function (nextProps, nextState) {
    
     if (this.state.isVisible != nextState.isVisible){
-      this.setOneTimeClasses();
+      this.setOneTimeClasses(nextState, this.props);
       
       this.rerenderIfNeeded(null, true);
       return true;
@@ -195,6 +196,11 @@ module.exports = React.createClass({
     if (this.props.twoGroupColumns != nextProps.twoGroupColumns)
       return true;
 
+    if (this.props.previewShown != nextProps.previewShown) {
+      this.setOneTimeClasses(this.state, nextProps);
+      return true;
+    }
+      
     //unly updated after restart
     /*if (this.props.showCloseButtons != nextProps.showCloseButtons)
       return true;
@@ -205,13 +211,31 @@ module.exports = React.createClass({
 
     return false;
   },
+  onMessage: function(request, sender, callback) {
+    if (typeof request.title !== 'undefined') {
+      
+      var id = sender.tab.id;
+     
+      var index = TabLogic.getTabIndex(id);
+      if (index >=0 ) {
+        var tab = TabManager.getTabs()[index];
+        if (tab.title != request.title) {
+          tab.title = request.title;
+          if (this.refs[id]) {
+            this.refs[id].setState({title:request.title});
+          }
+        }
+      }
+    }
+  },
   componentWillMount: function () {
     
     var self = this;
-    this.setOneTimeClasses();
+    this.setOneTimeClasses(this.state, this.props);
     this.setPlaceHolderClass(this.props);
     ThumbnailCache.init();
     TabLogic.init();
+    chrome.runtime.onMessage.addListener(this.onMessage);
     /*chrome.windows.onFocusChanged.addListener(function (windowId) {
       
       if(windowId >= 0){
@@ -228,6 +252,7 @@ module.exports = React.createClass({
       TabLogic.setUpEventListeners(self);
       self.ready = true;
       self.rerenderIfNeeded(null);
+      self.props.handleStatisticsUpdate();
       for (var i = 0; i < forceUpdateTabs.length; i++) {
         if(self.refs[forceUpdateTabs[i].id]){
           self.refs[forceUpdateTabs[i].id].setState({
@@ -304,7 +329,18 @@ module.exports = React.createClass({
   },
 
 
-  
+  handleTabMouseEnter: function(id) {
+    var index = TabLogic.getTabIndex(id);
+    
+    if (index >= 0) {
+      var tab = TabManager.getTabs()[index];
+      if (tab) {
+        this.props.handlePreview(tab.thumbnail, tab.title || tab.url);
+      }
+    }
+    
+    
+  },
 
   handleTabCollapsed: function (id){
     TabLogic.handleTabCollapsed(this, id);
@@ -321,7 +357,8 @@ module.exports = React.createClass({
   
     var activeTabId = TabManager.getActiveTabId();
     
-    var column = this.suppressTreeView?Constants.menus.menuBar.viewActions.SINGLE_COLUMN:this.props.column;
+    var column = (this.suppressTreeView && this.props.column 
+      == Constants.menus.menuBar.viewActions.TREE_VIEW)?Constants.menus.menuBar.viewActions.SINGLE_COLUMN:this.props.column;
 
     var tabNodes = [];
     var pinNodes = [];
@@ -344,6 +381,7 @@ module.exports = React.createClass({
               onDragStart = { this.tabDragStart }
               onTabClicked = { this.handleTabClicked }
               onTabClosed = { this.handleTabClosed }
+              onMouseEnter = { this.handleTabMouseEnter }
               column = { column }
               favicon = { tab.favicon }
               isLoading = { tab.status == 'loading' }
@@ -386,6 +424,8 @@ module.exports = React.createClass({
               onDragStart = { this.tabDragStart }
               onTabClicked = { this.handleTabClicked }
               onTabClosed = { this.handleTabClosed }
+              onMouseEnter = { this.handleTabMouseEnter }
+
               favicon = { tab.favicon }
               isLoading = { tab.status == 'loading' }
               isPinned = { true }
@@ -405,6 +445,7 @@ module.exports = React.createClass({
     return (
       <div
         className = { this.tabContainerClasses }>
+        
         <div
           className = "tab-list-container">
           <div 
@@ -422,8 +463,10 @@ module.exports = React.createClass({
             handleNewTabGroup = { this.props.handleNewTabGroup }
             handleEditTabGroup = { this.handleEditTabGroup }
             twoColumns = {this.props.twoGroupColumns}/>
+
           <div
-            className = "tab-list">
+            className = "tab-list"
+            onMouseLeave = { this.props.handleMouseLeave }>
             <ul
               ref= { Constants.refs.PIN_LIST }
               className = { this.pinNodesClasses }>

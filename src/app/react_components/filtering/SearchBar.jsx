@@ -25,7 +25,9 @@ module.exports = React.createClass({
           placeholder = { Strings.searchBar.INPUT_PLACEHOLDER }
           ref =  { Constants.refs.SEARCH_BOX }
           type = "text"
-          onKeyUp = { this.handleKeyUp }/>
+          onKeyUp = { this.handleKeyUp }
+          onFocus = { function (e) { e.target.select(); } }
+          onMouseUp = { function (e) { return false; } }/>
         <button
           className = "clear-margin-right"
           title = { Strings.searchBar.CLEAR_BUTTON_TITLE }

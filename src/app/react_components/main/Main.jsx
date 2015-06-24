@@ -6,7 +6,7 @@ var Constants = require('../util/Constants.js');
 var GroupCreator = require('../groups/GroupCreator.jsx');
 var Helpers = require('../util/Helpers.js');
 var MenuBar = require('../menus/MenuBar.jsx');
-
+var Preview = require('../preview/Preview.jsx');
 var RecentList = require('../recent/RecentList.jsx');
 var SearchBar = require('../filtering/SearchBar.jsx');
 var TabList = require('../tabs/TabList.jsx');
@@ -22,7 +22,8 @@ module.exports = React.createClass({
       showCloseButtons: true,
       showGroups: true,
       showNewOnTabs: true,
-      twoGroupColumns: true
+      twoGroupColumns: true,
+      preview: false
     };
   },
   componentWillMount: function () {
@@ -35,7 +36,8 @@ module.exports = React.createClass({
       showCloseButtons: state.tabSettings.showCloseButtons,
       showGroups: state.groupSettings.showGroups,
       showNewOnTabs: state.tabSettings.showNewOnTabs,
-      twoGroupColumns: state.groupSettings.twoGroupColumns
+      twoGroupColumns: state.groupSettings.twoGroupColumns,
+      preview: state.previewArea.show
     });
     
   },
@@ -64,6 +66,21 @@ module.exports = React.createClass({
   handleNewTabGroupCreated: function (name, color, filter) {
     this.refs[Constants.refs.TAB_LIST].createNewGroup(name, color, filter);
   },
+  handlePreview: function (img, title) {
+    if (this.refs[Constants.refs.PREVIEW]) {
+      this.refs[Constants.refs.PREVIEW].setState({preview:img, title:title});
+    }
+  },
+  handleStatisticsUpdate: function () {
+    if (this.refs[Constants.refs.PREVIEW]) {
+      this.refs[Constants.refs.PREVIEW].updateStatistics();
+    }
+  },
+  handlePreviewDisplay: function (show) {
+    Persistency.updateState({previewArea: { show: show }});
+    
+    this.setState({ preview: show });
+  },
   handleScrollToTop: function () {
     if(this.refs[Constants.refs.TAB_LIST].state.isVisible) {
       Helpers.scrollTo(React.findDOMNode(this.refs[Constants.refs.TAB_LIST]), 0, 200);
@@ -83,6 +100,11 @@ module.exports = React.createClass({
   handleSort: function (sort) {
     this.refs[Constants.refs.TAB_LIST].sortTabs(sort);
   },
+  handleTabListMouseLeave: function () {
+    if (this.refs[Constants.refs.PREVIEW]) {
+      this.refs[Constants.refs.PREVIEW].setState({preview:'', title:''});
+    }
+  },
   handleViewChange: function (view) {
     Persistency.updateState({tabSettings: { viewState: view }});
     this.setState({ viewState: view });
@@ -93,6 +115,13 @@ module.exports = React.createClass({
   },
   render: function () {
     
+    var preview = {};
+    if(this.state.preview) {
+      preview = (
+        <Preview
+          ref = { Constants.refs.PREVIEW } />
+        );
+    }
     return (
       <div>
         <MenuBar
@@ -100,6 +129,7 @@ module.exports = React.createClass({
           handleGroupColumnChange = { this.handleGroupColumnChange }
           handleNewTabGroup = { this.handleNewTabGroup }
           handleViewChange = { this.handleViewChange }
+          handlePreviewDisplay = { this.handlePreviewDisplay }
           handleSort = { this.handleSort }
           showGroups = { this.state.showGroups }
           showRecentTabs = { this.showRecentTabs }/>
@@ -114,12 +144,17 @@ module.exports = React.createClass({
           ref = { Constants.refs.TAB_LIST }
           handleEditTabGroup = { this.handleEditTabGroup }
           handleNewTabGroup = { this.handleNewTabGroup }
+          handlePreview = { this.handlePreview }
+          handleMouseLeave = { this.handleTabListMouseLeave }
           column = { this.state.column }
           showCloseButtons = { this.state.showCloseButtons }
           showGroups = { this.state.showGroups }
           showNewOnTabs = { this.state.showNewOnTabs }
           twoGroupColumns = { this.state.twoGroupColumns }
-          viewState = { this.state.viewState } />
+          viewState = { this.state.viewState }
+          handleStatisticsUpdate = { this.handleStatisticsUpdate }
+          previewShown = { this.state.preview } />
+        { preview }
         <BottomBar 
           column = { this.state.column }
           handleCollapseTabs = { this.handleCollapseTabs }
