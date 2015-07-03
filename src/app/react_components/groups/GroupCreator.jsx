@@ -31,6 +31,8 @@ module.exports = React.createClass({
         React.findDOMNode(this.refs[Constants.refs.FILTER_BY_VALUE]).value = group.filterValue;
         React.findDOMNode(this.refs[Constants.refs.SORT_BY]).value = group.sortBy;
         React.findDOMNode(this.refs[Constants.refs.SORT_DIRECTION]).value = group.sortDirection;
+        React.findDOMNode(this.refs[Constants.refs.USE_REGEX]).checked = (group.useRegex == true);
+        
       }
     }
     var self = this;
@@ -47,12 +49,14 @@ module.exports = React.createClass({
     var filterValue = React.findDOMNode(this.refs[Constants.refs.FILTER_BY_VALUE]).value;
     var sortBy =  React.findDOMNode(this.refs[Constants.refs.SORT_BY]).value;
     var sortDirection =  React.findDOMNode(this.refs[Constants.refs.SORT_DIRECTION]).value;
-
+    var useRegex = React.findDOMNode(this.refs[Constants.refs.USE_REGEX]).checked;
+    
     return {
       filterBy: filterBy,
       filterValue: filterValue,
       sortBy: sortBy,
-      sortDirection: sortDirection
+      sortDirection: sortDirection,
+      useRegex: useRegex
     };
   },
   getInitialState: function () {
@@ -173,6 +177,15 @@ module.exports = React.createClass({
           </select>
           <label>
             { Strings.groupCreator.FILTER_VALUE }
+            <span
+            style = { {float: 'right'} }>
+              <input
+                ref = { Constants.refs.USE_REGEX }
+                type = "checkbox"
+                >
+                { Strings.groupCreator.USE_REGEX }
+              </input>
+            </span>
           </label>
           <input
             ref = { Constants.refs.FILTER_BY_VALUE }
@@ -194,7 +207,7 @@ module.exports = React.createClass({
           </label>
           <select
             ref = { Constants.refs.SORT_DIRECTION }>
-            <option value = { Constants.groupCreator.ASCENDING } selected>{ Strings.groupCreator.ASCENDING }</option>
+            <option value = { Constants.groupCreator.ASCENDING } >{ Strings.groupCreator.ASCENDING }</option>
             <option value = { Constants.groupCreator.DESCENDING }>{ Strings.groupCreator.DESCENDING }</option>
           </select>
         </div>

@@ -1,6 +1,9 @@
 ﻿'use strict';
 
 module.exports = {
+  browser: {
+    OPERA: 'opera'
+  },
   groupCreator: {
     ASCENDING: 'ascending',
     DESCENDING: 'descending',
@@ -57,6 +60,7 @@ module.exports = {
         PIN_TAB: 'pintab',
         RELOAD_TAB: 'reloadtab',
         REMOVE_TAB_FROM_GROUP: 'removetabfromgroup',
+        SELECT_ALL: 'selectalltabs',
         UNPIN_TAB: 'unpintab'
       },
       ITEM_HEIGHT: 25,
@@ -89,6 +93,8 @@ module.exports = {
     TAB_LIST_TOP: 63
   },
   paths: {
+    INFO: 'app/info.html',
+    INFO_NEW: 'app/info.html#whatsnew',
     OPTIONS: 'app/options.html'
   },
   refs: {
@@ -109,12 +115,16 @@ module.exports = {
     TAB_GROUP_CONTAINER: 'tabGroupConteiner',
     TAB_GROUP_LIST: 'tabGroupList',
 
-    TAB_LIST: 'tabList'
+    TAB_LIST: 'tabList',
+    USE_REGEX: 'useregex'
   },
   scrollBar: {
     DEFAULT: 'default',
     HIDDEN: 'hidden',
     SLIM: 'slim'
+  },
+  search: {
+    MIN_QUERY_LENGTH: 3,
   },
   sortModes: {
     OPENED_ASC: 'openedasc',

@@ -318,6 +318,7 @@ input[type="color"] {
     -webkit-align-items: center;
     -webkit-box-align: center;
     cursor: default;
+
     &.collapsed {
       bottom: -178px;
 
@@ -338,7 +339,6 @@ input[type="color"] {
       flex-wrap: wrap;
       flex-flow: row wrap;
       align-content: flex-start;
-      
 
       .fav {
         height: 16px;
@@ -997,14 +997,22 @@ input[type="color"] {
 
   .selected {
     background-color: @selectedColor !important;
-
-    &:hover {
+     &:hover {
       background-color: lighten(@selectedColor,7%) !important;
     }
 
     &.active {
       background-color: lighten(@selectedColor,13%) !important;
     }
+
+    &.compact-thumbnail .thumbnail {
+      background: @selectedColor !important;
+    }
+    &.compact-thumbnail.active .thumbnail {
+      background-color: lighten(@selectedColor,13%) !important;
+    }
+
+   
   }
 
   .fa {

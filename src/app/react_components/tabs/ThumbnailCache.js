@@ -83,6 +83,14 @@ module.exports = {
     /*console.log("Cached thumbnails = " + count);
     console.log("Deleted thumbnails = " + deletedCount);*/
   },
+  getThumbnail: function (tab) {
+    var hash = this.hashThumbnail(tab.id, tab.url);
+    if (this.cache[Constants.globalProperties.THUMBNAIL_CACHE].hasOwnProperty(hash)
+      && this.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image) {
+      return this.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image;
+    }
+    return '';
+  },
   scheduleCleanup: function (tabList) {
     var self = this;
 
@@ -107,9 +115,7 @@ module.exports = {
         var now = Date.now();
 
         if (timestamp + Constants.thumbnails.MIN_UPDATE_DELAY > now) { //no new update yet allowed
-          if (tabs[index].thumbnail) { //we have already a thumbnail
-            return;//abort
-          }
+          return;
         } //else fall through
       } else {
         this.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash] = {};
@@ -120,7 +126,8 @@ module.exports = {
       this.createThumbnail(tabs[index], function (tabId, img) {
         if (tabList.refs[tabId]) {
           self.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].timestamp = Date.now();
-          tabs[index].thumbnail = img;
+          self.cache[Constants.globalProperties.THUMBNAIL_CACHE][hash].image = img;
+          //s[index].thumbnail = img;
           tabList.refs[tabId].setState({ thumbnail: img });
         }
       });

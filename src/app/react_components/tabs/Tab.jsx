@@ -11,7 +11,7 @@ module.exports = React.createClass({
       favicon: this.props.favicon,
       title: this.props.title,
       isLoading: false,
-      isSelected: false
+      isSelected: this.props.isSelected
     };
   },
   getDefaultProps: function () {
@@ -23,6 +23,7 @@ module.exports = React.createClass({
       firstNode: false,
       isActive: false,
       isPinned: false,
+      isSelected: false,
       isSmall: false,
       level: 0,
       parentNode: false,
@@ -30,6 +31,7 @@ module.exports = React.createClass({
       showNewOnTabs: true,
       title: '',
       thumbnail: ''
+      
 
     };
   },
@@ -110,6 +112,10 @@ module.exports = React.createClass({
     e.preventDefault();
     e.stopPropagation();
     this.props.onMouseEnter(this.props.id);
+  },
+  handleMouseUp: function (e) {
+    e.stopPropagation();
+    this.props.onMouseUp(this.props.id, event);
   },
   handleTabCloseClick: function (event) {
     event.stopPropagation()
@@ -241,7 +247,8 @@ module.exports = React.createClass({
         onDragEnd = { this.props.onDragEnd }
         onContextMenu = { this.handleContextMenu }
         onMouseDown = { this.handleClick }
-        onMouseEnter = { this.handleMouseEnter }>
+        onMouseEnter = { this.handleMouseEnter }
+        onMouseUp = { this.handleMouseUp }>
         { treeCollapse }
         <div
             className = { mainlineClasses }>

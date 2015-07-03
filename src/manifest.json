@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Tab Sidebar",
-  "description": "A sidebar extension for tab management.",
+  "name": "__MSG_EXTTITLE__",
+  "description": "__MSG_DESCRIPTION__",
   "version": "1.0",
   "options_page": "app/options.html",
   "background": { "scripts": [ "app/logic/background.js" ], "persistent": true },

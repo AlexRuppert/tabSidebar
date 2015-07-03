@@ -21,6 +21,7 @@ module.exports = React.createClass({
   suppressTreeView: false,
   tabPlaceholder: document.createElement('li'),
   lastTabsToShow: [],
+  lastPinnedTabs: {},
   tabsToShow: [],
   tabOpacity: 100,
   activeGroupChanged: function(id) {
@@ -95,6 +96,27 @@ module.exports = React.createClass({
           }
         }
       }
+
+      
+      var tabs = TabManager.getTabs();
+      for (var i = 0; i < tabs.length; i++) {
+        var id = tabs[i].id;
+        if (tabs[i].pinned){
+          if(!self.lastPinnedTabs[id]) {
+            self.lastPinnedTabs[id] = true;
+            same = false;
+          }
+          
+        }
+        else {
+          if(self.lastPinnedTabs[id]) {
+            delete self.lastPinnedTabs[id];
+            same = false;
+          }
+        }
+      }
+        
+      
     
       self.tabsToShow = tabsToShow;
       if (!same){
@@ -213,16 +235,17 @@ module.exports = React.createClass({
   },
   onMessage: function(request, sender, callback) {
     if (typeof request.title !== 'undefined') {
-      
-      var id = sender.tab.id;
+      if (sender && sender.tab) {
+        var id = sender.tab.id;
      
-      var index = TabLogic.getTabIndex(id);
-      if (index >=0 ) {
-        var tab = TabManager.getTabs()[index];
-        if (tab.title != request.title) {
-          tab.title = request.title;
-          if (this.refs[id]) {
-            this.refs[id].setState({title:request.title});
+        var index = TabLogic.getTabIndex(id);
+        if (index >=0 ) {
+          var tab = TabManager.getTabs()[index];
+          if (tab.title != request.title) {
+            tab.title = request.title;
+            if (this.refs[id]) {
+              this.refs[id].setState({title:request.title});
+            }
           }
         }
       }
@@ -277,6 +300,9 @@ module.exports = React.createClass({
   handleTabClicked: function (id, event) {
     TabLogic.handleTabClicked(this, id, event);
   },
+  handleTabMouseUp: function (id, event) {
+    TabLogic.handleTabMouseUp(this, id, event);
+  },
   handleTabClosed: function (id) {
     TabLogic.handleTabClosed(id);
   },  
@@ -298,6 +324,9 @@ module.exports = React.createClass({
   handleTabContextMenuSelect: function (id, action) {
     
     switch (action) {
+      case Constants.menus.contextMenu.tabActions.SELECT_ALL:
+        TabLogic.selectAllTabs(this, id);
+        break;
       case Constants.menus.contextMenu.tabActions.NEW_TAB:
         chrome.tabs.create({});
         break;
@@ -335,7 +364,7 @@ module.exports = React.createClass({
     if (index >= 0) {
       var tab = TabManager.getTabs()[index];
       if (tab) {
-        this.props.handlePreview(tab.thumbnail, tab.title || tab.url);
+        this.props.handlePreview(ThumbnailCache.getThumbnail(tab), tab.title || tab.url);
       }
     }
     
@@ -362,7 +391,40 @@ module.exports = React.createClass({
 
     var tabNodes = [];
     var pinNodes = [];
+    var tabs = TabManager.getTabs();
     this.thereArePinnedNodes = false;
+    for (var i = 0; i < tabs.length; i++) {
+      var tab = tabs[i];
+      if(tab.pinned){
+          this.thereArePinnedNodes = true;
+          pinNodes.push(
+            (
+            <Tab
+              ref = { tab.id }
+              id = { tab.id }
+              index = { i }
+              key = { tab.id }
+              title = { tab.title }
+
+              isActive = { tab.id == activeTabId }
+              onContextMenu = { this.handleTabContextMenuOpen }
+              onDragEnd = { this.tabDragEnd }
+              onDragStart = { this.tabDragStart }
+              onTabClicked = { this.handleTabClicked }
+              onTabClosed = { this.handleTabClosed }
+              onMouseEnter = { this.handleTabMouseEnter }
+              onMouseUp = { this.handleTabMouseUp }
+
+              favicon = { tab.favicon }
+              isLoading = { tab.status == 'loading' }
+              isPinned = { true }
+              opacity = { this.tabOpacity }
+              showClose = { false }
+              showNewOnTabs = { this.props.showNewOnTabs }
+            />
+            ));
+      }
+    }
     for (var i = 0; i < this.tabsToShow.length; i++) {
       var tab = this.tabsToShow[i];
       if(tab.visible){
@@ -382,11 +444,12 @@ module.exports = React.createClass({
               onTabClicked = { this.handleTabClicked }
               onTabClosed = { this.handleTabClosed }
               onMouseEnter = { this.handleTabMouseEnter }
+              onMouseUp = { this.handleTabMouseUp }
               column = { column }
               favicon = { tab.favicon }
               isLoading = { tab.status == 'loading' }
               isActive = { false}
-            
+              isSelected = { this.selectedTabs.indexOf(tab.id) >= 0 }
 
             
               level = { tab.level }
@@ -399,7 +462,7 @@ module.exports = React.createClass({
               opacity = { this.tabOpacity }
               showClose = { this.props.showCloseButtons }
               showNewOnTabs = { this.props.showNewOnTabs }
-              thumbnail = { tab.thumbnail }
+              thumbnail = { ThumbnailCache.getThumbnail(tab) }
               viewState = { this.props.viewState }
 
             />
@@ -407,35 +470,7 @@ module.exports = React.createClass({
             )
           );
         }
-        else {
-          this.thereArePinnedNodes = true;
-          pinNodes.push(
-            (
-            <Tab
-              ref = { tab.id }
-              id = { tab.id }
-              index = { i }
-              key = { tab.id }
-              title = { tab.title }
-
-              isActive = { tab.id == activeTabId }
-              onContextMenu = { this.handleTabContextMenuOpen }
-              onDragEnd = { this.tabDragEnd }
-              onDragStart = { this.tabDragStart }
-              onTabClicked = { this.handleTabClicked }
-              onTabClosed = { this.handleTabClosed }
-              onMouseEnter = { this.handleTabMouseEnter }
-
-              favicon = { tab.favicon }
-              isLoading = { tab.status == 'loading' }
-              isPinned = { true }
-              opacity = { this.tabOpacity }
-              showClose = { false }
-              showNewOnTabs = { this.props.showNewOnTabs }
-            />
-            )
-          );
-        }
+       
       }
     }
    

@@ -34,7 +34,7 @@ gulp.task('watch', function () {
     cache: {}, packageCache: {}, fullPaths: true
   }));
   gulp.src(['./app/logic/**/*.js', './app/bower_components/classnames/index.js'])
- 
+
  .pipe(concat('logic.built.js'))
  .pipe(gulp.dest('./app/js/'));
   watcher.on('update', function () {
@@ -48,11 +48,10 @@ gulp.task('watch', function () {
     .bundle()
     .pipe(source(path.REACT_BUILD))
     .pipe(gulp.dest(path.REACT_DEST));
-
- 
 });
 
 gulp.task('options', function () {
+ 
   browserify({
     entries: [path.OPTIONS_ENTRY]
   })
@@ -62,6 +61,9 @@ gulp.task('options', function () {
 });
 
 gulp.task('default', function () {
+  gulp.src(['./app/logic/**/*.js', './app/bower_components/classnames/index.js'])
+ .pipe(concat('logic.built.js'))
+ .pipe(gulp.dest('./app/js/'));
   browserify({
     entries: [path.REACT_ENTRY],
     transform: [reactify]
@@ -117,7 +119,7 @@ gulp.task('release', function () {
   gulp.src('./app/logic/observer.js')
   .pipe(uglify())
   .pipe(gulp.dest(path.RELEASE + "/app/logic"));
- 
+
   //copy stuff
   gulp.src('./manifest.json')
   .pipe(gulp.dest(path.RELEASE));
@@ -139,6 +141,15 @@ gulp.task('release', function () {
   }))
   .pipe(minifyHTML())
   .pipe(gulp.dest(path.RELEASE + '/app/'));
+
+  gulp.src('./app/info.html')
+ .pipe(htmlreplace({
+   'css': 'css/info.css',
+   'js': 'js/options.built.js'
+ }))
+ .pipe(minifyHTML())
+ .pipe(gulp.dest(path.RELEASE + '/app/'));
+
   gulp.src('./app/panel.html')
   .pipe(htmlreplace({
     'css': 'css/all.css',
@@ -151,6 +162,11 @@ gulp.task('release', function () {
   .pipe(gulp.dest(path.RELEASE + '/_locales/'));
   //css
   gulp.src('./app/css/options.less')
+  .pipe(less())
+  .pipe(minifyCSS())
+  .pipe(gulp.dest(path.RELEASE + '/app/css/'));
+
+  gulp.src('./app/css/info.less')
   .pipe(less())
   .pipe(minifyCSS())
   .pipe(gulp.dest(path.RELEASE + '/app/css/'));

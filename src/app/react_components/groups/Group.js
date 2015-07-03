@@ -19,7 +19,7 @@ module.exports = {
       var self = this;
       groupList.props.parent.getTabsOfGroup(id, function (tabsShown) {
         for (var i = 0; i < tabsShown.length; i++) {
-          cloneTabs.push(tabsShown[i].id);
+          cloneTabs.push(+tabsShown[i].id);
         }
         var groupClone = { title: title, id: newId, tabs: cloneTabs, color: Colors.getColorByHash(Colors.backgroundColors, newId) };
         var index = self.getGroupIndex(id);
@@ -47,7 +47,7 @@ module.exports = {
       title = Strings.groups.UNGROUPED_CLONE;
       groupList.props.parent.getTabsOfGroup(id, function (tabsShown) {
         for (var i = 0; i < tabsShown.length; i++) {
-          cloneTabs.push(tabsShown[i].id);
+          cloneTabs.push(+tabsShown[i].id);
         }
         var groupClone = { title: title, id: newId, tabs: cloneTabs, color: Colors.getColorByHash(Colors.backgroundColors, newId) };
         groups.splice(index + 1, 0, groupClone);
@@ -62,7 +62,7 @@ module.exports = {
         var groupSource = groups[index];
         title = groupSource.title;
         for (var i = 0; i < groupSource.tabs.length; i++) {
-          cloneTabs.push(groupSource.tabs[i]);
+          cloneTabs.push(+groupSource.tabs[i]);
         }
       }
       else {
@@ -139,7 +139,8 @@ module.exports = {
         filterBy: filter.filterBy,
         filterValue: filter.filterValue,
         sortBy: filter.sortBy,
-        sortDirection: filter.sortDirection
+        sortDirection: filter.sortDirection,
+        useRegex: filter.useRegex
       };
     }
     groups.splice(0, 0, newGroup);
@@ -319,24 +320,25 @@ module.exports = {
     var index = 0;
     try {
       index = Array.prototype.indexOf.call(tabList.groupDragged.parentNode.children, groupList.groupPlaceholder);
+      
       tabList.groupDragged.parentNode.removeChild(groupList.groupPlaceholder);
     }
     catch (ex) { }
     // Update state
     var groups = GroupManager.getGroups();
     var draggedIndex = Array.prototype.indexOf.call(tabList.groupDragged.parentNode.children, tabList.groupDragged);
-
-    var from = draggedIndex - 1 - groupList.hasUngrouped ? 1 : 0;
+    var offset =  1 + ( groupList.hasUngrouped ? 1 : 0);
+    var from = draggedIndex - offset;
     //var from = this.getGroupIndex(this.groupDragged.dataset.id)-1;
-    var to = index - 1 - groupList.hasUngrouped ? 1 : 0;//Number(this.tabOver.dataset.id);
-    if (from == to) {
+    var to = index - offset;//Number(this.tabOver.dataset.id);
+    if (from == to || to < 0) {
       groupList.updateGroupHeights();
       return;
     }
 
     if (from < to) to--;
     //  if(this.tabNodePlacement == "after") to++;
-
+    
     groups.splice(to, 0, groups.splice(from, 1)[0]);
     tabList.groupDragged = null;
     this.setGroupsAndSave(groups);
@@ -358,6 +360,7 @@ module.exports = {
           groups[index].filterValue = filter.filterValue;
           groups[index].sortBy = filter.sortBy;
           groups[index].sortDirection = filter.sortDirection;
+          groups[index].useRegex = filter.useRegex;
           if (GroupManager.getActiveGroupId() == id) {
             groupList.props.parent.rerenderIfNeeded(id);
           }
@@ -407,7 +410,7 @@ module.exports = {
   loadGroups: function () {
     this.init();
     var tabs = TabManager.getTabs();
-    var groups = Persistency.getState().groups;
+    var groups = Persistency.groups;
     
     var sameSession = true;
     if (!chrome.extension.getBackgroundPage().hasOwnProperty(Constants.globalProperties.SAME_SESSION)) {
@@ -473,7 +476,7 @@ module.exports = {
     }
   },
   saveGroups: function () {
-    Persistency.updateState({ groups: GroupManager.getGroups() });
+    Persistency.saveGroups(GroupManager.getGroups());
   },
   setGroupsActive: function (groupList, id) {
     var groups = GroupManager.getGroups();
@@ -489,7 +492,7 @@ module.exports = {
       if (id != Constants.groups.ALL_GROUP_ID) {
         groupList.refs[Constants.groups.ALL_GROUP_ID].setState({ isActive: false });
       }
-      if (id != Constants.groups.UNGROUPED_ID) {
+      if (id != Constants.groups.UNGROUPED_ID && groupList.refs[Constants.groups.UNGROUPED_ID]) {
         groupList.refs[Constants.groups.UNGROUPED_ID].setState({ isActive: false });
       }
       if (groupList.refs[id]) {

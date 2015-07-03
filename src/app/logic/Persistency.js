@@ -5,16 +5,16 @@ window.Persistency = {
   initialized: false,
   defaultState: {
     background: {
-      show: true,
+      show: false,
       useFilter: false,
-      image: 'http://i.imgur.com/8rSgyBO.jpg',
-      offset: 65,
+      image: '',
+      offset: 0,
       blur: 4,
-      opacity: 70,
+      opacity: 100,
       grayscale: 0,
-      tabOpacity: 75
+      tabOpacity: 100
     },
-    groups: [],
+
     groupSettings: {
       createNewTabs: 'next',
       showBarBackground: true,
@@ -41,7 +41,10 @@ window.Persistency = {
       closeChildren: 'never',
       maxLevel: 2
     },
+    firstRun: true,
+    version: 1
   },
+  groups: [],
   loaded: false,
 
   storage: chrome.storage.local,
@@ -55,6 +58,7 @@ window.Persistency = {
       } else {
         var saved = chrome.extension.getBackgroundPage()[persistency];
         this.currentState = saved.currentState;
+        this.groups = saved.groups;
         this.loaded = saved.loaded;
       }
       this.inialized = true;
@@ -63,6 +67,57 @@ window.Persistency = {
   getState: function () {
     return this.currentState;
   },
+
+  loadGroups: function (callback) {
+    var self = this;
+    if (this.groups.length > 0) {
+      callback();
+      return;
+    }
+    this.storage.get('groups', function (result) {
+      if (result.groups) {
+        self.groups = JSON.parse(result.groups);
+        
+        var test = result.groups.match(/"tabs":\[(\d|,)*/g);
+        
+        for (var i = 0; i < test.length; i++) {
+         
+          if (test[i]) { //some weird bug, that clears the tabs array on parsing... therefore manual id extraction
+            var values = test[i].substr(8);
+            
+            if (values.trim().length > 0) {
+              var ids = values.trim().split(',');
+              
+              for (var j = 0; j < ids.length; j++) {
+                if (self.groups[i].tabs.indexOf(+ids[j]) < 0) {
+                  self.groups[i].tabs.push(+ids[j])
+                }
+              }
+            }
+
+            
+          }
+          else {
+            self.groups[i].tabs = [];
+          }
+        }
+      }
+      else {
+        self.groups = [];
+      }
+
+      callback();
+    });
+  },
+
+  saveGroups: function (groups) {
+    this.groups = groups;
+
+    chrome.extension.getBackgroundPage()['persistency'].groups = this.groups;
+    this.storage.set({ groups: JSON.stringify(groups) });
+    
+  },
+
   loadState: function (callback) {
     if (this.loaded) {
       callback();

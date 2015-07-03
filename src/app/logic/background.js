@@ -8,7 +8,11 @@ function startupInject() {
         if (!chrome.runtime.lastError) {
           if (tabs[i].url.indexOf('http') == 0 && tabs[i].url.indexOf('addons.opera.com') == -1) {
             if (!chrome.runtime.lastError) {
-              chrome.tabs.executeScript(tabs[i].id, { file: "app/logic/observer.js" });
+              chrome.tabs.executeScript(tabs[i].id, { file: "app/logic/observer.js" }, function() {
+                if (!chrome.runtime.lastError) {
+                  return true;
+                }
+              });
               if (!chrome.runtime.lastError) {
                 true;
               }

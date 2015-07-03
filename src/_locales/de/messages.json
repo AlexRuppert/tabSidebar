@@ -1,4 +1,10 @@
 ﻿{
+  "EXTTITLE":  {
+    "message": "Tab Sidebar"
+  },
+  "DESCRIPTION": {
+    "message": "Eine Erweiterung zur Tab Verwaltung."
+  },
   "COLLAPSE_TABS": {
     "message": "Tabs einklappen"
   },
@@ -108,7 +114,9 @@
   "URL_CONTAINS" : {
     "message": "Url enthält"
   },
-
+  "USE_REGEX" : {
+    "message": "als regex"
+  },
 
 
   "ALL_GROUP" : {
@@ -128,7 +136,7 @@
     "message": "Suche zurücksetzen"
   },
   "INPUT_PLACEHOLDER" : {
-    "message": "Durchsuche tabs..."
+    "message": "Durchsuche Tabs..."
   },
 
 
@@ -178,6 +186,9 @@
   "REMOVE_TAB_FROM_GROUP" : {
     "message": "Tab aus Gruppe entfernen"
   },
+  "SELECT_ALL_TABS" : {
+    "message": "Alle tabs auswählen"
+  }, 
   "UNPIN_TAB" : {
     "message": "Tab lösen"
   },
@@ -243,6 +254,13 @@
     "message": "Zuletzt angeklickt absteigend"
   },
 
+  "PREVIEW_GROUPS" : {
+    "message": "Gruppen:"
+  },
+  "PREVIEW_TABS" : {
+    "message": "Tabs:"
+  },
+
   "SETTINGS_TAB_SIDEBAR_TITLE" : {
     "message":  "Tab Sidebar Einstellungen"
   },
@@ -259,7 +277,7 @@
     "message":  "Markiere unbesuchte Tabs"
   },
   "SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR_TEXT" :  {
-    "message":  "Im Hintergrund geöffnete Tabs werden mit einer kleinen Markierung versehen, solange sie nicht besucht worden sind."
+    "message":  "Im Hintergrund geöffnete Tabs werden mit einer kleinen Markierung versehen, so lange sie nicht besucht worden sind."
   },
   "SETTINGS_TAB_APPEARANCE_ANIMATE" :  {
     "message":  "Animiere Tabs"
@@ -430,6 +448,193 @@
   },
   "SETTINGS_RESET_TO_DEFAULT" :  {
     "message":  "Alles auf Standardwerte zurücksetzen"
+  },
+
+  "TUT_TITLE" : {
+    "message":  "Kurzanleitung"
+  },
+  "TUT_SIDE_GETTING_STARTED" : {
+    "message":  "Kurzanleitung"
+  },
+  "TUT_SIDE_WHATS_NEW" : {
+    "message":  "Was gibt's Neues?"
+  },
+  "TUT_SIDE_FAQ" : {
+    "message":  "Fragen &amp; Antworten"
+  },
+
+  "TUT_INTRODUCTION" : {
+    "message":  "<strong>Tab Sidebar</strong> ist einer Erweiterung für die Verwaltung von Tabs. Tabs können in der Seitenleiste in verschiedenen kombinierbaren Ansichten dargestellt werden, wie z.B. mit Vorschaubildern, in einer Baumstruktur oder in einer kompakten, platzsparenden Form. Tabs und ihr Inhalt können durchsucht, geschlossene Tabs wiederhergestellt, doppelte Tabs geschlossen und alle Tabs automatisch sortiert werden. <br /><br /> Mit dem Fokus auf Power User mit vielen offenen Tabs, verwendet <strong>Tab Sidebar</strong> Gruppen, welche ähnlich den Tab Stacks aus vorherigen Opera Versionen das gruppieren von ähnlichen Tabs erlauben. Dieses Konzept wird durch Filter erweitert, welche die gruppierung völlig automatisch handhaben. Zum Beispiel kann man einen Filter erstellen, der nur Tabs mit 'wikipedia.org' in der URL anzeigt, wenn dieser aktiviert ist. <br /><br /> <strong>Tab Sidebar</strong> kann durch viele Optionen angepasst werden. Im Einstellungsmenü kann man z.B. ein Hintergrundbild einfügen, das Gruppen Feature deaktivieren oder die Farbe des Icons in der Seitenleiste ändern. <br /><br /> Diese Erweiterung ist immer noch in Entwicklung. Es kann und wird sicherlich noch Fehler enthalten, welche ich zu beheben versuchen werde. Wenn du mir helfen möchtest, kannst du Feedback an: <a href='https://github.com/AlexRuppert/tabSidebar/issues'>github</a> schicken oder auf der Opera Addons Seite der Erweiterung unter 'Gemeldete Probleme'. Falls du ein interessierter Entwickler bist, kannst du gerne einen Blick auf die Projektseite werfen: <a href='https://github.com/AlexRuppert/tabSidebar'>github</a>."
+  },
+  "TUT_OVERVIEW" : {
+    "message":  "Übersicht"
+  },
+  "TUT_PINNED_TABS" : {
+    "message":  "Angeheftete Tabs"
+  },
+  "TUT_UNVISITED_TAB" : {
+    "message":  "Unbesuchter Tab"
+  },
+  "TUT_ALL_GROUP" : {
+    "message":  "Alle Gruppe"
+  },
+  "TUT_UNGROUPED_TABS" : {
+    "message":  "Gruppelose Tabs"
+  },
+  "TUT_GROUP" : {
+    "message":  "Gruppe"
+  },
+  "TUT_FILTER_GROUP" : {
+    "message":  "Filter"
+  },
+  "TUT_PANIC" : {
+    "message":  "Panik Knopf"
+  },
+  "TUT_MAGIC" : {
+    "message":  "Doppelte Tabs entfernen"
+  },
+  "TUT_GO_UP" : {
+    "message":  "Nach oben"
+  },
+
+  "TUT_NEW_TAB_TEXT" : {
+    "message":  "Erstellt einen neuen Tab, so wie der übliche Button in der Tableiste auch." 
+  },
+  "TUT_NEW_TAB_GROUP_TEXT" : {
+    "message":  "Öffnet ein neues <a href='#groupcreation'>Fenster</a>, in welchem man eine neue Gruppe erstellen kann."
+  },
+  "TUT_MENU_BAR_SORT_TEXT" : {
+    "message":  "Tabs können sortiert (statt nur manuell verschoben) werden um etwas Ordnung zu schaffen. Zum Beispiel kann nach der URL sortiert werden, um Tabs aus ähnlichen Webseiten zu bündeln."
+  },
+  "TUT_VIEW_MENU_TEXT" : {
+    "message":  "In diesem Menü kann die Ansicht angepasst werden. Tabs können. z.B. kleiner gemacht oder mit Vorschaubildern versehen werden. Vorschaubilder werden automatisch erstellt und aktualisiert, wenn ein Tab verlassen wurde, sodass es immer den letzten Zustand des Tabs repräsentiert. Zusätzlich können Tabs in mehreren Spalten angezeigt werden oder in einer Baumstruktur, wobei Tabs, die aus anderen Tabs hervorgehen (Links im Hintergrund öffnen) als deren Kinder angefügt werden. <br /><br /> Ein Vorschaubereich kann eingeblendet werden, welcher das Vorschaubild des Tabs anzeigt, welcher aktuell unter dem Mauszeiger liegt. Sofern kein Vorschaubild vorliegt, wird der Titel des Tabs angezeigt. Wird auf keinen Tab gezeigt, so erscheinen einige Statistiken, wie die Anzahl der geöffneten Tabs. <br /><br /> Gruppen können bei bedarf auch in zwei spalten angezeigt werden, um das Scrollen zu minimieren."
+  },
+  "TUT_CLOSED_TABS_TEXT" : {
+    "message":  "In diesem Bereich können geschlossene Tabs betrachtet, gesucht und wiederhergestellt werden."
+  },
+  "TUT_INPUT_PLACEHOLDER_TEXT" : {
+    "message":  "Mit diesem Suchfeld können Tabs durchsucht werden, unpassende Tabs werden währenddessen ausgeblendet. Standardmäßig wird der Titel durchsucht, doch alternativ kann mit einem vorangesetzten . (Punkt), wie in <strong>.was ist</strong> der Seiteninhalt aller Tabs durchsucht werden. Es sei erwähnt, dass wegen der Implementierung die Suche manchmal falsch positive Resultate anzeigen kann (z.B. bei unsichtbaren Seitenelementen)."
+  },
+  "TUT_CLEAR_BUTTON_TITLE_TEXT" : {
+    "message":  "Dieser Button löscht den Inhalt des Suchfelds, sodass der Suchmodus verlassen und alle Tabs wieder angezeigt werden. Natürlich kann das Feld auch manuell gelöscht werden."
+  },
+  "TUT_PINNED_TABS_TEXT" : {
+    "message":  "Oben über den normalen Tabs befinden sich die angehefteten Tabs. Mit steigender Anzahl der angehefteten Tabs variiert die Größe und notfalls werden zusätzliche Reihen hinzugefügt. Die angehefteten Tabs sind immer sichtbar, unabhängig von der derzeit ausgewählten Gruppe."
+  },
+  "TUT_UNVISITED_TAB_TEXT" : {
+    "message":  "Noch nicht besuchte Tabs (d.h. wenn sie im Hintergrund geöffnet wurden) werden mit einem kursiven Text und einem kleinen Dreieck in der Ecke markiert."
+  },
+  "TUT_ALL_GROUP_TEXT" : {
+    "message":  "Das ist eine Spezialgruppe, die immer angezeigt wird. Sie enthält alle Tabs, die gerade offen sind, und ist somit die ideale Anlaufstelle für einen Überblick oder eine globale Suche."
+  },
+  "TUT_UNGROUPED_TABS_TEXT" : {
+    "message":  "Dies ist eine weitere Spezialgruppe, die nur Tabs anzeigt, welche noch keiner Gruppe zugeordnet sind. Filter werden hierbei nicht berücksichtigt."
+  },
+  "TUT_GROUP_TEXT" : {
+    "message":  "Gruppen ähneln Tab Stacks und fassen Tabs zusammen. Gruppen können per Drag &amp; Drop umsortiert werden. Um eine neue Gruppe zu erstellen, öffnet man das entsprechende Menü in der Menüleiste (2) oder verwendet das Kontextmenü. <br /><br /> Tabs können mit Drag &amp; Drop in eine Gruppe geschoben werden. Mehrere Tabs können dabei mit gedrückter STRG Taste ausgewählt werden. Um Tabs wieder aus einer Gruppe zu entfernen, zieht man sie dazu per Drag &amp; Drop aus dieser in die 'Alle' Gruppe. Alternativ kann auch die entsprechende Option im Tab-Kontextmenü verwendet werden. <br /><br /> Tabs können innerhalb einer Gruppe mit Drag &amp; Drop umsortiert werden. Dabei wird nur die Reihenfolge für diese eine Gruppe verändert, die eigentlichen Tabs im Fenster sind davon nicht betroffen."
+  },
+  "TUT_FILTER_GROUP_TEXT" : {
+    "message":  "Filter werden durch das kleine Filter-Symbol neben ihrem Namen gekennzeichnet. Sie sind spezielle Gruppen, in welche man keine Tabs manuell hinzufügen kann. Stattdessen filtern sie alle offenen Tabs anhand der eingestellten <a href='#groupcreation'>Kriterien</a>. Zum Beispiel kann man einen Filter erstellen, welcher nur Tabs anzeigt, welche in den letzten 10 Minuten aktiviert waren. Filter können auch zum Sortieren verwendet werden (auch ohne vorher zu filtern). <br /> <br /> Eine weitere Verwendungsmöglichkeit ist das Aufräumen unnötiger Tabs. Mit einem Filter kann man sich alle Tabs anzeigen, die schon lange nicht mehr aktiviert wurden. Diese können dann mit einem Rechtsklick auf die Gruppe über das Kontextmenü geschlossen werden. <br /><br /> Über das Kontextmenü kann außerdem auch eine Momentaufnahme des Filter-Inhalts erstellt werden. Diese ist dann eine normale Gruppe mit den Tabs, welche zur Erstellungszeit im Filter waren."
+  },
+  "TUT_PANIC_TEXT" : {
+    "message":  "Keine Software ist vor Fehlern sicher. Sollte sich mal die Erweiterung seltsam verhalten, so kann sie mit diesem Button neu gestartet werden, was hoffentlich das bestehende Problem wieder behebt."
+  },
+  "TUT_SETTINGS_TEXT" : {
+    "message":  "Dieser Button öffnet die Einstellungen der Erweiterung."
+  },
+  "TUT_MAGIC_TEXT" : {
+    "message":  "Hiermit können doppelte Tabs entfernt werden (wobei gleicher URL wird nur ein Tab behalten)."
+  },
+  "TUT_GO_UP_TEXT" : {
+    "message":  "Dieser Button scrollt die Tab Liste wieder ganz nach oben. Die Scroll-Leiste kann übrigens in den Einstellungen geändert oder entfernt werden."
+  },
+
+  "TUT_GROUP_CREATION" : {
+    "message":  "Erstellung von Gruppen"
+  },
+  "TUT_GROUP_CREATION_NAME" : {
+    "message":  "Name"
+  },
+  "TUT_GROUP_CREATION_COLOR" : {
+    "message":  "Farbe"
+  },
+  "TUT_GROUP_CREATION_FILTER" : {
+    "message":  "Als Filter erstellen"
+  },
+  "TUT_GROUP_CREATION_FILTER_BY" : {
+    "message":  "Filter"
+  },
+  "TUT_GROUP_CREATION_FILTER_VALUE" : {
+    "message":  "Filterwert"
+  },
+  "TUT_GROUP_CREATION_REGEX" : {
+    "message":  "Als regulärer Ausdruck"
+  },
+  "TUT_GROUP_CREATION_SORT_BY" : {
+    "message":  "Sortierung"
+  },
+  "TUT_GROUP_CREATION_SORT_DIRECTION" : {
+    "message":  "Sortierrichtung"
+  },
+  "TUT_GROUP_CREATION_CREATE_GROUP" : {
+    "message":  "Gruppe erstellen"
+  },
+
+  "TUT_GROUP_CREATION_NAME_TEXT" : {
+    "message":  "Der Name der Gruppe."
+  }, 
+  "TUT_GROUP_CREATION_COLOR_TEXT" : {
+    "message":  "Für das schnelle und einfache Erkennen hat jede Gruppe eine frei wählbare Farbe. Abhängig von dieser Hintergrundfarbe wird dann die Textfarbe gewählt, sodass der Gruppenname immer lesbar bleibt."
+  },
+  "TUT_GROUP_CREATION_FILTER_TEXT" : {
+    "message":  "Hier kann ausgewählt werden, ob eine normale Gruppe oder ein Filter erstellt werden soll. Bei einem Filter erscheinen zusätzliche Optionen."
+  },
+  "TUT_GROUP_CREATION_FILTER_BY_TEXT" : {
+    "message":  "Der Filter-Parameter wird hier spezifiziert. Wenn nicht gefiltert, sondern nur sortiert werden soll, wähle die Option <strong>kein</strong>."
+  },
+  "TUT_GROUP_CREATION_FILTER_VALUE_TEXT" : {
+    "message":  "Der Wert, wonach gefiltert wird. Beim Filtern nach Titel oder URL kann der Platzhalter * verwendet werden."
+  },
+  "TUT_GROUP_CREATION_REGEX_TEXT" : {
+    "message":  "Für mehr Kontrolle beim Filtern kann der Filterwert auch als regulärer Ausdruck eingegeben werden."
+  },
+  "TUT_GROUP_CREATION_SORT_BY_TEXT" : {
+    "message":  "Filter können die Ergebnisse sortiert darstellen. Um die Tab-Reihenfolge beizubehalten, wähle <strong>kein</strong>."
+  },
+  "TUT_GROUP_CREATION_SORT_DIRECTION_TEXT" : {
+    "message":  "Ob auf- oder absteigend sortiert werden soll."
+  },
+  "TUT_GROUP_CREATION_CREATE_GROUP_TEXT" : {
+    "message":  "Dieser Button erstellt die Gruppe mit den angegebenen Parametern."
+  },
+
+  "TUT_WHATS_NEW_INITIAL" : {
+    "message":  "Dies ist die Erstveröffentlichung. Später werden hier alle Änderungen zur letzten Version aufgelistet."
+  },
+  
+  "TUT_FAQ_Q1" : {
+    "message":  "Wie füge ich Tabs zu einer Gruppe hinzu?"
+  },
+  "TUT_FAQ_A1" : {
+    "message":  "Tabs können zu einer Gruppe hinzugefügt werden, indem sie mit gedrückter Maustaste auf die Gruppe gezogen werden (Drag &amp; Drop). Mehrere Tabs können dabei vorher mit gedrückter STRG-Taste ausgewählt werden. Dies funktioniert allerdings nicht für Filter, da deren Inhalt nur dynamisch generiert wird."
+  },
+  "TUT_FAQ_Q2" : {
+    "message":  "Wie entferne ich Tabs aus einer Gruppe?"
+  },
+  "TUT_FAQ_A2" : {
+    "message":  "Tabs können auf die gleiche Weise entfernt, wie hinzugefügt werden. Dazu müssen sie einfach aus der aktuellen Gruppe in die 'Alle' Gruppe verschoben werden. Alternativ können sie aber auch über das Tab-Kontextmenü entfernt werden."
+  },
+  "TUT_FAQ_Q3" : {
+    "message":  "Warum haben meine Tabs keine Vorschaubilder?"
+  },
+  "TUT_FAQ_A3" : {
+    "message":  "Vorschaubilder können nur erstellt werden, wenn die Seite sichtbar ist. Hintergrund-Tabs werden daher so lange keine Vorschaubilder haben, bis sie betrachtet wurden. Dies ist auch der Fall für wiederhergestellte Sitzungen, da Vorschaubilder nicht abgespeichert werden."
+  },
+  "TUT_FAQ_Q4" : {
+    "message":  "Warum ist der Speicherverbrauch so groß?"
+  },
+  "TUT_FAQ_A4" : {
+    "message":  "Das ist ein Fehler von Chromium (auf welchem Opera basiert) welcher auch mit normalen Webseiten in Tabs auftritt. Bei jedem Aktualisieren eines Tabs wird bis zu einer bestimmten Grenze immer mehr Speicher reserviert. Im Falle der Seitenleisten-Erweiterung zählt jedes Öffnen und Schließen dieser als Neuladen (ich kann dieses Verhalten nicht ändern). Nach meinen Beobachtungen liegt die Grenze bei etwa 250 MB und der Speicherverbrauch sinkt dann nach einer Weile auf etwa 100 MB herunter, wobei insgesammt 5GB RAM frei sind."
   }
 
 }

@@ -12,6 +12,7 @@ module.exports = React.createClass({
   },  
   handleOpenSettings: function () {
     chrome.tabs.create({ url: Constants.paths.OPTIONS });
+    
   },
   handleMagic: function() {
     chrome.tabs.query({}, function (tabs) {

@@ -1,4 +1,10 @@
 ﻿{
+  "EXTTITLE":  {
+    "message": "Tab Sidebar"
+  },
+  "DESCRIPTION": {
+    "message": "A sidebar extension for tab management."
+  },
   "COLLAPSE_TABS": {
     "message": "Collapse tabs"
   },
@@ -108,7 +114,9 @@
   "URL_CONTAINS" : {
     "message": "Url contains"
   },
-
+  "USE_REGEX" : {
+    "message": "use regex"
+  },
 
 
   "ALL_GROUP" : {
@@ -178,6 +186,9 @@
   "REMOVE_TAB_FROM_GROUP" : {
     "message": "Remove tab from group"
   },  
+  "SELECT_ALL_TABS" : {
+    "message": "Select all tabs"
+  }, 
   "UNPIN_TAB" : {
     "message": "Unpin tab"
   },
@@ -243,194 +254,389 @@
     "message": "Last clicked descending"
   },
 
+  "PREVIEW_GROUPS" : {
+    "message": "Groups:"
+  },
+  "PREVIEW_TABS" : {
+    "message": "Tabs:"
+  },
 
-  "SETTINGS_TAB_SIDEBAR_TITLE" :  {
+
+  "SETTINGS_TAB_SIDEBAR_TITLE" : {
     "message":  "Tab Sidebar Settings"
   },
-  "SETTINGS_TAB_APPEARANCE" :  {
+  "SETTINGS_TAB_APPEARANCE" : {
     "message":  "Tab appearance"
   },
-  "SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON" :  {
+  "SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON" : {
     "message":  "Show close button on tabs"
   },
-  "SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON_TEXT" :  {
+  "SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON_TEXT" : {
     "message":  "Each tab will have a small button on it, that can be clicked to close the tab."
   },
-  "SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR" :  {
+  "SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR" : {
     "message":  "Show indicator for unvisited tabs"
   },
-  "SETTINGS_TAB_APPEARANCE_ANIMATE" :  {
+  "SETTINGS_TAB_APPEARANCE_ANIMATE" : {
     "message":  "Animate tabs"
   },
-  "SETTINGS_TAB_APPEARANCE_ANIMATE_TEXT" :  {
+  "SETTINGS_TAB_APPEARANCE_ANIMATE_TEXT" : {
     "message":  "If you do not like the tab animations, you can turn them off with this setting."
   },
   
 
-  "SETTINGS_TAB_TREES" :  {
+  "SETTINGS_TAB_TREES" : {
     "message":  "Tab trees"
   },
-  "SETTINGS_TAB_TREES_USE_IN_FILTERS" :  {
+  "SETTINGS_TAB_TREES_USE_IN_FILTERS" : {
     "message":  "Use tree view also in filter groups"
   },
-  "SETTINGS_TAB_TREES_USE_IN_FILTERS_TEXT" :  {
+  "SETTINGS_TAB_TREES_USE_IN_FILTERS_TEXT" : {
     "message":  "When in tree view mode, the display of tabs as a tree can be explicitly prevented inside of filter groups. This can be useful since the tree structure not necessarily corresponds to the expected sorting order."
   },
-  "SETTINGS_TAB_TREES_MAX_LEVEL" :  {
+  "SETTINGS_TAB_TREES_MAX_LEVEL" : {
     "message":  "Max tree level"
   },
-  "SETTINGS_TAB_TREES_MAX_LEVEL_TEXT" :  {
+  "SETTINGS_TAB_TREES_MAX_LEVEL_TEXT" : {
     "message":  "Defines the maximum depth of the tab tree. I.e. with a lower level children will not be pushed as far to the right in the tree."
   },
-  "SETTINGS_TAB_TREE_CLOSING" :  {
+  "SETTINGS_TAB_TREE_CLOSING" : {
     "message":  "Tab tree closing behavior"
   },
-  "SETTINGS_TAB_TREE_CLOSING_NEVER" :  {
+  "SETTINGS_TAB_TREE_CLOSING_NEVER" : {
     "message":  "Do not close children, when parent is closed"
   },
-  "SETTINGS_TAB_TREE_CLOSING_NEVER_TEXT" :  {
+  "SETTINGS_TAB_TREE_CLOSING_NEVER_TEXT" : {
     "message":  "Child tabs are never closed automatically, when their parent is closed."
   },
-  "SETTINGS_TAB_TREE_CLOSING_COLLAPSED" :  {
+  "SETTINGS_TAB_TREE_CLOSING_COLLAPSED" : {
     "message":  "Close children only, if parent is collapsed"
   },
-  "SETTINGS_TAB_TREE_CLOSING_COLLAPSED_TEXT" :  {
+  "SETTINGS_TAB_TREE_CLOSING_COLLAPSED_TEXT" : {
     "message":  "Child tabs will only be closed of the parent was closed in a collapsed state."
   },
-  "SETTINGS_TAB_TREE_CLOSING_ALWAYS" :  {
+  "SETTINGS_TAB_TREE_CLOSING_ALWAYS" : {
     "message":  "Always close children, when parent is closed"
   },
-  "SETTINGS_TAB_TREE_CLOSING_ALWAYS_TEXT" :  {
+  "SETTINGS_TAB_TREE_CLOSING_ALWAYS_TEXT" : {
     "message":  "Child tabs are always closed, when their parent is closed."
   },
-  "SETTINGS_GROUP_APPEARANCE" :  {
+  "SETTINGS_GROUP_APPEARANCE" : {
     "message":  "Group appearance"
   },
-  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS" :  {
+  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS" : {
     "message":  "Show group bar"
   },
-  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_TEXT" :  {
+  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_TEXT" : {
     "message":  "Shows the group bar. If you do not want to use the groups features, you can disable them and have more space for the tabs."
   },
-  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND" :  {
+  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND" : {
     "message":  "Show group bar background"
   },
-  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND_TEXT" :  {
+  "SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND_TEXT" : {
     "message":  "Hides the dark group bar background."
   },
 
-  "SETTINGS_GROUP_NEW_TABS" :  {
+  "SETTINGS_GROUP_NEW_TABS" : {
     "message":  "Group behavior for new tabs"
   },
-  "SETTINGS_GROUP_NEW_TABS_NEXT" :  {
+  "SETTINGS_GROUP_NEW_TABS_NEXT" : {
     "message":  "Create new tabs next to current tab"
   },
-  "SETTINGS_GROUP_NEW_TABS_NEXT_TEXT" :  {
+  "SETTINGS_GROUP_NEW_TABS_NEXT_TEXT" : {
     "message":  "New Tabs created inside a group are automatically placed below the current tab, if present."
   },
-  "SETTINGS_GROUP_NEW_BOTTOM_NEXT" :  {
+  "SETTINGS_GROUP_NEW_BOTTOM_NEXT" : {
     "message":  "Create new tabs at bottom"
   },
-  "SETTINGS_GROUP_NEW_BOTTOM_NEXT_TEXT" :  {
+  "SETTINGS_GROUP_NEW_BOTTOM_NEXT_TEXT" : {
     "message":  "New tabs created inside a group are automatically placed at the bottom."
   },
 
-  "SETTINGS_SCROLL_BAR" :  {
+  "SETTINGS_SCROLL_BAR" : {
     "message":  "Scrollbar"
   },
-  "SETTINGS_SCROLL_BAR_DEFAULT" :  {
+  "SETTINGS_SCROLL_BAR_DEFAULT" : {
     "message":  "Use default scrollbar"
   },
-  "SETTINGS_SCROLL_BAR_DEFAULT_TEXT" :  {
+  "SETTINGS_SCROLL_BAR_DEFAULT_TEXT" : {
     "message":  "This option will use the system default scrollbar in the sidebar."
   },
-  "SETTINGS_SCROLL_BAR_SLIM" :  {
+  "SETTINGS_SCROLL_BAR_SLIM" : {
     "message":  "Use slim scrollbar"
   },
-  "SETTINGS_SCROLL_BAR_SLIM_TEXT" :  {
+  "SETTINGS_SCROLL_BAR_SLIM_TEXT" : {
     "message":  "The default scrollbar is replaced with a thinner version. It is better suited, if you scroll with a mouse wheel and only need a position indicator."
   },
-  "SETTINGS_SCROLL_BAR_HIDDEN" :  {
+  "SETTINGS_SCROLL_BAR_HIDDEN" : {
     "message":  "Hide scrollbar"
   },
-  "SETTINGS_SCROLL_BAR_HIDDEN_TEXT" :  {
+  "SETTINGS_SCROLL_BAR_HIDDEN_TEXT" : {
     "message":  "The scrollbar in the side bar is hidden completely. There is more space for tabs, but you will need a mouse wheel for scrolling."
   },
-  "SETTINGS_BACKGROUND" :  {
+  "SETTINGS_BACKGROUND" : {
     "message":  "Background"
   },
-  "SETTINGS_BACKGROUND_USE" :  {
+  "SETTINGS_BACKGROUND_USE" : {
     "message":  "Use background"
   },
-  "SETTINGS_BACKGROUND_USE_TEXT" :  {
+  "SETTINGS_BACKGROUND_USE_TEXT" : {
     "message":  "If you find the sidebar too empty and boring, you can use custom backgrounds to make it more visually appealing."
   },
-  "SETTINGS_BACKGROUND_IMAGE" :  {
+  "SETTINGS_BACKGROUND_IMAGE" : {
     "message":  "Background image"
   },
-  "SETTINGS_BACKGROUND_IMAGE_TEXT" :  {
+  "SETTINGS_BACKGROUND_IMAGE_TEXT" : {
     "message":  "You can specify the image to be used as a background. Either use a local file or specify a Url to the image."
   },
-  "SETTINGS_BACKGROUND_FILE" :  {
+  "SETTINGS_BACKGROUND_FILE" : {
     "message":  "Background file"
   },
-  "SETTINGS_BACKGROUND_URL" :  {
+  "SETTINGS_BACKGROUND_URL" : {
     "message":  "Url"
   },
-  "SETTINGS_BACKGROUND_RESET_IMAGE" :   {
+  "SETTINGS_BACKGROUND_RESET_IMAGE" :  {
     "message":  "Remove background"
   },
-  "SETTINGS_BACKGROUND_OFFSET" :  {
+  "SETTINGS_BACKGROUND_OFFSET" : {
     "message":  "X-offset:"
   },
-  "SETTINGS_BACKGROUND_OFFSET_TEXT" :  {
+  "SETTINGS_BACKGROUND_OFFSET_TEXT" : {
     "message":  "Use this slider to specify what section of the image to show on the sidebar."
   },
-  "SETTINGS_BACKGROUND_USE_FILTER" :  {
+  "SETTINGS_BACKGROUND_USE_FILTER" : {
     "message":  "Use following image filters"
   },
-  "SETTINGS_BACKGROUND_USE_FILTER_TEXT" :  {
+  "SETTINGS_BACKGROUND_USE_FILTER_TEXT" : {
     "message":  "Not using image filters can save memory."
   },
-  "SETTINGS_BACKGROUND_BLUR" :  {
+  "SETTINGS_BACKGROUND_BLUR" : {
     "message":  "Image blur:"
   },
-  "SETTINGS_BACKGROUND_BLUR_TEXT" :  {
+  "SETTINGS_BACKGROUND_BLUR_TEXT" : {
     "message":  "The image can be blurred to reduce distracting details."
   },
-  "SETTINGS_BACKGROUND_OPACITY" :  {
+  "SETTINGS_BACKGROUND_OPACITY" : {
     "message":  "Image opacity:"
   },
-  "SETTINGS_BACKGROUND_OPACITY_TEXT" :  {
+  "SETTINGS_BACKGROUND_OPACITY_TEXT" : {
     "message":  "The image opacity specifies how visible the background image is."
   },
-  "SETTINGS_BACKGROUND_GRAYSCALE" :  {
+  "SETTINGS_BACKGROUND_GRAYSCALE" : {
     "message":  "Image grayscale filter:"
   },
-  "SETTINGS_BACKGROUND_GRAYSCALE_TEXT" :  {
+  "SETTINGS_BACKGROUND_GRAYSCALE_TEXT" : {
     "message":  "This setting reduces the saturation of an image."
   },
-  "SETTINGS_BACKGROUND_TAB_OPACITY" :  {
+  "SETTINGS_BACKGROUND_TAB_OPACITY" : {
     "message":  "Tab opacity"
   },
-  "SETTINGS_BACKGROUND_TAB_OPACITY_TEXT" :  {
+  "SETTINGS_BACKGROUND_TAB_OPACITY_TEXT" : {
     "message":  "Tab opacity specifies, how much of the background is visible through the tabs."
   },
 
-  "SETTINGS_ICON" :  {
+  "SETTINGS_ICON" : {
     "message":  "Extension Icon"
   },
-  "SETTINGS_ICON_GRAY" :  {
+  "SETTINGS_ICON_GRAY" : {
     "message":  "Use gray icon"
   },
-  "SETTINGS_ICON_COLORED" :  {
+  "SETTINGS_ICON_COLORED" : {
     "message":  "Use colored icon"
   },
-  "SETTINGS_RESET" :  {
+  "SETTINGS_RESET" : {
     "message":  "Reset everything"
   },
-  "SETTINGS_RESET_TO_DEFAULT" :  {
+  "SETTINGS_RESET_TO_DEFAULT" : {
     "message":  "Reset to default"
+  },
+
+  "TUT_TITLE" : {
+    "message":  "Getting started"
+  },
+  "TUT_SIDE_GETTING_STARTED" : {
+    "message":  "Getting started"
+  },
+  "TUT_SIDE_WHATS_NEW" : {
+    "message":  "What's new"
+  },
+  "TUT_SIDE_FAQ" : {
+    "message":  "FAQ"
+  },
+
+  "TUT_INTRODUCTION" : {
+    "message":  "<strong>Tab Sidebar</strong> is an extension for tab management. Tabs can be displayed in the sidebar with different combinable view options, like with thumbnails, in a tree structure or in reduced size. Tabs and even their content can be easily searched, closed tabs viewed and restored, duplicate tabs closed and even all tabs sorted and rearranged within a few clicks. <br /><br /> Designed for power users with the demand to manage many open tabs <strong>Tab Sidebar</strong> introduces the concept of groups. Similar to tab stacks it allows grouping of tabs into categories. This concept is extended by group filters, which handle the grouping automatically for you. For example you can create a group that filters for 'wikipedia.org' in the URL and automatically display all wikipedia pages inside one group. <br /><br /> <strong>Tab Sidebar</strong> was created to be customizable. In the extension settings you can adjust it to your needs, set a background image and even disable the groups feature completely and change the extension icon. <br /><br /> This extension is still in development. It can and most likely will contain undetected bugs. I will try to fix them. If you want to help me, you can submit feedback and bugs to: <a href='https://github.com/AlexRuppert/tabSidebar/issues'>github</a> or on the Opera Addon Extension page under 'Reported issues'. If you are an interested developer, you might want to take a look at the project page <a href='https://github.com/AlexRuppert/tabSidebar'>github</a>."
+  },
+  "TUT_OVERVIEW" : {
+    "message":  "Overview"
+  },
+  "TUT_PINNED_TABS" : {
+    "message":  "Pinned tabs"
+  },
+  "TUT_UNVISITED_TAB" : {
+    "message":  "Unvisited tab"
+  },
+  "TUT_ALL_GROUP" : {
+    "message":  "All group"
+  },
+  "TUT_UNGROUPED_TABS" : {
+    "message":  "Ungrouped tabs"
+  },
+  "TUT_GROUP" : {
+    "message":  "Group"
+  },
+  "TUT_FILTER_GROUP" : {
+    "message":  "Filter group"
+  },
+  "TUT_PANIC" : {
+    "message":  "Panic button"
+  },
+  "TUT_MAGIC" : {
+    "message":  "Remove duplicate tabs"
+  },
+  "TUT_GO_UP" : {
+    "message":  "Go up"
+  },
+
+  "TUT_NEW_TAB_TEXT" : {
+    "message":  "Just as the regular button in the tab bar it creates a new speeddial tab."
+  },  
+  "TUT_NEW_TAB_GROUP_TEXT" : {
+    "message":  "Opens a new <a href='#groupcreation'>dialog</a>, where a new group can be created."
+  }, 
+  "TUT_MENU_BAR_SORT_TEXT" : {
+    "message":  "Tabs can be sorted (instead of manually rearranged) to reduce the chaos. For example you can sort tabs by URL to bring pages of the same domain together."
+  }, 
+  "TUT_VIEW_MENU_TEXT" : {
+    "message":  "Here you can control how groups and tabs are displayed and combine several settings. You can control the individual tab appearance by making them small or showing thumbnails. Tab thumbnails are automatically created and updated, when a tab is left, so you have always the latest state of the tab. Additionally you can arrange tabs in two columns instead of one or in a tree structure, where tabs created by opening a link in one tab are appended as its children. <br /><br /> A preview area can be enabled, which shows the thumbnail of the tab the mouse is currently on. If no thumbnail is available, the title of the tab is shown. By default (if the mouse is not over a tab) it shows some statistics, like the number of tabs, groups and how many tabs per domain currently are opened. <br /><br /> If you use lots of groups you can display them in two columns instead of two to reduce the amount of scrolling."
+  }, 
+  "TUT_CLOSED_TABS_TEXT" : {
+    "message":  "Previously closed tabs can be viewed, searched and restored in this menu."
+  }, 
+  "TUT_INPUT_PLACEHOLDER_TEXT" : {
+    "message":  "With this box you can search tabs and display the results directly. The default mode is to search the tab titles. If you start the search query with a . (dot), like <strong>.what if</strong> you can search the page content inside each tab and display all tabs containing the text. Be aware that due to its implementation this search can yield sometimes false positives (for example for invisible page elements)."
+  }, 
+  "TUT_CLEAR_BUTTON_TITLE_TEXT" : {
+    "message":  "This button clears the search input so that the search mode is stopped and all regular tabs are displayed again. Of course you can also manually delete the search query."
+  }, 
+  "TUT_PINNED_TABS_TEXT" : {
+    "message":  "On top of the regular tabs are the pinned tabs. The size and the number of rows scales dynamically with the amount of pinned tabs. Pinned tabs are visible independent of the group."
+  }, 
+  "TUT_UNVISITED_TAB_TEXT" : {
+    "message":  "Unvisited tabs, i.e. tabs opened in the background and not yet activated, are displayed with italic text and a small triangle in the corner."
+  }, 
+  "TUT_ALL_GROUP_TEXT" : {
+    "message":  "This is a special unchangeable group, which shows all tabs independently of the group they are in. Here you can get a good overview of all your opened tabs."
+  }, 
+  "TUT_UNGROUPED_TABS_TEXT" : {
+    "message":  "This is another special group. It shows all tabs that are not associated with a group (filter groups not included)."
+  }, 
+  "TUT_GROUP_TEXT" : {
+    "message":  "Groups are similar to tab stacks. They group similar tabs together. Groups can be rearranged on the bar with drag &amp; drop. To create a new group you need to press the button in the menu bar (2) or use the context menu. <br /><br /> Tabs can be added to a group via drag &amp; drop. Multiple tabs can be selected by holding the CTRL key and clicking on them. A drag &amp; drop operation will then move all the tabs to that group. To remove tabs from a group simply open the group and drag &amp; drop the tabs on the 'all' group. Or just use the context menu option of the selected tabs. <br /><br /> Tabs can be rearranged within a group via drag &amp; drop. This rearrangement is only valid for the selected group and actual tabs in the window are not affected."
+  }, 
+  "TUT_FILTER_GROUP_TEXT" : {
+    "message":  "Filter groups can be recognized by their filter icon next to their name. They are special groups as you cannot manually assign tabs to them. Instead they filter all available tabs based on some filter <a href='#groupcreation'>criteria</a>. For example you can create a filter group that shows all the tabs you clicked within the last 10 minutes. You can also use filter groups for sorting. For example you can create a filter group that shows all tabs, but sorted by name. <br /> <br /> Another use case is to collect tabs for deletion and clean up. Create a filter group that shows all tabs that were not clicked for a long time. Then do a right click on the group and delete all tabs inside that group. <br /><br /> You can also create a snapshot of the current filter group via the context menu. This snapshot is then a normal group containing all the tabs of the filter group at that particular time."
+  }, 
+  "TUT_PANIC_TEXT" : {
+    "message":  "No software can avoid bugs completely. If the extension starts to behave strangely, click this button. It restarts the whole extension and might fix your problem."
+  }, 
+  "TUT_SETTINGS_TEXT" : {
+    "message":  "Opens the settings page."
+  }, 
+  "TUT_MAGIC_TEXT" : {
+    "message":  "Removes tabs that have the same URL (only one of them is kept)."
+  }, 
+  "TUT_GO_UP_TEXT" : {
+    "message":  " This button automatically scrolls to the top of the tab list. By the way: you can change the appearance of the scroll bar in the settings."
+  }, 
+
+  "TUT_GROUP_CREATION" : {
+    "message":  "Group creation"
+  }, 
+  "TUT_GROUP_CREATION_NAME" : {
+    "message":  "Name"
+  }, 
+  "TUT_GROUP_CREATION_COLOR" : {
+    "message":  "Color"
+  }, 
+  "TUT_GROUP_CREATION_FILTER" : {
+    "message":  "Create as tab filter"
+  }, 
+  "TUT_GROUP_CREATION_FILTER_BY" : {
+    "message":  "Filter by"
+  }, 
+  "TUT_GROUP_CREATION_FILTER_VALUE" : {
+    "message":  "Filter value"
+  }, 
+  "TUT_GROUP_CREATION_REGEX" : {
+    "message":  "Use regular expression"
+  }, 
+  "TUT_GROUP_CREATION_SORT_BY" : {
+    "message":  "Sort by"
+  }, 
+  "TUT_GROUP_CREATION_SORT_DIRECTION" : {
+    "message":  "Sort direction"
+  }, 
+  "TUT_GROUP_CREATION_CREATE_GROUP" : {
+    "message":  "Create group"
+  },
+
+  "TUT_GROUP_CREATION_NAME_TEXT" : {
+    "message":  "The name of the group."
+  }, 
+  "TUT_GROUP_CREATION_COLOR_TEXT" : {
+    "message":  "Groups are associated with colors for easier identification. You can choose any color you want and depending on the selection the color of the displayed group name will adapt for best readability."
+  },
+  "TUT_GROUP_CREATION_FILTER_TEXT" : {
+    "message":  "This checkbox specifies, if this group will be a normal group or a filter group. On checking this option a set of additional options will appear."
+  },
+  "TUT_GROUP_CREATION_FILTER_BY_TEXT" : {
+    "message":  "The filter parameter can be specified here. If you don't want to filter, but just sort, choose <strong>none</strong>."
+  },
+  "TUT_GROUP_CREATION_FILTER_VALUE_TEXT" : {
+    "message":  "The value the chosen filter parameter should have. If you filter for title or URL, you can use * as a wildcard."
+  },
+  "TUT_GROUP_CREATION_REGEX_TEXT" : {
+    "message":  "If you want more control and are familiar with regular expressions you can treat the filter value as a regular expression."
+  },
+  "TUT_GROUP_CREATION_SORT_BY_TEXT" : {
+    "message":  "Filter groups can sort the displayed tabs automatically depending on the chosen parameter. If you don't want to change the tab order, choose <strong>none</strong>."
+  },
+  "TUT_GROUP_CREATION_SORT_DIRECTION_TEXT" : {
+    "message":  "The direction in which the sorted elements are displayed."
+  },
+  "TUT_GROUP_CREATION_CREATE_GROUP_TEXT" : {
+    "message":  "This button creates a new group based on the chosen settings."
+  },
+
+  "TUT_WHATS_NEW_INITIAL" : {
+    "message":  "This is the first release. For future updates this section will contain information about changes."
+  },
+  
+  "TUT_FAQ_Q1" : {
+    "message":  "How do I add tabs to a group?"
+  },
+  "TUT_FAQ_A1" : {
+    "message":  "Tabs can be added to a group by clicking and dragging them over a group (drag &amp; drop). Multiple tabs can be added by selecting them before the (drag &amp; drop) operation, which can be done by pressing the CTRL key and clicking on them. This does not work for filter groups, as their content is generated dynamically."
+  },
+  "TUT_FAQ_Q2" : {
+    "message":  "How do I remove tabs from a group?"
+  },
+  "TUT_FAQ_A2" : {
+    "message":  "Tabs can be removed from a group in the same way they are added. Just drop them over the 'all' group. Alternatively you can remove them via the tab context menu."
+  },
+  "TUT_FAQ_Q3" : {
+    "message":  "Why don't my tabs have any thumbnails?"
+  },
+  "TUT_FAQ_A3" : {
+    "message":  "To create thumbnails the page has to be visible. Tabs created in the background will therefore not have any thumbnails unless you view them. This is also the case for restored sessions, since thumbnails are not saved to the hard drive."
+  },
+  "TUT_FAQ_Q4" : {
+    "message":  "Why is the memory consumption so high?"
+  },
+  "TUT_FAQ_A4" : {
+    "message":  "This is a Chromium (which Opera is based on) bug that also happens with regular web pages inside regular tabs. Every time you reload a page more memory is acquired by the tab until some limit. In the case of the extension every time you close and open the side bar it counts as a reload (I can't change this behavior). I observed the limit to be around 250 MB and the used memory then decreases after a while down to around 100 MB with overall 5GB free RAM available."
   }
+ 
 
 }

@@ -76,7 +76,9 @@ module.exports = React.createClass({
         onDragEnd = { this.props.onDragEnd }
         onMouseEnter = { function(e) {e.target.classList.add("hover");} }
         onMouseLeave = { function(e) {e.target.classList.remove("hover");} }>
-        <i className = { filterIconClasses }/>
+        <i 
+          className = { filterIconClasses }
+          style = { {color: this.textColor} }/>
         { this.props.title }
       </div>
     );

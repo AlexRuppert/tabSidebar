@@ -40,7 +40,8 @@ module.exports = {
     TITLE: chrome.i18n.getMessage('TITLE'),
     TITLE_CONTAINS: chrome.i18n.getMessage('TITLE_CONTAINS'),
     URL: chrome.i18n.getMessage('URL'),
-    URL_CONTAINS: chrome.i18n.getMessage('URL_CONTAINS')
+    URL_CONTAINS: chrome.i18n.getMessage('URL_CONTAINS'),
+    USE_REGEX: chrome.i18n.getMessage('USE_REGEX')
   },
   groups: {
     ALL_GROUP: chrome.i18n.getMessage('ALL_GROUP'),
@@ -59,6 +60,11 @@ module.exports = {
     SORT: chrome.i18n.getMessage('MENU_BAR_SORT'),
     TABS: chrome.i18n.getMessage('TABS'),
     VIEW_MENU: chrome.i18n.getMessage('VIEW_MENU')
+  },
+  preview: {
+    TABS: chrome.i18n.getMessage('PREVIEW_TABS'),
+    GROUPS: chrome.i18n.getMessage('PREVIEW_GROUPS'),
+
   },
   sortMenu: {
     OPENED_ASC: chrome.i18n.getMessage('OPENED_ASC'),
@@ -79,6 +85,7 @@ module.exports = {
     PIN_TAB: chrome.i18n.getMessage('PIN_TAB'),
     RELOAD_TAB: chrome.i18n.getMessage('RELOAD_TAB'),
     REMOVE_TAB_FROM_GROUP: chrome.i18n.getMessage('REMOVE_TAB_FROM_GROUP'),
+    SELECT_ALL_TABS: chrome.i18n.getMessage('SELECT_ALL_TABS'),
     UNPIN_TAB: chrome.i18n.getMessage('UNPIN_TAB')
   },
   viewMenu: {

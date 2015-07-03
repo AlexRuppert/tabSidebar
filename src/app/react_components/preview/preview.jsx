@@ -2,6 +2,7 @@
 'use strict';
 
 var Constants = require('../util/Constants.js');
+var Strings = require('../util/Strings.js');
 
 module.exports = React.createClass({
   //mixins: [React.addons.PureRenderMixin],
@@ -83,7 +84,7 @@ module.exports = React.createClass({
     if (Persistency.getState().groupSettings.showGroups) {
       groupCount = (
         <p>
-          Groups: { this.state.groupCount }
+          { Strings.preview.GROUPS } { this.state.groupCount }
         </p>
       )
     }
@@ -110,7 +111,7 @@ module.exports = React.createClass({
           className = { statisticsClasses }>
           { groupCount }
           <p>
-            Tabs: { this.state.tabCount }
+            { Strings.preview.TABS } { this.state.tabCount }
           </p>
         </div>
         <div

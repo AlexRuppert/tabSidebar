@@ -5,6 +5,15 @@ var Strings = require('../util/Strings.js');
 module.exports = [
   {
     type: Constants.menus.menuTypes.ITEM,
+    title: Strings.tabContextMenu.SELECT_ALL_TABS,
+    icon: 'fa-check',
+    action: Constants.menus.contextMenu.tabActions.SELECT_ALL
+  },
+  {
+    type: Constants.menus.menuTypes.DIVIDER
+  },
+  {
+    type: Constants.menus.menuTypes.ITEM,
     title: Strings.tabContextMenu.NEW_TAB,
     icon: 'fa-plus',
     action: Constants.menus.contextMenu.tabActions.NEW_TAB

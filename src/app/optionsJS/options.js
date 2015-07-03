@@ -50,10 +50,10 @@ function setProperty(obj, prop, value) {
   }
 }
 function translate() {
-  document.title = chrome.i18n.getMessage('SETTINGS_TAB_SIDEBAR_TITLE');
+  document.title = chrome.i18n.getMessage(document.title.trim());
   var els = document.querySelectorAll(".trans");
   for (var i = 0; i < els.length; i++) {
-    els[i].innerText = chrome.i18n.getMessage(els[i].innerText.trim());
+    els[i].innerHTML = chrome.i18n.getMessage(els[i].innerText.trim());
   }
 
   var els = document.querySelectorAll("div");
@@ -195,28 +195,32 @@ function setRange(node, property) {
 
 function initControls() {
   setControls();
+  try {
+    document.getElementById('reset-settings').addEventListener('click', function () {
+      Persistency.reset();
+      init();
+      reloadPanel();
+    });
+    document.getElementById('reset-background-image').addEventListener('click', function () {
+      var state = Persistency.getState();
+      setProperty(state, 'background.image', '');
+      initControls();
+      update();
+    });
+    document.getElementById('gray-icon').addEventListener('click', function () {
+      var state = Persistency.getState();
+      setProperty(state, 'iconSettings.gray', true);
+      update();
+    });
+    document.getElementById('colored-icon').addEventListener('click', function () {
+      var state = Persistency.getState();
+      setProperty(state, 'iconSettings.gray', false);
+      update();
+    });
+  }
+  catch (e) {
 
-  document.getElementById('reset-settings').addEventListener('click', function () {
-    Persistency.reset();
-    init();
-    reloadPanel();
-  });
-  document.getElementById('reset-background-image').addEventListener('click', function () {
-    var state = Persistency.getState();
-    setProperty(state, 'background.image', '');
-    initControls();
-    update();
-  });
-  document.getElementById('gray-icon').addEventListener('click', function () {
-    var state = Persistency.getState();
-    setProperty(state, 'iconSettings.gray', true);
-    update();
-  });
-  document.getElementById('colored-icon').addEventListener('click', function () {
-    var state = Persistency.getState();
-    setProperty(state, 'iconSettings.gray', false);
-    update();
-  });
+  }
 }
 
 function init() {

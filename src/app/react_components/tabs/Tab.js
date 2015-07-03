@@ -193,21 +193,47 @@ module.exports = {
   },
   getFavIcon: function (url, favicon) {
     var result = chrome.runtime.getURL('app/media/fav/default.png');
-    if (!url.startsWith('opera://')) {
-      result = 'opera://favicon/' + url || favicon || chrome.runtime.getURL('app/media/fav/default.png');
+    var browser = Constants.browser.OPERA;
+    if (!url.startsWith(browser)) {
+      result = browser+'://favicon/' + url || favicon || chrome.runtime.getURL('app/media/fav/default.png');
     }
     else {
-      if (url === 'opera://settings/') result = chrome.runtime.getURL('app/media/fav/settings.png');
-      else if (url === 'opera://startpage/#speeddial') result = chrome.runtime.getURL('app/media/fav/newtab.png');
-      else if (url === 'opera://history/') result = chrome.runtime.getURL('app/media/fav/history.png');
-      else if (url === 'opera://themes/') result = chrome.runtime.getURL('app/media/fav/themes.png');
-      else if (url === 'opera://downloads/') result = chrome.runtime.getURL('app/media/fav/downloads.png');
-      else if (url === 'opera://bookmarks/') result = chrome.runtime.getURL('app/media/fav/bookmarks.png');
-      else if (url === 'opera://startpage/#discover') result = chrome.runtime.getURL('app/media/fav/discover.png');
-      else if (url === 'opera://extensions/') result = chrome.runtime.getURL('app/media/fav/extensions.png');
-      else if (url === 'opera://plugins/') result = chrome.runtime.getURL('app/media/fav/plugins.png');
-      else if (url === 'opera://flags/') result = chrome.runtime.getURL('app/media/fav/flags.png');
-      else result = chrome.runtime.getURL('app/media/fav/default.png');
+
+      switch (url) {
+        case browser + '://settings/':
+          result = chrome.runtime.getURL('app/media/fav/settings.png');
+          break;
+        case browser + '://startpage/#speeddial':
+          result = chrome.runtime.getURL('app/media/fav/newtab.png');
+          break;
+        case browser + '://history/':
+          result = chrome.runtime.getURL('app/media/fav/history.png');
+          break;
+        case browser + '://themes/':
+          result = chrome.runtime.getURL('app/media/fav/themes.png');
+          break;
+        case browser + ':://downloads/':
+          result = chrome.runtime.getURL('app/media/fav/downloads.png');
+          break;
+        case browser + '://bookmarks/':
+          result = chrome.runtime.getURL('app/media/fav/bookmarks.png');
+          break;
+        case browser + '://startpage/#discover':
+          result = chrome.runtime.getURL('app/media/fav/discover.png');
+          break;
+        case browser + ':://extensions/':
+          result = chrome.runtime.getURL('app/media/fav/extensions.png');
+          break;
+        case browser + '://plugins/':
+          result = chrome.runtime.getURL('app/media/fav/plugins.png');
+          break;
+        case browser + '://flags/':
+          result = chrome.runtime.getURL('app/media/fav/flags.png');
+          break;
+        default:
+          result = chrome.runtime.getURL('app/media/fav/default.png');
+      }
+     
     }
     return result;
   },
@@ -232,7 +258,11 @@ module.exports = {
           var oldTitle = originalTabs[index].title;
           var oldUrl = originalTabs[index].url;
           tabs[i] = self.preserveTabProperties(originalTabs[index], tabs[i]);
-
+          /*chrome.tabs.sendMessage(tabs[i].id, { type: 'search', value: 'batman' }, function (response) {
+            if (response && response.found) {
+              console.log('found');
+            }
+          });*/
           var changed = false;
           if (tabs[i].url != oldUrl) {
             tabs[i].favicon = self.getFavIcon(tabs[i].url, tabs[i].favIconUrl);
@@ -317,8 +347,9 @@ module.exports = {
           if (Helpers.isInt(filterValueLower.trim())) {
             numVal = +filterValueLower.trim() * 60 * 1000;//min -> ms
           }
+          //TODO
+          var filterValueRegex = group.useRegex ? new RegExp(group.filterValue) : new RegExp(Helpers.escapeRegExp(filterValueLower));
 
-          var filterValueRegex = new RegExp(Helpers.escapeRegExp(filterValueLower));
           switch (group.filterBy) {
             case Constants.groupCreator.TITLE_CONTAINS:
               filterFunc = function (obj) {
@@ -381,15 +412,47 @@ module.exports = {
     }
 
     for (var i = 0; i < tabsToShow.length; i++) {
-      tabsToShow[i].visible = true;//currentWindowIds.indexOf(tabsToShow[i].id) >= 0;
+      tabsToShow[i].visible = true; //currentWindowIds.indexOf(tabsToShow[i].id) >= 0;
     }
     if (self.searchQuery.length > 0) {
-      tabsToShow = tabsToShow.filter(function (obj) {
-        return obj.title.toLowerCase().indexOf(query) >= 0;
-      });
+      if (self.searchQuery[0] != '.') { //search tabs only
+        tabsToShow = tabsToShow.filter(function (obj) {
+          return obj.title.toLowerCase().indexOf(query) >= 0;
+        });
+        self.tabsToShow = tabsToShow;
+        callback(tabsToShow);
+      }
+      else if (self.searchQuery.length >= Constants.search.MIN_QUERY_LENGTH + 1) { //search tab contents
+        var query = self.searchQuery.substring(1);
+        var tabsCopy = tabsToShow.slice(0);
+        tabsToShow = [];
+
+        for (var i = 0; i < tabsCopy.length; i++) {
+          chrome.tabs.sendMessage(tabsCopy[i].id, { type: 'search', value: query, index: i }, function (response) {
+            if (response && response.found && response.index) {
+              tabsToShow.push(tabsCopy[response.index]);
+            }
+          });
+        }
+        if (!window.tabContentSearchTimeout) {
+          window.tabContentSearchTimeout = setTimeout(function () {
+            self.tabsToShow = tabsToShow;
+            window.tabContentSearchTimeout = false;
+            callback(tabsToShow);
+          }, 100);
+        }
+      }
+    } else {
+      self.tabsToShow = tabsToShow;
+      callback(tabsToShow);
     }
-    self.tabsToShow = tabsToShow;
-    callback(tabsToShow);
+  },
+  handleTabMouseUp: function (tabList, id, event) {
+    if (event.which == 1) {
+      if (!event.ctrlKey) {
+        this.clearSelectedTabs(tabList);
+      }
+    }
   },
   handleTabClicked: function (tabList, id, event) {
     event = event.nativeEvent;
@@ -413,7 +476,6 @@ module.exports = {
         }
       }
       else {
-        this.clearSelectedTabs(tabList);
         var oldId = TabManager.getActiveTabId();
         if (oldId == id) {
           return 0;
@@ -485,7 +547,7 @@ module.exports = {
   initNewTab: function (tab) {
     tab.favicon = this.getFavIcon(tab.url, tab.favIconUrl);
     //tab.thumbnail = ThumbnailCache.loadFromCache(tab);
-    tab.thumbnail = '';
+
     tab.collapsed = false;
     tab.level = 0;
     tab.visible = true;
@@ -494,7 +556,7 @@ module.exports = {
   },
   preserveTabProperties: function (target, source) {
     var properties = [
-      'newlyCreated', 'hasThumbnail', 'thumbnail',
+      'newlyCreated',
       'favicon', 'level', 'collapsed', 'visitedTime', 'openedTime', 'visible'];
     var obj = {};
     for (var i = 0; i < properties.length; i++) {
@@ -544,6 +606,19 @@ module.exports = {
       this.searchQuery = query;
       tabList.rerenderIfNeeded();
     }
+  },
+  selectAllTabs: function (tabList, id) {
+    this.clearSelectedTabs(tabList);
+    var groupId = GroupManager.getActiveGroupId();
+    this.getTabsToShow(groupId, function (tabsShown) {
+      for (var i = 0; i < tabsShown.length; i++) {
+        var tabRef = tabsShown[i].id;
+        if (!tabsShown[i].pinned && tabList.refs[tabRef]) {
+          tabList.refs[tabRef].setState({ isSelected: true });
+        }
+        tabList.selectedTabs.push(tabsShown[i].id);
+      }
+    });
   },
   setTabsAndUpdate: function (tabList, tabs, redraw) {
     this.updateTabIds(tabs);
@@ -626,10 +701,10 @@ module.exports = {
               }
 
               if (index >= 0) {
-                groups[groupIndex].tabs.splice(index + 1, 0, tab.id);
+                groups[groupIndex].tabs.splice(index + 1, 0, +tab.id);
               }
               else {
-                groups[groupIndex].tabs.push(tab.id);
+                groups[groupIndex].tabs.push(+tab.id);
               }
             }
             GroupLogic.setGroupsAndSave(groups);
@@ -879,11 +954,12 @@ module.exports = {
     }
     var groups = GroupManager.getGroups();
     var activeGroupId = GroupManager.getActiveGroupId();
-
-    if (!tabList.groupDragged && tabList.groupOver && tabList.tabDragged)//when tab is dragged into a group
-    {
+    var tabId = -1;
+    if (tabList.tabDragged) {
+      tabId = tabList.tabDragged.getAttribute('data-reactid').split('$')[1];
+    }
+    if (!tabList.groupDragged && tabList.groupOver && tabList.tabDragged) {//when tab is dragged into a group
       var groupId = tabList.groupOver.getAttribute('data-reactid').split('$')[1];
-      var tabId = tabList.tabDragged.getAttribute('data-reactid').split('$')[1];
 
       var target = GroupLogic.getGroupIndex(groupId);
       var current = GroupLogic.getGroupIndex(activeGroupId)
@@ -898,7 +974,7 @@ module.exports = {
         if (!groups[target].filter) {
           for (var i = 0; i < tabsToMove.length; i++) {
             if (GroupLogic.getTabIndexInGroup(groups[target], tabsToMove[i]) < 0) {
-              groups[target].tabs.push(tabsToMove[i]);
+              groups[target].tabs.push(+tabsToMove[i]);
             }
           }
         }
@@ -912,7 +988,6 @@ module.exports = {
             groups[current].tabs.splice(+tabIndexInGroup, 1);
           }
         }
-        
       }
       tabList.rerenderIfNeeded();
       GroupLogic.setGroupsAndSave(groups);
@@ -958,7 +1033,9 @@ module.exports = {
       if (from == to) return;
       if (from < to) to--;
 
+      var tabNodes = tabList.tabDragged.parentNode;
       tabList.tabDragged = null;
+
       //for tree tabs
       if (tabList.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW
         && this.tabsToShow[to]) {
@@ -968,6 +1045,15 @@ module.exports = {
       //count pinned tabs
 
       var oldTo = to;
+      var groupedTabs = {};
+      if (activeGroupId == Constants.groups.UNGROUPED_ID) { //if in 'grouped' special group we have to consider the missing tabs, that are not shown...
+        for (var i = 0; i < groups.length; i++) {
+          for (var j = 0; j < groups[i].tabs.length; j++) {
+            groupedTabs[groups[i].tabs[j]] = true;
+          }
+        }
+      }
+      var self = this;
       //supports multiple windows
       chrome.tabs.query({}, function (tabs) {
         var pinnedCount = {};
@@ -975,6 +1061,8 @@ module.exports = {
         var shownPinned = 0;
         var pinnedTabs = [];
         var unpinnedTabs = [];
+        var ungroupedOffsets = {};
+        var ungroupedOffsetCount = 0;
         for (var i = 0; i < tabs.length; i++) {
           if (tabs[i].pinned) {
             shownPinned += 1;
@@ -992,27 +1080,57 @@ module.exports = {
             }
             unpinnedTabs.push(tabs[i]);
           }
+
+          if (groupedTabs.hasOwnProperty(tabs[i].id)) {//tab is in a group
+            ungroupedOffsets[tabs[i].id] = ungroupedOffsetCount;
+            ungroupedOffsetCount++;
+          }
+          else {
+            ungroupedOffsets[tabs[i].id] = ungroupedOffsetCount;
+          }
         }
+
         tabs = pinnedTabs.concat(unpinnedTabs);
 
         pinnedTabs = null;
         unpinnedTabs = null;
-        for (var i = 0; i < tabs.length; i++) {
-          //console.log(tabs[i].title);
-        }
 
-        var tabObj = tabs[draggedIndex + shownPinned];
+        from = self.getTabIndex(tabId);
+        var tabObj = tabs[from];
         var winId = tabObj.windowId;
+
         to += pinnedCount[winId];
 
+        var savedTabs = TabManager.getTabs();
         for (var i = 0; i <= to + (shownPinned - pinnedCount[winId]) ; i++) {
           if (tabs[i].windowId != winId) {
             foreignTabs++;
           }
         }
+
         to -= (foreignTabs - (shownPinned - pinnedCount[winId]));
         if (to < 0)
           to = 0;
+
+        if (activeGroupId == Constants.groups.UNGROUPED_ID) {
+          if (ungroupedOffsets.hasOwnProperty(tabs[to].id)) {
+            to += ungroupedOffsets[tabs[to].id];
+          }
+        }
+
+        if (tabList.props.column == Constants.menus.menuBar.viewActions.TREE_VIEW) {
+          if (tabNodes.children[index]) {
+            var targetId = tabNodes.children[index].getAttribute('data-reactid').split('$')[1];
+
+            to = self.getTabIndex(targetId);
+            if (from < to) {
+              to--;
+            }
+          }
+          else {
+            to = -1;
+          }
+        }
         //console.log(winId + " " + foreignTabs + " " + oldTo + " "+ to);
 
         chrome.tabs.move(tabObj.id, { windowId: winId, index: to });

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Tab Sidebar Settings</title>
+  <title>SETTINGS_TAB_SIDEBAR_TITLE</title>
   <link rel="shortcut icon" href="./media/icons/tabSidebar_16.png">
   <!-- build:css -->
   <link rel="stylesheet" href="css/options.css" />
@@ -15,201 +15,204 @@
           <img src="media/icons/tabSidebar_48.png" />
           <h1 class="trans">SETTINGS_TAB_SIDEBAR_TITLE</h1>
         </div>
-
-        <section>
-          <h3 class="section-header trans">SETTINGS_TAB_APPEARANCE</h3>
-          <div class="checkbox" title="SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON_TEXT">
-            <label>
-              <input data-property="tabSettings.showCloseButtons" type="checkbox">
-              <span class="trans">SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON</span>
-            </label>
-          </div>
-          <div class="checkbox" title="SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR_TEXT">
-            <label>
-              <input data-property="tabSettings.showNewOnTabs" type="checkbox">
-              <span class="trans">SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR</span>
-            </label>
-          </div>
-          <div class="checkbox" title="SETTINGS_TAB_APPEARANCE_ANIMATE_TEXT">
-            <label>
-              <input data-property="tabSettings.animated" type="checkbox">
-              <span class="trans">SETTINGS_TAB_APPEARANCE_ANIMATE</span>
-            </label>
-          </div>
-        </section>
-
-        <section>
-          <h3 class="section-header trans">SETTINGS_TAB_TREES</h3>
-          <div class="checkbox" title="SETTINGS_TAB_TREES_USE_IN_FILTERS_TEXT">
-            <label>
-              <input data-property="treeSettings.showTreesInFilters" type="checkbox">
-              <span class="trans">SETTINGS_TAB_TREES_USE_IN_FILTERS</span>
-            </label>
-          </div>
-          <div class="complex-input" title="SETTINGS_TAB_TREES_MAX_LEVEL_TEXT">
-            <label>
-              <span class="trans">SETTINGS_TAB_TREES_MAX_LEVEL</span> <label>20</label><br />
-              <input data-property="treeSettings.maxLevel" type="range" min="1" max="10">
-            </label>
-          </div>
-        </section>
-
-        <section>
-          <h3 class="section-header trans">SETTINGS_TAB_TREE_CLOSING</h3>
-          <div class="radio" title="SETTINGS_TAB_TREE_CLOSING_NEVER_TEXT">
-            <label>
-              <input type="radio" name="tree-close" data-property="treeSettings.closeChildren" value="never" checked="checked">
-              <span class="trans">SETTINGS_TAB_TREE_CLOSING_NEVER</span>
-            </label>
-          </div>
-          <div class="radio" title="SETTINGS_TAB_TREE_CLOSING_COLLAPSED_TEXT">
-            <label>
-              <input type="radio" name="tree-close" data-property="treeSettings.closeChildren" value="collapsed">
-              <span class="trans">SETTINGS_TAB_TREE_CLOSING_COLLAPSED</span>
-            </label>
-          </div>
-          <div class="radio" title="SETTINGS_TAB_TREE_CLOSING_ALWAYS_TEXT">
-            <label>
-              <input type="radio" name="tree-close" data-property="treeSettings.closeChildren" value="always">
-              <span class="trans">SETTINGS_TAB_TREE_CLOSING_ALWAYS</span>
-            </label>
-          </div>
-        </section>
-
-        <section>
-          <h3 class="section-header trans">SETTINGS_GROUP_APPEARANCE</h3>
-          <div class="checkbox" title="SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_TEXT">
-            <label>
-              <input data-property="groupSettings.showGroups" type="checkbox">
-              <span class="trans">SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS</span>
-            </label>
-          </div>
-          <div class="checkbox" title="SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND_TEXT">
-            <label>
-              <input data-property="groupSettings.showBarBackground" type="checkbox">
-              <span class="trans">SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND</span>
-            </label>
-          </div>
-        </section>
-
-        <section>
-          <h3 class="section-header trans">SETTINGS_GROUP_NEW_TABS</h3>
-          <div class="radio" title="SETTINGS_GROUP_NEW_TABS_NEXT_TEXT">
-            <label>
-              <input type="radio" name="groups-new-tab" data-property="groupSettings.createNewTabs" value="next" checked="checked">
-              <span class="trans">SETTINGS_GROUP_NEW_TABS_NEXT</span>
-            </label>
-          </div>
-          <div class="radio" title="SETTINGS_GROUP_NEW_TABS_NEXT_TEXT">
-            <label>
-              <input type="radio" name="groups-new-tab" data-property="groupSettings.createNewTabs" value="bottom">
-              <span class="trans">SETTINGS_GROUP_NEW_BOTTOM_NEXT</span>
-            </label>
-          </div>
-        </section>
-
-        <section>
-          <h3 class="section-header trans">SETTINGS_SCROLL_BAR</h3>
-          <div class="radio" title="SETTINGS_SCROLL_BAR_DEFAULT_TEXT">
-            <label>
-              <input type="radio" name="scroll-bar" data-property="scrollBar" value="default" checked="checked">
-              <span class="trans">SETTINGS_SCROLL_BAR_DEFAULT</span>
-            </label>
-          </div>
-          <div class="radio" title="SETTINGS_SCROLL_BAR_SLIM_TEXT">
-            <label>
-              <input type="radio" name="scroll-bar" data-property="scrollBar" value="slim">
-              <span class="trans">SETTINGS_SCROLL_BAR_SLIM</span>
-            </label>
-          </div>
-          <div class="radio" title="SETTINGS_SCROLL_BAR_HIDDEN_TEXT">
-            <label>
-              <input type="radio" name="scroll-bar" data-property="scrollBar" value="hidden">
-              <span class="trans">SETTINGS_SCROLL_BAR_HIDDEN</span>
-            </label>
-          </div>
-        </section>
-
-        <!--<section>
-          <h3 class="section-header">Animations</h3>
-          <div class="checkbox" title="asd">
-            <label>
-              <input id="use-animations" type="checkbox">
-              <span>Use animations</span>
-            </label>
-          </div>
-        </section>-->
-
-        <section>
-          <h3 class="section-header trans">SETTINGS_BACKGROUND</h3>
-          <div class="checkbox" title="SETTINGS_BACKGROUND_USE_TEXT">
-            <label>
-              <input data-property="background.show" type="checkbox">
-              <span class="trans">SETTINGS_BACKGROUND_USE</span>
-            </label>
-          </div>
-          <div class="complex-input" title="SETTINGS_BACKGROUND_IMAGE_TEXT">
-            <label>
-              <span class="trans">SETTINGS_BACKGROUND_IMAGE</span><br />
-              <img class="preview" src=""/>
-              <br />
-              <br />
-              <span class="trans">SETTINGS_BACKGROUND_FILE</span><br />
-              <input data-property="background.image" type="file"><br /><br />
-              <span class="trans">SETTINGS_BACKGROUND_URL</span><br />
-              <input data-property="background.image" type="text"><br />
-              <button id="reset-background-image" class="trans">SETTINGS_BACKGROUND_RESET_IMAGE</button>
-            </label>
-          </div>
-          <div class="complex-input" title="SETTINGS_BACKGROUND_OFFSET_TEXT">
-            <label>
-              <span class="trans">SETTINGS_BACKGROUND_OFFSET</span> <label>15</label>%<br />
-              <input data-property="background.offset" type="range" min="0" max="100">
-            </label>
-          </div>
-          <div class="complex-input" title="SETTINGS_BACKGROUND_OPACITY_TEXT">
-            <label>
-              <span class="trans">SETTINGS_BACKGROUND_OPACITY</span> <label>15</label>%<br />
-              <input data-property="background.opacity" type="range" min="0" max="100">
-            </label>
-          </div>
-          <div class="box">
-            <div class="checkbox" title="SETTINGS_BACKGROUND_USE_FILTER_TEXT">
+          <section>
+            <h3 class="section-header trans">TUT_TITLE</h3>
+            <a href="info.html" class="trans" style="font-size:18px">TUT_TITLE</a>
+          </section>
+          <section>
+            <h3 class="section-header trans">SETTINGS_TAB_APPEARANCE</h3>
+            <div class="checkbox" title="SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON_TEXT">
               <label>
-                <input data-property="background.useFilter" type="checkbox">
-                <span class="trans">SETTINGS_BACKGROUND_USE_FILTER</span>
+                <input data-property="tabSettings.showCloseButtons" type="checkbox">
+                <span class="trans">SETTINGS_TAB_APPEARANCE_SHOW_CLOSE_BUTTON</span>
               </label>
             </div>
-            <div class="complex-input" title="SETTINGS_BACKGROUND_BLUR_TEXT">
+            <div class="checkbox" title="SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR_TEXT">
               <label>
-                <span class="trans">SETTINGS_BACKGROUND_BLUR</span> <label>15</label>px<br />
-                <input data-property="background.blur" type="range" min="0" max="10">
+                <input data-property="tabSettings.showNewOnTabs" type="checkbox">
+                <span class="trans">SETTINGS_TAB_APPEARANCE_SHOW_INDICATOR</span>
               </label>
             </div>
-            <div class="complex-input" title="SETTINGS_BACKGROUND_GRAYSCALE_TEXT">
+            <div class="checkbox" title="SETTINGS_TAB_APPEARANCE_ANIMATE_TEXT">
               <label>
-                <span class="trans">SETTINGS_BACKGROUND_GRAYSCALE</span> <label>15</label>%<br />
-                <input data-property="background.grayscale" type="range" min="0" max="100">
+                <input data-property="tabSettings.animated" type="checkbox">
+                <span class="trans">SETTINGS_TAB_APPEARANCE_ANIMATE</span>
               </label>
             </div>
-          </div>
-          <div class="complex-input" title="SETTINGS_BACKGROUND_TAB_OPACITY_TEXT">
-            <label>
-              <span class="trans">SETTINGS_BACKGROUND_TAB_OPACITY</span> <label>15</label>%<br />
-              <input data-property="background.tabOpacity" type="range" min="0" max="100">
-            </label>
-          </div>
-        </section>
-        <section>
-          <h3 class="section-header trans">SETTINGS_ICON</h3>
-          <button id="gray-icon" class="trans">SETTINGS_ICON_GRAY</button>
-          <button id="colored-icon" class="trans">SETTINGS_ICON_COLORED</button>
-        </section>
-        <section>
-          <h3 class="section-header trans">SETTINGS_RESET</h3>
-          <button id="reset-settings" class="trans">SETTINGS_RESET_TO_DEFAULT</button>
-        </section>
+          </section>
+
+          <section>
+            <h3 class="section-header trans">SETTINGS_TAB_TREES</h3>
+            <div class="checkbox" title="SETTINGS_TAB_TREES_USE_IN_FILTERS_TEXT">
+              <label>
+                <input data-property="treeSettings.showTreesInFilters" type="checkbox">
+                <span class="trans">SETTINGS_TAB_TREES_USE_IN_FILTERS</span>
+              </label>
+            </div>
+            <div class="complex-input" title="SETTINGS_TAB_TREES_MAX_LEVEL_TEXT">
+              <label>
+                <span class="trans">SETTINGS_TAB_TREES_MAX_LEVEL</span> <label>20</label><br />
+                <input data-property="treeSettings.maxLevel" type="range" min="1" max="10">
+              </label>
+            </div>
+          </section>
+
+          <section>
+            <h3 class="section-header trans">SETTINGS_TAB_TREE_CLOSING</h3>
+            <div class="radio" title="SETTINGS_TAB_TREE_CLOSING_NEVER_TEXT">
+              <label>
+                <input type="radio" name="tree-close" data-property="treeSettings.closeChildren" value="never" checked="checked">
+                <span class="trans">SETTINGS_TAB_TREE_CLOSING_NEVER</span>
+              </label>
+            </div>
+            <div class="radio" title="SETTINGS_TAB_TREE_CLOSING_COLLAPSED_TEXT">
+              <label>
+                <input type="radio" name="tree-close" data-property="treeSettings.closeChildren" value="collapsed">
+                <span class="trans">SETTINGS_TAB_TREE_CLOSING_COLLAPSED</span>
+              </label>
+            </div>
+            <div class="radio" title="SETTINGS_TAB_TREE_CLOSING_ALWAYS_TEXT">
+              <label>
+                <input type="radio" name="tree-close" data-property="treeSettings.closeChildren" value="always">
+                <span class="trans">SETTINGS_TAB_TREE_CLOSING_ALWAYS</span>
+              </label>
+            </div>
+          </section>
+
+          <section>
+            <h3 class="section-header trans">SETTINGS_GROUP_APPEARANCE</h3>
+            <div class="checkbox" title="SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_TEXT">
+              <label>
+                <input data-property="groupSettings.showGroups" type="checkbox">
+                <span class="trans">SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS</span>
+              </label>
+            </div>
+            <div class="checkbox" title="SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND_TEXT">
+              <label>
+                <input data-property="groupSettings.showBarBackground" type="checkbox">
+                <span class="trans">SETTINGS_GROUP_APPEARANCE_SHOW_GROUPS_BACKGROUND</span>
+              </label>
+            </div>
+          </section>
+
+          <section>
+            <h3 class="section-header trans">SETTINGS_GROUP_NEW_TABS</h3>
+            <div class="radio" title="SETTINGS_GROUP_NEW_TABS_NEXT_TEXT">
+              <label>
+                <input type="radio" name="groups-new-tab" data-property="groupSettings.createNewTabs" value="next" checked="checked">
+                <span class="trans">SETTINGS_GROUP_NEW_TABS_NEXT</span>
+              </label>
+            </div>
+            <div class="radio" title="SETTINGS_GROUP_NEW_TABS_NEXT_TEXT">
+              <label>
+                <input type="radio" name="groups-new-tab" data-property="groupSettings.createNewTabs" value="bottom">
+                <span class="trans">SETTINGS_GROUP_NEW_BOTTOM_NEXT</span>
+              </label>
+            </div>
+          </section>
+
+          <section>
+            <h3 class="section-header trans">SETTINGS_SCROLL_BAR</h3>
+            <div class="radio" title="SETTINGS_SCROLL_BAR_DEFAULT_TEXT">
+              <label>
+                <input type="radio" name="scroll-bar" data-property="scrollBar" value="default" checked="checked">
+                <span class="trans">SETTINGS_SCROLL_BAR_DEFAULT</span>
+              </label>
+            </div>
+            <div class="radio" title="SETTINGS_SCROLL_BAR_SLIM_TEXT">
+              <label>
+                <input type="radio" name="scroll-bar" data-property="scrollBar" value="slim">
+                <span class="trans">SETTINGS_SCROLL_BAR_SLIM</span>
+              </label>
+            </div>
+            <div class="radio" title="SETTINGS_SCROLL_BAR_HIDDEN_TEXT">
+              <label>
+                <input type="radio" name="scroll-bar" data-property="scrollBar" value="hidden">
+                <span class="trans">SETTINGS_SCROLL_BAR_HIDDEN</span>
+              </label>
+            </div>
+          </section>
+
+          <!--<section>
+      <h3 class="section-header">Animations</h3>
+      <div class="checkbox" title="asd">
+        <label>
+          <input id="use-animations" type="checkbox">
+          <span>Use animations</span>
+        </label>
       </div>
+    </section>-->
+
+          <section>
+            <h3 class="section-header trans">SETTINGS_BACKGROUND</h3>
+            <div class="checkbox" title="SETTINGS_BACKGROUND_USE_TEXT">
+              <label>
+                <input data-property="background.show" type="checkbox">
+                <span class="trans">SETTINGS_BACKGROUND_USE</span>
+              </label>
+            </div>
+            <div class="complex-input" title="SETTINGS_BACKGROUND_IMAGE_TEXT">
+              <label>
+                <span class="trans">SETTINGS_BACKGROUND_IMAGE</span><br />
+                <img class="preview" src="" />
+                <br />
+                <br />
+                <span class="trans">SETTINGS_BACKGROUND_FILE</span><br />
+                <input data-property="background.image" type="file"><br /><br />
+                <span class="trans">SETTINGS_BACKGROUND_URL</span><br />
+                <input data-property="background.image" type="text"><br />
+                <button id="reset-background-image" class="trans">SETTINGS_BACKGROUND_RESET_IMAGE</button>
+              </label>
+            </div>
+            <div class="complex-input" title="SETTINGS_BACKGROUND_OFFSET_TEXT">
+              <label>
+                <span class="trans">SETTINGS_BACKGROUND_OFFSET</span> <label>15</label>%<br />
+                <input data-property="background.offset" type="range" min="0" max="100">
+              </label>
+            </div>
+            <div class="complex-input" title="SETTINGS_BACKGROUND_OPACITY_TEXT">
+              <label>
+                <span class="trans">SETTINGS_BACKGROUND_OPACITY</span> <label>15</label>%<br />
+                <input data-property="background.opacity" type="range" min="0" max="100">
+              </label>
+            </div>
+            <div class="box">
+              <div class="checkbox" title="SETTINGS_BACKGROUND_USE_FILTER_TEXT">
+                <label>
+                  <input data-property="background.useFilter" type="checkbox">
+                  <span class="trans">SETTINGS_BACKGROUND_USE_FILTER</span>
+                </label>
+              </div>
+              <div class="complex-input" title="SETTINGS_BACKGROUND_BLUR_TEXT">
+                <label>
+                  <span class="trans">SETTINGS_BACKGROUND_BLUR</span> <label>15</label>px<br />
+                  <input data-property="background.blur" type="range" min="0" max="10">
+                </label>
+              </div>
+              <div class="complex-input" title="SETTINGS_BACKGROUND_GRAYSCALE_TEXT">
+                <label>
+                  <span class="trans">SETTINGS_BACKGROUND_GRAYSCALE</span> <label>15</label>%<br />
+                  <input data-property="background.grayscale" type="range" min="0" max="100">
+                </label>
+              </div>
+            </div>
+            <div class="complex-input" title="SETTINGS_BACKGROUND_TAB_OPACITY_TEXT">
+              <label>
+                <span class="trans">SETTINGS_BACKGROUND_TAB_OPACITY</span> <label>15</label>%<br />
+                <input data-property="background.tabOpacity" type="range" min="0" max="100">
+              </label>
+            </div>
+          </section>
+          <section>
+            <h3 class="section-header trans">SETTINGS_ICON</h3>
+            <button id="gray-icon" class="trans">SETTINGS_ICON_GRAY</button>
+            <button id="colored-icon" class="trans">SETTINGS_ICON_COLORED</button>
+          </section>
+          <section>
+            <h3 class="section-header trans">SETTINGS_RESET</h3>
+            <button id="reset-settings" class="trans">SETTINGS_RESET_TO_DEFAULT</button>
+          </section>
+</div>
     </div>
   </div>
   <!-- build:js -->
