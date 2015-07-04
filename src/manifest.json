@@ -15,7 +15,7 @@
     }
   ],
   "default_locale": "en",
-  "permissions": [ "tabs", "storage", "sessions", "opera://favicon/", "<all_urls>" ],
+  "permissions": [ "tabs", "storage", "sessions", "<all_urls>" ],
   "icons": {
     "16": "app/media/icons/tabSidebar_16.png",
     "19": "app/media/icons/tabSidebar_19.png",
