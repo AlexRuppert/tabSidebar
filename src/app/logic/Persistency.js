@@ -79,27 +79,31 @@ window.Persistency = {
         self.groups = JSON.parse(result.groups);
         
         var test = result.groups.match(/"tabs":\[(\d|,)*/g);
-        
-        for (var i = 0; i < test.length; i++) {
-         
-          if (test[i]) { //some weird bug, that clears the tabs array on parsing... therefore manual id extraction
-            var values = test[i].substr(8);
-            
-            if (values.trim().length > 0) {
-              var ids = values.trim().split(',');
-              
-              for (var j = 0; j < ids.length; j++) {
-                if (self.groups[i].tabs.indexOf(+ids[j]) < 0) {
-                  self.groups[i].tabs.push(+ids[j])
+        if (test) {
+          for (var i = 0; i < test.length; i++) {
+
+            if (test[i]) { //some weird bug, that clears the tabs array on parsing... therefore manual id extraction
+              var values = test[i].substr(8);
+
+              if (values.trim().length > 0) {
+                var ids = values.trim().split(',');
+
+                for (var j = 0; j < ids.length; j++) {
+                  if (self.groups[i].tabs.indexOf(+ids[j]) < 0) {
+                    self.groups[i].tabs.push(+ids[j])
+                  }
                 }
               }
-            }
 
-            
+
+            }
+            else {
+              self.groups[i].tabs = [];
+            }
           }
-          else {
-            self.groups[i].tabs = [];
-          }
+        }
+        else {
+          self.groups = [];
         }
       }
       else {
