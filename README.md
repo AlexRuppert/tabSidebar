@@ -3,6 +3,8 @@
 
 Tab Sidebar is an Opera 30+ extension for tab management. Tabs can be displayed in the sidebar with different combinable view options, like with thumbnails, in a tree structure or with reduced size. Tabs and even their content can be easily searched, closed tabs viewed and restored, duplicate tabs closed and even all tabs sorted and rearanged within a few clicks. 
 
+![alt text](https://i.imgur.com/Xzr9g3N.png "Screenshot")
+
 ##Environment##
 * Node.js (http://nodejs.org/)
 
@@ -25,4 +27,4 @@ Navigate into the /src directory and use the console:
 Now open Opera's Extension Manager and activate 'Developer mode' (top right corner).
 'Load unpacked extension...' -> select the /src directory.
 
-Now the extension should be build and running in Opera.
+Now the extension should be built and running in Opera.
